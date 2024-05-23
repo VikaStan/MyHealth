@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">My Health</string>
+    <string name="diary_screen">Diary</string>
+    <string name="account_screen">Account</string>
+    <string name="stats_screen">Stats</string>
+    <string name="settings_screen">Settings</string>
+    <string name="data" translatable="false">Тут должна быть дата</string>
+    <string name="breakfast_title">Breakfast</string>
+    <string name="lunch_title">Lunch</string>
+    <string name="dinner_title">Dinner</string>
+    <string name="sleep_title">Sleep</string>
+    <string name="mon">Mon</string>
+    <string name="thu">Thu</string>
+    <string name="wed">Wed</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="sun">Sun</string>
+    <string name="food_add">Add food</string>
+    <string name="sleep_add">Add bed time</string>
+    <string name="products">products count</string>
+    <string name="calories">calories</string>
+    <string name="sleep_count">Sleep count</string>
+    <string name="lack_of_sleep">lack of sleep</string>
+    <string name="sleep_time">hours</string>
+</resources>
