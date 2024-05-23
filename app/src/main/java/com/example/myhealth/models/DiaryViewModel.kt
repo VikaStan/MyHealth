@@ -1,5 +1,6 @@
 package com.example.myhealth.models
 
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
@@ -30,6 +31,7 @@ class DiaryViewModel:ViewModel(){
     fun selected(index: Int){
         selectedDayIndex.value=index
         selectedDay = MutableStateFlow(days.value[index])
+        selectedDay.value.calcBadTime()
     }
 
     private fun getListSize():Int{
@@ -45,8 +47,6 @@ class DiaryViewModel:ViewModel(){
             list.add(
                 Day(
                     date = day,
-                    /*day = dayOfWeekToString(day.dayOfWeek.value),
-                    mounth = if (thisMouth) currDay.month.value else currDay.minusMonths(1).month.value,*/
                     foodCount = 1, //получать с базы
                     totalCalories = 0, // рассчитывать и получать с бд
                                     //рассчитывать 2 параметра еще

@@ -22,5 +22,6 @@
     <string name="sleep_count">снов</string>
     <string name="lack_of_sleep">недосып</string>
     <string name="sleep_time">часов</string>
+    <string name="sleep_more">больше на</string>
 
 </resources>

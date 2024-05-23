@@ -56,7 +56,7 @@ fun FoodSectionContent(
         Text(
             text = " ${stringResource(R.string.products)}: ${eating.products.size}",
             minLines = 2,
-            modifier = modifier.padding(top = 15.dp),
+            modifier = modifier.padding(top = 20.dp),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -67,7 +67,7 @@ fun FoodSectionContent(
             val color: Color
             if (currentCalories > goalCalories) {
                 str =
-                    "${stringResource(R.string.calories)} на ${currentCalories - goalCalories} больше рекомендованного"
+                    "${stringResource(R.string.calories)} на ${currentCalories - goalCalories} больше "
                 color = Color.Red
             } else {
                 str = "${stringResource(R.string.calories)}: $currentCalories"
@@ -84,7 +84,7 @@ fun FoodSectionContent(
                 str,
                 style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
                 minLines = 2,
-                modifier = modifier.padding(4.dp).fillMaxWidth().align(Alignment.CenterEnd),
+                modifier = modifier.padding(4.dp).padding(top = 15.dp).fillMaxWidth().align(Alignment.Center),
                 textAlign = TextAlign.Center
             )
         }

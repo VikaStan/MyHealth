@@ -1,5 +1,6 @@
 package com.example.myhealth.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -31,7 +32,7 @@ import java.time.LocalDate
 fun SleepSectionContent(
     modifier: Modifier = Modifier, day: Day, goalSleep: Float
 ) {
-    val currentSleep by remember { mutableFloatStateOf(day.calcBadTime()) }
+    val currentSleep by remember { mutableFloatStateOf(day.totalSleep) }
 
     Row(
         modifier.fillMaxWidth().padding(8.dp).height(60.dp),
@@ -39,21 +40,28 @@ fun SleepSectionContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = " ${stringResource(R.string.sleep_count)}: ${day.bedTime.values.reduce { acc, i -> acc + i }}",
+            text = " ${stringResource(R.string.sleep_count)}: ${day.bedTime.size}",
             minLines = 2,
-            modifier = modifier.padding(top = 15.dp),
+            modifier = Modifier.padding(top = 20.dp),
             style = MaterialTheme.typography.bodyLarge,
         )
 
         VerticalDivider(thickness = 6.dp, color = Color.Transparent)
-        Box(modifier, Alignment.Center) {
+
+        Box(modifier, Alignment.CenterEnd) {
             val str: String
             val color: Color
             if (currentSleep < goalSleep) {
                 str =
-                    "${stringResource(R.string.lack_of_sleep)} ${goalSleep - currentSleep} часов"
+                    "${stringResource(R.string.lack_of_sleep)}(часов): ${goalSleep - currentSleep} "
+                color = Color.Blue
+            }
+            else if(currentSleep > goalSleep){
+                str =
+                    "${stringResource(R.string.sleep_more)} (часов): ${currentSleep - goalSleep} "
                 color = Color.Red
-            } else {
+            }
+                else {
                 str = "${stringResource(R.string.sleep_time)}: $currentSleep"
                 color = Color.Blue
             }
@@ -68,7 +76,7 @@ fun SleepSectionContent(
                 str,
                 style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
                 minLines = 2,
-                modifier = modifier.padding(4.dp).fillMaxWidth().align(Alignment.CenterEnd),
+                modifier = modifier.padding(4.dp).padding(top = 15.dp).fillMaxHeight().align(Alignment.Center),
                 textAlign = TextAlign.Center
             )
         }

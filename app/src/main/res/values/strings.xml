@@ -22,4 +22,5 @@
     <string name="sleep_count">Sleep count</string>
     <string name="lack_of_sleep">lack of sleep</string>
     <string name="sleep_time">hours</string>
+    <string name="sleep_more">sleep more</string>
 </resources>

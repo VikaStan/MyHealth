@@ -9,7 +9,7 @@ import java.util.Calendar
 class Day(
     val date: LocalDate,
     var foodCount: Int = 0,
-    var totalCalories: Int = 10,
+    var totalCalories: Int = 0,
     var goalCalories: Int = 1000,
     var totalSleep: Float = 0f,
     var goalSleep: Float = 8f,
@@ -28,7 +28,7 @@ class Day(
                 Icons.Default.FoodBank,
                 "Макарошки",
                 1000
-            ) to 2
+            ) to 1
         ), 100
     ),
     var dinner: Food = Food(
@@ -40,8 +40,8 @@ class Day(
             ) to 2
         ), 100
     ),
-    var bedTime: MutableMap<Sleep, Int> = mutableMapOf(
-        Sleep(hours = 3f, " ", true) to 2
+    var bedTime: MutableList<Sleep> = mutableListOf(
+        Sleep(hours = 9f, " ", true)
     )
 ) {
 
@@ -52,8 +52,8 @@ class Day(
                 totalCalories += i.calories
             }
         }
-        bedTime.forEach { sleep, count ->
-            totalSleep+=sleep.hours*count
+        bedTime.forEach { sleep ->
+            totalSleep+=sleep.hours
         }
     }
 
@@ -81,8 +81,8 @@ class Day(
     }.timeInMillis
 
     fun calcBadTime():Float {
-        bedTime.forEach { sleep, count ->
-            totalSleep+=sleep.hours*count
+        bedTime.forEach { sleep ->
+            totalSleep+=sleep.hours
         }
         return totalSleep
     }

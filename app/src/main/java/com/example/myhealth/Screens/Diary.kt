@@ -2,11 +2,15 @@ package com.example.myhealth.Screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Bedtime
 import androidx.compose.material.icons.twotone.BreakfastDining
@@ -18,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.myhealth.R
 import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.ui.components.ActivityRings
 import com.example.myhealth.ui.components.CalendarItem
 import com.example.myhealth.ui.components.DatePickerWithDialog
 import com.example.myhealth.ui.components.ExpandableSection
@@ -60,7 +66,9 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(modifier.padding(horizontal = 8.dp)) {
-        item { } // полоски с активностями
+        item {
+                ActivityRings(1f,0.5f,1f)
+          } // полоски с активностями
         item { //календарь
             LazyRow(
                 modifier.padding(8.dp),
@@ -94,7 +102,12 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
                 onAddClick = {
                     model.navHostController.navigate(Screen.FoodAdd.route)
                 },
-                content = { FoodSectionContent(eating = selectedDay.breakfast, goalCalories = selectedDay.goalCalories) }) //завтрак
+                content = {
+                    FoodSectionContent(
+                        eating = selectedDay.breakfast,
+                        goalCalories = selectedDay.goalCalories
+                    )
+                }) //завтрак
 
             HorizontalDivider(thickness = 8.dp, color = Color.Transparent)
             ExpandableSection(
@@ -105,7 +118,10 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
                     model.navHostController.navigate(Screen.FoodAdd.route)
                 },
                 content = {
-                    FoodSectionContent(eating = selectedDay.lunch, goalCalories = selectedDay.goalCalories)
+                    FoodSectionContent(
+                        eating = selectedDay.lunch,
+                        goalCalories = selectedDay.goalCalories
+                    )
                 }) //обед
 
             HorizontalDivider(thickness = 8.dp, color = Color.Transparent)
@@ -117,7 +133,10 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
                     model.navHostController.navigate(Screen.FoodAdd.route)
                 },
                 content = {
-                    FoodSectionContent(eating = selectedDay.dinner, goalCalories = selectedDay.goalCalories)
+                    FoodSectionContent(
+                        eating = selectedDay.dinner,
+                        goalCalories = selectedDay.goalCalories
+                    )
                 }) //ужин
 
             HorizontalDivider(thickness = 8.dp, color = Color.Transparent)
@@ -128,7 +147,13 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
                 onAddClick = {
                     model.navHostController.navigate(Screen.SleepAdd.route)
                 },
-                content = { SleepSectionContent(modifier, selectedDay,selectedDay.goalSleep) }) //сон
+                content = {
+                    SleepSectionContent(
+                        modifier,
+                        selectedDay,
+                        selectedDay.goalSleep
+                    )
+                }) //сон
         }
     }
 }
