@@ -96,7 +96,7 @@ sealed class Screen(
     }
 
     object SleepAdd : Screen(
-        route = "food_add",
+        route = "sleep_add",
         title = R.string.sleep_title,
         buttomIcon = Icons.Default.MenuBook,
         isAppBarVisible = true,

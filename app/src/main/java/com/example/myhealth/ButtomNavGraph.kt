@@ -1,5 +1,7 @@
 package com.example.myhealth
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -7,12 +9,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.myhealth.Screens.Account
 import com.example.myhealth.Screens.Diary
+import com.example.myhealth.Screens.FoodAdd
 import com.example.myhealth.Screens.Screen
 import com.example.myhealth.Screens.Settings
+import com.example.myhealth.Screens.SleepAdd
 import com.example.myhealth.Screens.Stats
 import com.example.myhealth.ui.components.DatePickerWithDialog
 
 
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun BottomNavGraph(navController: NavHostController, modifier: Modifier= Modifier) {
     NavHost(
@@ -33,10 +38,10 @@ fun BottomNavGraph(navController: NavHostController, modifier: Modifier= Modifie
             Settings(onBackClick = {navController.popBackStack() })
         }
         composable(route = Screen.FoodAdd.route) {
-            Settings(onBackClick = {navController.popBackStack() })
+            FoodAdd("",modifier)
         }
         composable(route = Screen.SleepAdd.route) {
-            Settings(onBackClick = {navController.popBackStack() })
+            SleepAdd("SleepAdd")
         }
 
     }
