@@ -23,4 +23,17 @@
     <string name="lack_of_sleep">lack of sleep</string>
     <string name="sleep_time">hours</string>
     <string name="sleep_more">sleep more</string>
+    <string name="bakery">Bakery</string>
+    <string name="porridge">Porridge</string>
+    <string name="eggs">Eggs</string>
+    <string name="meat">Meat</string>
+    <string name="cheese">Cheese</string>
+    <string name="fruts">Fruts</string>
+    <string name="vegetables">Vegetables</string>
+    <string name="candies">Candies</string>
+    <string name="snack">Snack</string>
+    <string name="other_food">Other Food</string>
+    <string name="soup">Soup</string>
+    <string name="fish">Fish</string>
+    <string name="water">Water</string>
 </resources>

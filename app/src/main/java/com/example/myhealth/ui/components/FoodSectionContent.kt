@@ -42,52 +42,55 @@ import java.time.LocalDate
 fun FoodSectionContent(
     modifier: Modifier = Modifier, eating: Food, goalCalories: Int
 ) {
-    var cal=0f
-    eating.products.forEach { (product, count) ->
-        cal += product.calories * count
+    var cal = 0f
+    eating.products.forEach { product ->
+        cal += product.calories * (product.gramms / 100)
     }
-    val currentCalories by remember { mutableFloatStateOf(cal) }
 
-    Row(
-        modifier.fillMaxWidth().padding(8.dp).height(60.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = " ${stringResource(R.string.products)}: ${eating.products.size}",
-            minLines = 2,
-            modifier = modifier.padding(top = 20.dp),
-            style = MaterialTheme.typography.bodyLarge,
+
+val currentCalories by remember { mutableFloatStateOf(cal) }
+
+Row(
+modifier.fillMaxWidth().padding(8.dp).height(60.dp),
+horizontalArrangement = Arrangement.SpaceAround,
+verticalAlignment = Alignment.CenterVertically
+) {
+    Text(
+        text = " ${stringResource(R.string.products)}: ${eating.products.size}",
+        minLines = 2,
+        modifier = modifier.padding(top = 20.dp),
+        style = MaterialTheme.typography.bodyLarge,
+    )
+
+    VerticalDivider(thickness = 6.dp, color = Color.Transparent)
+    //ProgressTextIndicator((eating.calories / maxCalories).toFloat(), {})
+    Box(modifier, Alignment.Center) {
+        val str: String
+        val color: Color
+        if (currentCalories > goalCalories) {
+            str =
+                "${stringResource(R.string.calories)} на ${currentCalories - goalCalories} больше "
+            color = Color.Red
+        } else {
+            str = "${stringResource(R.string.calories)}: $currentCalories"
+            color = Color.Green
+        }
+        LinearProgressIndicator(
+            progress = currentCalories / goalCalories,
+            color = color,
+            strokeCap = StrokeCap.Round,
+            modifier = modifier.padding(2.dp).fillMaxHeight()
         )
 
-        VerticalDivider(thickness = 6.dp, color = Color.Transparent)
-        //ProgressTextIndicator((eating.calories / maxCalories).toFloat(), {})
-        Box(modifier, Alignment.Center) {
-            val str: String
-            val color: Color
-            if (currentCalories > goalCalories) {
-                str =
-                    "${stringResource(R.string.calories)} на ${currentCalories - goalCalories} больше "
-                color = Color.Red
-            } else {
-                str = "${stringResource(R.string.calories)}: $currentCalories"
-                color = Color.Green
-            }
-            LinearProgressIndicator(
-                progress = currentCalories / goalCalories,
-                color = color,
-                strokeCap = StrokeCap.Round,
-                modifier = modifier.padding(2.dp).fillMaxHeight()
-            )
-
-            Text(
-                str,
-                style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
-                minLines = 2,
-                modifier = modifier.padding(4.dp).padding(top = 15.dp).fillMaxWidth().align(Alignment.Center),
-                textAlign = TextAlign.Center
-            )
-        }
+        Text(
+            str,
+            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+            minLines = 2,
+            modifier = modifier.padding(4.dp).padding(top = 15.dp).fillMaxWidth()
+                .align(Alignment.Center),
+            textAlign = TextAlign.Center
+        )
+    }
     }
 }
 
@@ -124,6 +127,7 @@ fun ProgressTextIndicator(
         Text("Каллории", style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
     }
 }
+
 
 @Composable
 @Preview(showBackground = true)

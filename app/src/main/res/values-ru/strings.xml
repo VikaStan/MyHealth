@@ -23,5 +23,18 @@
     <string name="lack_of_sleep">недосып</string>
     <string name="sleep_time">часов</string>
     <string name="sleep_more">больше на</string>
+    <string name="bakery">Выпечка</string>
+    <string name="porridge">Каша</string>
+    <string name="eggs">Яйца</string>
+    <string name="meat">Мясо</string>
+    <string name="cheese">Сыр</string>
+    <string name="fruts">Фрукты</string>
+    <string name="vegetables">Овощи</string>
+    <string name="candies">Сладости</string>
+    <string name="snack">Перекус</string>
+    <string name="other_food">Другая еда</string>
+    <string name="soup">Суп</string>
+    <string name="fish">Рыба</string>
+    <string name="water">Жидкость</string>
 
 </resources>

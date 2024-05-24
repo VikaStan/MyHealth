@@ -13,32 +13,21 @@ class Day(
     var goalCalories: Int = 1000,
     var totalSleep: Float = 0f,
     var goalSleep: Float = 8f,
+
     var breakfast: Food = Food(
-        products = mutableMapOf(
-            Product(
-                Icons.Default.FoodBank,
-                "Макарошки",
-                3500
-            ) to 2
-        ), 100
+        products = mutableListOf(
+            Product(Product.Eggs, 100, 100, "")
+        )
     ),
     var lunch: Food = Food(
-        products = mutableMapOf(
-            Product(
-                Icons.Default.FoodBank,
-                "Макарошки",
-                1000
-            ) to 1
-        ), 100
+        products = mutableListOf(
+            Product(Product.Eggs, 100, 100, "")
+        )
     ),
     var dinner: Food = Food(
-        products = mutableMapOf(
-            Product(
-                Icons.Default.FoodBank,
-                "Макарошки",
-                1000
-            ) to 2
-        ), 100
+        products = mutableListOf(
+            Product(Product.Eggs, 100, 100, "")
+        )
     ),
     var bedTime: MutableList<Sleep> = mutableListOf(
         Sleep(hours = 9f, " ", true)
@@ -48,28 +37,30 @@ class Day(
     init {
         for (i in listOf(breakfast, lunch, dinner)) {
             if (i.products.isNotEmpty()) {
-                foodCount++
-                totalCalories += i.calories
+                i.products.forEach {
+                    foodCount++
+                    totalCalories += it.calories
+                }
+
             }
         }
         bedTime.forEach { sleep ->
-            totalSleep+=sleep.hours
+            totalSleep += sleep.hours
         }
     }
 
-    fun dayOfWeekToString() =
-        when (this.date.dayOfWeek.value) {
-            1 -> R.string.mon
-            2 -> R.string.thu
-            3 -> R.string.wed
-            4 -> R.string.thu
-            5 -> R.string.fri
-            6 -> R.string.sat
-            7 -> R.string.sun
-            else -> {
-                R.string.data
-            }
+    fun dayOfWeekToString() = when (this.date.dayOfWeek.value) {
+        1 -> R.string.mon
+        2 -> R.string.thu
+        3 -> R.string.wed
+        4 -> R.string.thu
+        5 -> R.string.fri
+        6 -> R.string.sat
+        7 -> R.string.sun
+        else -> {
+            R.string.data
         }
+    }
 
 
     fun dayToMillis() = Calendar.getInstance().apply {
@@ -80,27 +71,19 @@ class Day(
         )
     }.timeInMillis
 
-    fun calcBadTime():Float {
+    fun calcBadTime(): Float {
         bedTime.forEach { sleep ->
-            totalSleep+=sleep.hours
+            totalSleep += sleep.hours
         }
         return totalSleep
     }
 }
 
 class Food(
-    var products: MutableMap<Product, Int>,
-    var calories: Int
-) {
-    fun addFood(product: Product, count: Int) {
-        products[product] = count
-        calories += product.calories * count
-    }
-}
+    var products: MutableList<Product>
+) {}
 
 class Sleep(
-    var hours: Float,
-    var description: String,
-    var isAlarmed: Boolean
+    var hours: Float, var description: String, var isAlarmed: Boolean
 )
 
