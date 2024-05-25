@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.myhealth.R
+import com.example.myhealth.data.FoodTimeType
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.ui.components.ActivityRings
 import com.example.myhealth.ui.components.CalendarItem
@@ -100,7 +101,7 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
                 title = R.string.breakfast_title,
                 Icons.TwoTone.BreakfastDining,
                 onAddClick = {
-                    model.navHostController.navigate(Screen.FoodAdd.route)
+                    model.navHostController.navigate(Screen.FoodAdd.route+"/${FoodTimeType.Breakfast.n}")
                 },
                 content = {
                     FoodSectionContent(
@@ -115,7 +116,7 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
                 title = R.string.lunch_title,
                 Icons.TwoTone.LunchDining,
                 onAddClick = {
-                    model.navHostController.navigate(Screen.FoodAdd.route)
+                    model.navHostController.navigate(Screen.FoodAdd.route+"/${FoodTimeType.Lunch.n}")
                 },
                 content = {
                     FoodSectionContent(
@@ -130,7 +131,7 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
                 title = R.string.dinner_title,
                 Icons.TwoTone.DinnerDining,
                 onAddClick = {
-                    model.navHostController.navigate(Screen.FoodAdd.route)
+                    model.navHostController.navigate(Screen.FoodAdd.route+"/${FoodTimeType.Dinner.n}")
                 },
                 content = {
                     FoodSectionContent(

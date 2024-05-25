@@ -44,7 +44,7 @@ fun FoodSectionContent(
 ) {
     var cal = 0f
     eating.products.forEach { product ->
-        cal += product.calories * (product.gramms / 100)
+        cal += product.caloriesPer100Gramms * (product.gramms / 100)
     }
 
 

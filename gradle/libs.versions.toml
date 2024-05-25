@@ -12,6 +12,7 @@ materialIconsExtended = "1.6.7"
 navigationCompose = "2.7.7"
 composeMaterial = "1.6.7"
 leanback = "1.0.0"
+swipe = "1.1.1"
 
 
 [libraries]
@@ -33,6 +34,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
 androidx-leanback = { group = "androidx.leanback", name = "leanback", version.ref = "leanback" }
+swipe-component = { module = "me.saket.swipe:swipe", name = "swipe", version.ref = "swipe" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

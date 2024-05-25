@@ -1,7 +1,5 @@
 package com.example.myhealth.data
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FoodBank
 import com.example.myhealth.R
 import java.time.LocalDate
 import java.util.Calendar
@@ -16,18 +14,21 @@ class Day(
 
     var breakfast: Food = Food(
         products = mutableListOf(
-            Product(Product.Eggs, 100, 100, "")
-        )
+            Product(Product.Soup, 100, 100,10, "Покушал хорошо, все гуд")
+        ),
+        FoodTimeType.Breakfast
     ),
     var lunch: Food = Food(
         products = mutableListOf(
-            Product(Product.Eggs, 100, 100, "")
-        )
+            Product(Product.Eggs, 100, 100, 10,"")
+        ),
+        FoodTimeType.Lunch
     ),
     var dinner: Food = Food(
         products = mutableListOf(
-            Product(Product.Eggs, 100, 100, "")
-        )
+            Product(Product.Eggs, 100, 100, 10,"")
+        ),
+        FoodTimeType.Dinner
     ),
     var bedTime: MutableList<Sleep> = mutableListOf(
         Sleep(hours = 9f, " ", true)
@@ -39,7 +40,7 @@ class Day(
             if (i.products.isNotEmpty()) {
                 i.products.forEach {
                     foodCount++
-                    totalCalories += it.calories
+                    totalCalories += it.caloriesPer100Gramms
                 }
 
             }
@@ -80,9 +81,15 @@ class Day(
 }
 
 class Food(
-    var products: MutableList<Product>
-) {}
+    var products: MutableList<Product>,
+    val foodTimeType: FoodTimeType
+)
 
+enum class FoodTimeType(val n: String){
+    Breakfast("Breakfast"),
+    Lunch("Lunch"),
+    Dinner("Dinner")
+}
 class Sleep(
     var hours: Float, var description: String, var isAlarmed: Boolean
 )
