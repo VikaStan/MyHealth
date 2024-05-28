@@ -36,4 +36,11 @@
     <string name="soup">Soup</string>
     <string name="fish">Fish</string>
     <string name="water">Water</string>
+    <string name="add_product_btn">Add Product</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="calories_100_gr">Calories per 100 gramm</string>
+    <string name="gramm">Gramm</string>
+    <string name="calories_summary">Calories Summary</string>
+    <string name="description">description</string>
+    <string name="toast_add">first 2 fields not be changed</string>
 </resources>

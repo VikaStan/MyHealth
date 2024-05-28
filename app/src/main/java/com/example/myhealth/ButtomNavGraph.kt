@@ -16,11 +16,12 @@ import com.example.myhealth.Screens.Screen
 import com.example.myhealth.Screens.Settings
 import com.example.myhealth.Screens.SleepAdd
 import com.example.myhealth.Screens.Stats
+import com.example.myhealth.models.MainScreenViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
-fun BottomNavGraph(navController: NavHostController, modifier: Modifier= Modifier) {
+fun BottomNavGraph(navController: NavHostController, modifier: Modifier= Modifier, model:MainScreenViewModel) {
     NavHost(
         navController = navController,
         startDestination = Screen.Diary.route,
@@ -45,7 +46,7 @@ fun BottomNavGraph(navController: NavHostController, modifier: Modifier= Modifie
             }
             )
         ) {
-            FoodAdd(it.arguments?.getString("foodType"),modifier)
+            FoodAdd(it.arguments?.getString("foodType"),modifier, model.diaryModel)
         }
         composable(route = Screen.SleepAdd.route) {
             SleepAdd("SleepAdd")

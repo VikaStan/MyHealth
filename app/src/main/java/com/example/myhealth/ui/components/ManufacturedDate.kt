@@ -91,7 +91,6 @@ fun DatePickerWithDialog(
             return true
         }
     },
-       // yearRange = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate().year -1 .. Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate().year,
         initialSelectedDateMillis = model.selectedDay.collectAsState().value.dayToMillis(),
         initialDisplayedMonthMillis = model.selectedDay.collectAsState().value.dayToMillis())
     val chooseDate = dateState.selectedDateMillis?.let {//выбранная дата

@@ -1,6 +1,8 @@
 package com.example.myhealth
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,6 +35,7 @@ import com.example.myhealth.ui.components.appbar.rememberAppBarState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
@@ -102,7 +105,7 @@ fun MainScreen(
 
 
     ) {
-        BottomNavGraph(navController = navController, modifier = Modifier.padding(it))
+        BottomNavGraph(navController = navController, modifier = Modifier.padding(it), mainViewModel)
     }
 }
 

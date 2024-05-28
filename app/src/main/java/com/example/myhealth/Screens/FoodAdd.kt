@@ -1,5 +1,6 @@
 package com.example.myhealth.Screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,24 +17,39 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocalDining
+import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Scale
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myhealth.R
 import com.example.myhealth.data.Food
@@ -41,50 +57,61 @@ import com.example.myhealth.data.FoodTimeType
 import com.example.myhealth.data.Product
 import com.example.myhealth.data.ProductType
 import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
 
 @Composable
-fun FoodAdd(eatingType: String?, modifier: Modifier, model: DiaryViewModel = viewModel()) {
+fun FoodAdd(
+    eatingType: String?,
+    modifier: Modifier,
+    modelDiary: DiaryViewModel = viewModel(),
+    model: FoodAddViewModel = viewModel()
+) {
 
-    val selectedDay by model.selectedDay.collectAsState()
+    val selectedProductType by model.selectedTypeProduct.collectAsState()
+    val eatingFoodTime by model.eatingFoodTime.collectAsState()
 
-    var eatingName: Int = 0
-    var eatingFoodType: Food = Food(emptyList<Product>().toMutableList(), FoodTimeType.Dinner)
-    when (eatingType) {
-        FoodTimeType.Lunch.n -> {
-            eatingName = R.string.lunch_title
-            eatingFoodType = selectedDay.lunch
-        }
+    model.getEatingTimeName(eatingType)
+    model.getEatingFoodTime(modelDiary, eatingType)
 
-        FoodTimeType.Breakfast.n -> {
-            eatingName = R.string.breakfast_title
-            eatingFoodType = selectedDay.breakfast
-        }
 
-        FoodTimeType.Dinner.n -> {
-            eatingName = R.string.dinner_title
-            eatingFoodType = selectedDay.dinner
-        }
+    if (model.foodAddDialog) {
+        FoodDetailDialog(
+            showDialog = model::foodAddDialogShow,
+            selectedProductType,
+            model::AddProduct,
+            model::EditProduct
+        )
+    }
+
+    if (model.foodEditDialog) {
+        FoodDetailDialog(
+            showDialog = model::foodEditDialogShow,
+            selectedProductType,
+            model::AddProduct,
+            model::EditProduct,
+            true
+        )
     }
     Column {
-        //TODO выбор времени
+        //TODO выбор времени?
         Text(
-            text = "${stringResource(eatingName)}!", modifier = Modifier
+            text = "${stringResource(model.eatingTimeName)}!", modifier = Modifier
         )
-        FoodSection({}, eatingFoodType)
-        FoodDetailDialog()
+        FoodSection(model, eatingFoodTime)
+
         //TODO список выбранных продуктов
-        FoodDetailList(eatingFoodType)
+        FoodDetailList(eatingFoodTime.products, model::onEditSwipe, model::onDelSwipe)
     }
 }
 
 @Composable
 fun FoodSection(
-    onClickItem: () -> Unit,
+    model: FoodAddViewModel,
     currEatingFoodType: Food
-) { //TODO подсвечивать выбранную категорию
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.padding(8.dp)
@@ -115,10 +142,7 @@ fun FoodSection(
                 Box(contentAlignment = Alignment.TopEnd) {
                     val count =
                         currEatingFoodType.products.count { it.productCategory == productList }
-                    FoodSectionItem(
-                        productList, onClickItem = onClickItem,
-                        count
-                    )
+                    FoodSectionItem(productList, model, count)
                     if (count != 0) {
                         Text(
                             count.toString(),
@@ -147,7 +171,7 @@ fun FoodSection(
 }
 
 @Composable
-fun FoodSectionItem(productType: ProductType, onClickItem: () -> Unit, count: Int) {
+fun FoodSectionItem(productType: ProductType, model: FoodAddViewModel, count: Int) {
     val color = if (count > 0) Color.Green.copy(alpha = 0.8f) else Color.Transparent
     Column(
         modifier = Modifier
@@ -157,7 +181,8 @@ fun FoodSectionItem(productType: ProductType, onClickItem: () -> Unit, count: In
                 color = color,
                 shape = RoundedCornerShape(8.dp)
             )
-            .clip(RoundedCornerShape(8.dp)).clickable { onClickItem },
+            .clickable { model.onProductItemSelected(Product(productCategory = productType)) }
+            .clip(RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -176,7 +201,11 @@ fun FoodSectionItem(productType: ProductType, onClickItem: () -> Unit, count: In
 }
 
 @Composable
-fun FoodDetailList(selFoodTime: Food) {
+fun FoodDetailList(
+    products:  MutableList<Product>,
+    onEditSwipe: (Product) -> Unit,
+    onDelSwipe: (Product) -> Unit
+) {
 
     LazyColumn(
         modifier = Modifier.padding(8.dp).fillMaxWidth()
@@ -186,15 +215,16 @@ fun FoodDetailList(selFoodTime: Food) {
                 ), shape = RoundedCornerShape(8.dp)
             )
     ) {
-        items(selFoodTime.products) {
+        items(products) {
+
             val delete = SwipeAction(
                 onSwipe = {
-
+                    onDelSwipe(it)
                 },
                 icon = {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete chat",
+                        contentDescription = "Delete product",
                         modifier = Modifier.padding(16.dp),
                         tint = Color.White
                     )
@@ -202,11 +232,13 @@ fun FoodDetailList(selFoodTime: Food) {
                 isUndo = true
             )
             val archive = SwipeAction(
-                onSwipe = {},
+                onSwipe = {
+                    onEditSwipe(it)
+                },
                 icon = {
                     Icon(
                         Icons.Default.Edit,
-                        contentDescription = "archive chat",
+                        contentDescription = "edit product",
                         modifier = Modifier.padding(16.dp),
 
                         tint = Color.White
@@ -260,7 +292,122 @@ fun FoodDetailListItem(product: Product) {
 }
 
 @Composable
-fun FoodDetailDialog() {
+fun FoodDetailDialog(
+    showDialog: (Boolean) -> Unit,
+    product: Product,
+    onAcceptProduct: (Product) -> Unit,
+    editProduct: (Product) -> Unit,
+    isEdit: Boolean = false
+) {
+
+    var caloriesPer100Gramms = remember { mutableIntStateOf(product.caloriesPer100Gramms) }
+    var caloriesSummery = remember { mutableFloatStateOf(product.caloriesSummery) }
+    var gramms = remember { mutableIntStateOf(product.gramms) }
+    var description = remember { mutableStateOf(product.description) }
+    val toastShow = remember { mutableStateOf(false) }
+    Dialog(
+        onDismissRequest = { showDialog(false) },
+        DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = true
+        )
+    )
+    {
+        if (toastShow.value) {
+            Toast.makeText(LocalContext.current, R.string.toast_add, Toast.LENGTH_LONG).show()
+            toastShow.value = false
+        }
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(product.productCategory.icon, "")
+                Text(stringResource(product.productCategory.name))
+
+
+                OutlinedTextField(
+                    caloriesPer100Gramms.intValue.toString(),
+                    {
+                        if (it != "") {
+                            caloriesPer100Gramms.intValue = it.toInt()
+                            caloriesSummery.floatValue =
+                                ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    leadingIcon = { Icon(Icons.Default.MenuBook, "") },
+                    label = { Text(stringResource(R.string.calories_100_gr)) }) // калорий на 100 гр
+
+                OutlinedTextField(
+                    gramms.intValue.toString(),
+                    {
+                        if (it != "") {
+                            gramms.intValue = it.toInt()
+                            caloriesSummery.floatValue =
+                                ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    leadingIcon = { Icon(Icons.Default.Scale, "") },
+                    label = { Text(stringResource(R.string.gramm)) }) //грамм
+
+                OutlinedTextField(
+                    caloriesSummery.floatValue.toString(),
+                    { caloriesSummery.floatValue = it.toFloat() },
+                    enabled = false,
+                    leadingIcon = { Icon(Icons.Default.LocalDining, "") },
+                    label = { Text(stringResource(R.string.calories_summary)) }) //общие калории
+
+
+                OutlinedTextField(
+                    description.value,
+                    { description.value = it },
+                    minLines = 2,
+                    maxLines = 3,
+                    label = { Text(stringResource(R.string.description)) }
+                ) //описание
+
+
+                Button({
+                    if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && !isEdit)
+                        onAcceptProduct(
+                            Product(
+                                productCategory = product.productCategory,
+                                caloriesPer100Gramms.intValue,
+                                caloriesSummery.floatValue,
+                                gramms.intValue,
+                                description.value
+                            )
+                        )
+                    else if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && isEdit) {
+                        editProduct(
+                            Product(
+                                productCategory = product.productCategory,
+                                caloriesPer100Gramms.intValue,
+                                caloriesSummery.floatValue,
+                                gramms.intValue,
+                                description.value
+                            )
+                        )
+                    } else toastShow.value = true
+                }, Modifier) {
+                    Text(stringResource(R.string.add_product_btn))
+                }
+
+                Button({ showDialog(false) }, Modifier) {
+                    Text(stringResource(R.string.cancel_btn))
+                }
+
+            }
+        }
+    }
 
 }
 
@@ -268,6 +415,6 @@ fun FoodDetailDialog() {
 @Composable
 fun FoodAddPreview() {
     MyHealthTheme {
-        FoodAdd(FoodTimeType.Breakfast.n, model = DiaryViewModel(), modifier = Modifier)
+        FoodAdd(FoodTimeType.Breakfast.n, modelDiary = DiaryViewModel(), modifier = Modifier)
     }
 }

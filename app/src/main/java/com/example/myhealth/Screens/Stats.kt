@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.ui.components.ActivityRings
 import com.example.myhealth.ui.components.DatePickerWithDialog
 import com.example.myhealth.ui.theme.MyHealthTheme
 
@@ -13,10 +14,7 @@ import com.example.myhealth.ui.theme.MyHealthTheme
 fun Stats(name: String, modifier: Modifier = Modifier) {
 
     //if (Screen.Stats.dialog.value) DatePickerWithDialog(modifier,diaryModel) TODO
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+    ActivityRings(1f,0.5f,1f)
 }
 
 @Preview(showBackground = true)

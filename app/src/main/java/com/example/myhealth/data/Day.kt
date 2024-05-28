@@ -14,19 +14,19 @@ class Day(
 
     var breakfast: Food = Food(
         products = mutableListOf(
-            Product(Product.Soup, 100, 100,10, "Покушал хорошо, все гуд")
+            Product(Product.Soup, 100, 100f,10, "Покушал хорошо, все гуд")
         ),
         FoodTimeType.Breakfast
     ),
     var lunch: Food = Food(
         products = mutableListOf(
-            Product(Product.Eggs, 100, 100, 10,"")
+            Product(Product.Eggs, 100, 100f, 10,"")
         ),
         FoodTimeType.Lunch
     ),
     var dinner: Food = Food(
         products = mutableListOf(
-            Product(Product.Eggs, 100, 100, 10,"")
+            Product(Product.Eggs, 100, 100f, 10,"")
         ),
         FoodTimeType.Dinner
     ),

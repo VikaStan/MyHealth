@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.EggAlt
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Icecream
 import androidx.compose.material.icons.filled.KebabDining
-import androidx.compose.material.icons.filled.Park
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.RiceBowl
@@ -19,12 +18,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.myhealth.R
 
 data class Product(
-    val productCategory: ProductType,
-    val caloriesPer100Gramms: Int,
-    val caloriesSummery: Int,
-    var gramms: Int,
-    var description: String,
-    ) {
+    val productCategory: ProductType = Bakery,
+    val caloriesPer100Gramms: Int = 0,
+    val caloriesSummery: Float = 0f,
+    var gramms: Int = 0,
+    var description: String = "",
+) {
     data object Bakery : ProductType(
         icon = Icons.Default.BakeryDining,
         name = R.string.bakery,
@@ -39,6 +38,7 @@ data class Product(
         icon = Icons.Default.SoupKitchen,
         name = R.string.soup,
     )
+
     data object Eggs : ProductType(
         icon = Icons.Default.EggAlt,
         name = R.string.eggs,
@@ -73,6 +73,7 @@ data class Product(
         icon = Icons.Default.SetMeal,
         name = R.string.fish,
     )
+
     data object Snack : ProductType(
         icon = Icons.Default.Fastfood,
         name = R.string.snack,

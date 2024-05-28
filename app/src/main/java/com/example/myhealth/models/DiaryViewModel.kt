@@ -27,7 +27,6 @@ class DiaryViewModel:ViewModel(){
         //рассчитывать 2 параметра еще
     ))
 
-
     fun selected(index: Int){
         selectedDayIndex.value=index
         selectedDay = MutableStateFlow(days.value[index])

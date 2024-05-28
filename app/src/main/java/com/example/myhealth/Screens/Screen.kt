@@ -90,6 +90,13 @@ sealed class Screen(
             Done
         }
 
+        val dialog = mutableStateOf(false)
+        fun showDialog(){
+            if (dialog.value)
+                dialog.value=false
+            else dialog.value=true
+        }
+
         // 2
         private val _buttons = MutableSharedFlow<AppBarIcons>(extraBufferCapacity = 1)
         val buttons: Flow<AppBarIcons> = _buttons.asSharedFlow()

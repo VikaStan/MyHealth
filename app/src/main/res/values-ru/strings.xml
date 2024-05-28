@@ -36,5 +36,12 @@
     <string name="soup">Суп</string>
     <string name="fish">Рыба</string>
     <string name="water">Жидкость</string>
+    <string name="add_product_btn">Добавить продукт</string>
+    <string name="cancel_btn">Отменить</string>
+    <string name="calories_100_gr">Калорий на 100 грамм</string>
+    <string name="gramm">Грамм</string>
+    <string name="calories_summary">Калорий всего</string>
+    <string name="description">Описание</string>
+    <string name="toast_add">Первые два поля нулевые!</string>
 
 </resources>

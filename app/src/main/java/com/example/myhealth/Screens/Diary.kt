@@ -67,9 +67,6 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(modifier.padding(horizontal = 8.dp)) {
-        item {
-                ActivityRings(1f,0.5f,1f)
-          } // полоски с активностями
         item { //календарь
             LazyRow(
                 modifier.padding(8.dp),

@@ -16,9 +16,16 @@ class AppBarState(
 ) {
     // 2
     private val currentScreenRoute: String?
-        @Composable get() = navController
-            .currentBackStackEntryAsState()
-            .value?.destination?.route
+        @Composable get() {
+            var str: String? = navController.currentBackStackEntryAsState().value?.destination?.route
+            if (str != null) {
+                str = if (navController.currentBackStackEntryAsState().value?.destination?.route?.contains("/") == true) {
+                        str.substring(0, str.indexOf('/')
+                        )
+                    } else navController.currentBackStackEntryAsState().value?.destination?.route
+            }
+            return str
+        }
 
     // 3
     val currentScreen: Screen?
