@@ -1,12 +1,22 @@
 package com.example.myhealth.models
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
-import com.example.myhealth.ui.components.appbar.rememberAppBarState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainScreenViewModel: ViewModel() {
+@HiltViewModel
+class MainScreenViewModel @Inject constructor(
+) : ViewModel() {
+
+    lateinit var diaryModel: DiaryViewModel
+    lateinit var foodAddViewModel: FoodAddViewModel
+    fun initiate(diaryModel: DiaryViewModel, foodAddViewModel: FoodAddViewModel){
+        this.diaryModel=diaryModel
+        this.foodAddViewModel = foodAddViewModel
+    }
+
     //val navController = rememberNavController()
-   // val appBarState = rememberAppBarState(navController)
-    val diaryModel: DiaryViewModel=DiaryViewModel()
+    // val appBarState = rememberAppBarState(navController)
+    //val diaryModel: DiaryViewModel= hiltViewModel()
+    //val foodAddViewModel: DiaryViewModel= hiltViewModel()
 }

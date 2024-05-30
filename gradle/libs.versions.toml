@@ -5,7 +5,7 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.0"
+lifecycleRuntimeKtx = "2.8.1"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 materialIconsExtended = "1.6.7"
@@ -13,6 +13,7 @@ navigationCompose = "2.7.7"
 composeMaterial = "1.6.7"
 leanback = "1.0.0"
 swipe = "1.1.1"
+hilt = "2.44"
 
 
 [libraries]
@@ -36,7 +37,12 @@ androidx-compose-material = { group = "androidx.compose.material", name = "mater
 androidx-leanback = { group = "androidx.leanback", name = "leanback", version.ref = "leanback" }
 swipe-component = { module = "me.saket.swipe:swipe", name = "swipe", version.ref = "swipe" }
 
+google-dagger={module = "com.google.dagger:hilt-android", name = "hilt", version.ref = "hilt"}
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
+org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+google-dagger-hilt-android = {id = "com.google.dagger.hilt.android", version.ref ="hilt"}

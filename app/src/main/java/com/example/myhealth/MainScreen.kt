@@ -17,7 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -26,6 +28,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myhealth.Screens.Screen
+import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.ui.components.DatePickerWithDialog
 import com.example.myhealth.ui.components.ManufacturedDate
@@ -39,9 +43,12 @@ import kotlinx.coroutines.flow.onEach
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-    mainViewModel: MainScreenViewModel = viewModel()
+    mainViewModel: MainScreenViewModel = hiltViewModel(),
+    diaryViewModel: DiaryViewModel = hiltViewModel(),
+    foodAddViewModel: FoodAddViewModel = hiltViewModel()
 ) {
 
+    mainViewModel.initiate(diaryViewModel,foodAddViewModel)
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
     LaunchedEffect(key1 = Unit) {//прослушивание нажатий в upBar
@@ -78,8 +85,10 @@ fun MainScreen(
             .onEach { button ->
                 when (button) {
                     // переход в настройки при срабатывании flow
-                    Screen.FoodAdd.AppBarIcons.Done -> Screen.Diary.showDialog()
-                    Screen.FoodAdd.AppBarIcons.Clear -> navController.popBackStack()
+                    Screen.FoodAdd.AppBarIcons.Back -> {
+                        navController.popBackStack()
+                        foodAddViewModel.updateListProducts(mainViewModel.diaryModel)
+                    }
                 }
             }
             .launchIn(this)

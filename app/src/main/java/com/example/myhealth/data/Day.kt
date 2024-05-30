@@ -36,6 +36,10 @@ class Day(
 ) {
 
     init {
+        updateAllCount()
+    }
+
+    fun updateAllCount(){
         for (i in listOf(breakfast, lunch, dinner)) {
             if (i.products.isNotEmpty()) {
                 i.products.forEach {
@@ -49,7 +53,6 @@ class Day(
             totalSleep += sleep.hours
         }
     }
-
     fun dayOfWeekToString() = when (this.date.dayOfWeek.value) {
         1 -> R.string.mon
         2 -> R.string.thu
@@ -78,6 +81,7 @@ class Day(
         }
         return totalSleep
     }
+
 }
 
 class Food(

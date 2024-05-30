@@ -37,19 +37,20 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myhealth.R
 import com.example.myhealth.data.Food
@@ -66,61 +67,56 @@ import me.saket.swipe.SwipeableActionsBox
 fun FoodAdd(
     eatingType: String?,
     modifier: Modifier,
-    modelDiary: DiaryViewModel = viewModel(),
-    model: FoodAddViewModel = viewModel()
+    modelDiary: DiaryViewModel = hiltViewModel(),
+    model: FoodAddViewModel = hiltViewModel()
 ) {
 
     val selectedProductType by model.selectedTypeProduct.collectAsState()
     val eatingFoodTime by model.eatingFoodTime.collectAsState()
-
     model.getEatingTimeName(eatingType)
     model.getEatingFoodTime(modelDiary, eatingType)
-
 
     if (model.foodAddDialog) {
         FoodDetailDialog(
             showDialog = model::foodAddDialogShow,
             selectedProductType,
-            model::AddProduct,
-            model::EditProduct
+            model::addProduct,
+            model::editProduct
         )
     }
-
     if (model.foodEditDialog) {
         FoodDetailDialog(
             showDialog = model::foodEditDialogShow,
             selectedProductType,
-            model::AddProduct,
-            model::EditProduct,
+            model::addProduct,
+            model::editProduct,
             true
         )
     }
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         //TODO выбор времени?
         Text(
-            text = "${stringResource(model.eatingTimeName)}!", modifier = Modifier
+            text = stringResource(model.eatingTimeName),
+            style = MaterialTheme.typography.headlineMedium
         )
+
         FoodSection(model, eatingFoodTime)
 
         //TODO список выбранных продуктов
-        FoodDetailList(eatingFoodTime.products, model::onEditSwipe, model::onDelSwipe)
+        FoodDetailList(model.products, model::onEditSwipe, model::onDelSwipe)
     }
 }
 
 @Composable
 fun FoodSection(
-    model: FoodAddViewModel,
-    currEatingFoodType: Food
+    model: FoodAddViewModel, currEatingFoodType: Food
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier.padding(8.dp)
-            .background(
-                color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                    alpha = .50f
-                ), shape = RoundedCornerShape(8.dp)
-            ),
-        horizontalArrangement = Arrangement.Center
+        columns = GridCells.Fixed(3), modifier = Modifier.padding(8.dp).background(
+            color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                alpha = .50f
+            ), shape = RoundedCornerShape(8.dp)
+        ), horizontalArrangement = Arrangement.Center
     ) {
         listOf(
             Product.Eggs,
@@ -156,8 +152,7 @@ fun FoodSection(
                                     )
                                 )
                         )
-                    }
-                    /*Icon(Icons.Default.Cancel,
+                    }/*Icon(Icons.Default.Cancel,
                         "",modifier = Modifier.padding(top = 6.dp, end = 8.dp).clip(
                         CircleShape
                     )
@@ -174,15 +169,11 @@ fun FoodSection(
 fun FoodSectionItem(productType: ProductType, model: FoodAddViewModel, count: Int) {
     val color = if (count > 0) Color.Green.copy(alpha = 0.8f) else Color.Transparent
     Column(
-        modifier = Modifier
-            .fillMaxWidth().padding(4.dp)
-            .border(2.dp, color = Color.Black, RoundedCornerShape(8.dp))
-            .background(
-                color = color,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .clickable { model.onProductItemSelected(Product(productCategory = productType)) }
-            .clip(RoundedCornerShape(8.dp)),
+        modifier = Modifier.fillMaxWidth().padding(4.dp)
+            .border(2.dp, color = Color.Black, RoundedCornerShape(8.dp)).background(
+                color = color, shape = RoundedCornerShape(8.dp)
+            ).clip(RoundedCornerShape(8.dp))
+            .clickable { model.onProductItemSelected(Product(productCategory = productType)) },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -193,58 +184,49 @@ fun FoodSectionItem(productType: ProductType, model: FoodAddViewModel, count: In
         )
 
         Text(
-            stringResource(productType.name),
-            modifier = Modifier,
-            textAlign = TextAlign.Center
+            stringResource(productType.name), modifier = Modifier, textAlign = TextAlign.Center
         )
     }
 }
 
 @Composable
 fun FoodDetailList(
-    products:  MutableList<Product>,
+    products: SnapshotStateList<Product>,
     onEditSwipe: (Product) -> Unit,
     onDelSwipe: (Product) -> Unit
 ) {
-
     LazyColumn(
-        modifier = Modifier.padding(8.dp).fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                    alpha = .50f
-                ), shape = RoundedCornerShape(8.dp)
-            )
+        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
+            color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                alpha = .50f
+            ), shape = RoundedCornerShape(8.dp)
+        )
     ) {
         items(products) {
 
-            val delete = SwipeAction(
-                onSwipe = {
-                    onDelSwipe(it)
-                },
-                icon = {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Delete product",
-                        modifier = Modifier.padding(16.dp),
-                        tint = Color.White
-                    )
-                }, background = Color.Red.copy(alpha = 0.5f),
-                isUndo = true
+            val delete = SwipeAction(onSwipe = {
+                onDelSwipe(it)
+            }, icon = {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete product",
+                    modifier = Modifier.padding(16.dp),
+                    tint = Color.White
+                )
+            }, background = Color.Red.copy(alpha = 0.5f), isUndo = true
             )
-            val archive = SwipeAction(
-                onSwipe = {
-                    onEditSwipe(it)
-                },
-                icon = {
-                    Icon(
-                        Icons.Default.Edit,
-                        contentDescription = "edit product",
-                        modifier = Modifier.padding(16.dp),
+            val archive = SwipeAction(onSwipe = {
+                onEditSwipe(it)
+            }, icon = {
+                Icon(
+                    Icons.Default.Edit,
+                    contentDescription = "edit product",
+                    modifier = Modifier.padding(16.dp),
 
-                        tint = Color.White
+                    tint = Color.White
 
-                    )
-                }, background = Color(0xFF50B384).copy(alpha = 0.7f)
+                )
+            }, background = Color(0xFF50B384).copy(alpha = 0.7f)
             )
             SwipeableActionsBox(
                 modifier = Modifier,
@@ -260,34 +242,34 @@ fun FoodDetailList(
 
 @Composable
 fun FoodDetailListItem(product: Product) {
-    Row(
-        modifier = Modifier.padding(8.dp).fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                    alpha = .50f
-                ), shape = RoundedCornerShape(8.dp)
-            ),
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
+            color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                alpha = .50f
+            ), shape = RoundedCornerShape(8.dp)
+        ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Row(/*verticalAlignment = Alignment.,*/
             modifier = Modifier.padding(4.dp)
         ) {
             Icon(product.productCategory.icon, stringResource(product.productCategory.name))
-            Text(stringResource(product.productCategory.name))
+            Text(
+                stringResource(product.productCategory.name),
+                Modifier.padding(end = 4.dp),
+                style = MaterialTheme.typography.labelLarge,
+
+                )
+            Text(
+                "${(product.gramms.toFloat() / 100) * product.caloriesPer100Gramms} калл. в ${product.gramms} гр",
+                style = MaterialTheme.typography.labelLarge
+            )
         }
-
-        Text("${(product.gramms.toFloat() / 100) * product.caloriesPer100Gramms} калл. в ${product.gramms} гр")
-
-        Text(product.description, textAlign = TextAlign.Center, fontStyle = FontStyle.Italic)
-
-        /* Column {
-             Icon(Icons.Default.Edit, "edit")
-             Icon(Icons.Default.Delete, "delete")
-         }*/
-
-
+        OutlinedTextField(product.description,
+            { product.description = it },
+            Modifier.fillMaxWidth().padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
+            enabled = false,
+            label = { Text(stringResource(R.string.description)) })
     }
 }
 
@@ -306,21 +288,16 @@ fun FoodDetailDialog(
     var description = remember { mutableStateOf(product.description) }
     val toastShow = remember { mutableStateOf(false) }
     Dialog(
-        onDismissRequest = { showDialog(false) },
-        DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = true
+        onDismissRequest = { showDialog(false) }, DialogProperties(
+            dismissOnBackPress = false, dismissOnClickOutside = true
         )
-    )
-    {
+    ) {
         if (toastShow.value) {
             Toast.makeText(LocalContext.current, R.string.toast_add, Toast.LENGTH_LONG).show()
             toastShow.value = false
         }
         Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
@@ -332,8 +309,7 @@ fun FoodDetailDialog(
                 Text(stringResource(product.productCategory.name))
 
 
-                OutlinedTextField(
-                    caloriesPer100Gramms.intValue.toString(),
+                OutlinedTextField(caloriesPer100Gramms.intValue.toString(),
                     {
                         if (it != "") {
                             caloriesPer100Gramms.intValue = it.toInt()
@@ -345,8 +321,7 @@ fun FoodDetailDialog(
                     leadingIcon = { Icon(Icons.Default.MenuBook, "") },
                     label = { Text(stringResource(R.string.calories_100_gr)) }) // калорий на 100 гр
 
-                OutlinedTextField(
-                    gramms.intValue.toString(),
+                OutlinedTextField(gramms.intValue.toString(),
                     {
                         if (it != "") {
                             gramms.intValue = it.toInt()
@@ -358,34 +333,30 @@ fun FoodDetailDialog(
                     leadingIcon = { Icon(Icons.Default.Scale, "") },
                     label = { Text(stringResource(R.string.gramm)) }) //грамм
 
-                OutlinedTextField(
-                    caloriesSummery.floatValue.toString(),
+                OutlinedTextField(caloriesSummery.floatValue.toString(),
                     { caloriesSummery.floatValue = it.toFloat() },
                     enabled = false,
                     leadingIcon = { Icon(Icons.Default.LocalDining, "") },
                     label = { Text(stringResource(R.string.calories_summary)) }) //общие калории
 
 
-                OutlinedTextField(
-                    description.value,
+                OutlinedTextField(description.value,
                     { description.value = it },
                     minLines = 2,
                     maxLines = 3,
-                    label = { Text(stringResource(R.string.description)) }
-                ) //описание
+                    label = { Text(stringResource(R.string.description)) }) //описание
 
 
                 Button({
-                    if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && !isEdit)
-                        onAcceptProduct(
-                            Product(
-                                productCategory = product.productCategory,
-                                caloriesPer100Gramms.intValue,
-                                caloriesSummery.floatValue,
-                                gramms.intValue,
-                                description.value
-                            )
+                    if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && !isEdit) onAcceptProduct(
+                        Product(
+                            productCategory = product.productCategory,
+                            caloriesPer100Gramms.intValue,
+                            caloriesSummery.floatValue,
+                            gramms.intValue,
+                            description.value
                         )
+                    )
                     else if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && isEdit) {
                         editProduct(
                             Product(
