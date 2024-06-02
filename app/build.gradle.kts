@@ -76,24 +76,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
-    //implementation(libs.plugins.google.dagger.hilt.android)
     implementation ("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha03")
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
-    // Dagger Core
-    /*implementation("com.google.dagger:dagger:2.44")
-    kapt ("com.google.dagger:dagger-compiler:2.44")
-
-// Dagger Android
-    api("com.google.dagger:dagger-android:2.44")
-    api( "com.google.dagger:dagger-android-support:2.44")
-    kapt( "com.google.dagger:dagger-android-processor:2.44")
-
-// Dagger - Hilt
-    implementation ("com.google.dagger:hilt-android:2.44")
-    kapt ("com.google.dagger:hilt-android-compiler:2.44")*/
 
 }
 

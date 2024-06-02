@@ -73,6 +73,7 @@ fun FoodAdd(
 
     val selectedProductType by model.selectedTypeProduct.collectAsState()
     val eatingFoodTime by model.eatingFoodTime.collectAsState()
+
     model.getEatingTimeName(eatingType)
     model.getEatingFoodTime(modelDiary, eatingType)
 

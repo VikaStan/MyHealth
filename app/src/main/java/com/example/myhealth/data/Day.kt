@@ -40,6 +40,8 @@ class Day(
     }
 
     fun updateAllCount(){
+        foodCount=0
+        totalSleep=0f
         for (i in listOf(breakfast, lunch, dinner)) {
             if (i.products.isNotEmpty()) {
                 i.products.forEach {
@@ -95,6 +97,6 @@ enum class FoodTimeType(val n: String){
     Dinner("Dinner")
 }
 class Sleep(
-    var hours: Float, var description: String, var isAlarmed: Boolean
+    var hours: Float=0f, var description: String = "", var isAlarmed: Boolean = false
 )
 

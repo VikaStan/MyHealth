@@ -1,6 +1,7 @@
 package com.example.myhealth.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,11 +18,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,27 +42,22 @@ import androidx.compose.ui.unit.dp
 import com.example.myhealth.R
 import com.example.myhealth.data.Day
 import com.example.myhealth.data.Food
+import com.example.myhealth.data.Product
 import java.time.LocalDate
 
 @Composable
 fun FoodSectionContent(
-    modifier: Modifier = Modifier, eating: Food, goalCalories: Int
+    modifier: Modifier = Modifier, products: SnapshotStateList<Product>, goalCalories: Int
 ) {
-    var cal = 0f
-    eating.products.forEach { product ->
-        cal += product.caloriesPer100Gramms * (product.gramms / 100)
-    }
 
-
-val currentCalories by remember { mutableFloatStateOf(cal) }
-
-Row(
+    val currentCalories = products.fold(0f) { a, b -> a + b.caloriesSummery }
+    Row(
 modifier.fillMaxWidth().padding(8.dp).height(60.dp),
 horizontalArrangement = Arrangement.SpaceAround,
 verticalAlignment = Alignment.CenterVertically
 ) {
     Text(
-        text = " ${stringResource(R.string.products)}: ${eating.products.size}",
+        text = " ${stringResource(R.string.products)}: ${products.size}",
         minLines = 2,
         modifier = modifier.padding(top = 20.dp),
         style = MaterialTheme.typography.bodyLarge,
@@ -70,16 +71,16 @@ verticalAlignment = Alignment.CenterVertically
         if (currentCalories > goalCalories) {
             str =
                 "${stringResource(R.string.calories)} на ${currentCalories - goalCalories} больше "
-            color = Color.Red
+            color = Color.Red.copy(0.75f)
         } else {
             str = "${stringResource(R.string.calories)}: $currentCalories"
-            color = Color.Green
+            color = Color.Green.copy(0.75f)
         }
         LinearProgressIndicator(
             progress = currentCalories / goalCalories,
             color = color,
             strokeCap = StrokeCap.Round,
-            modifier = modifier.padding(2.dp).fillMaxHeight()
+            modifier = modifier.padding(2.dp).height(30.dp).border(1.dp,Color.Black, RoundedCornerShape(16.dp))
         )
 
         Text(
@@ -95,42 +96,7 @@ verticalAlignment = Alignment.CenterVertically
 }
 
 @Composable
-fun ProgressTextIndicator(
-    progress: Float,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var height by remember { mutableStateOf(0.dp) }
-
-    val shape = RoundedCornerShape(8.dp)
-    val density = LocalDensity.current
-    Box(
-        modifier = modifier.background(
-            color = Color.Green,
-            shape = shape,
-        ).clip(shape),
-    ) {
-        Button(
-            modifier = Modifier.fillMaxSize().onSizeChanged {
-                height = density.run { it.height.toDp() }
-            },
-            contentPadding = PaddingValues(16.dp),
-            enabled = false,
-            onClick = onClick,
-        ) {}
-        LinearProgressIndicator(
-            modifier = Modifier.fillMaxWidth().height(height),
-            progress = progress,
-            backgroundColor = Color.Transparent,
-            color = Color.White.copy(alpha = 0.15f),
-        )
-        Text("Каллории", style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
-    }
-}
-
-
-@Composable
 @Preview(showBackground = true)
 fun FoodSectionContentPreview() {
-    FoodSectionContent(Modifier, Day(LocalDate.now()).breakfast, 10000)
+    //FoodSectionContent(Modifier, Day(LocalDate.now()).breakfast.products, 10000)
 }

@@ -31,6 +31,8 @@ import com.example.myhealth.Screens.Screen
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.models.SleepAddViewModel
+import com.example.myhealth.models.StatsViewModel
 import com.example.myhealth.ui.components.DatePickerWithDialog
 import com.example.myhealth.ui.components.ManufacturedDate
 import com.example.myhealth.ui.components.appbar.ActionsMenu
@@ -45,10 +47,12 @@ import kotlinx.coroutines.flow.onEach
 fun MainScreen(
     mainViewModel: MainScreenViewModel = hiltViewModel(),
     diaryViewModel: DiaryViewModel = hiltViewModel(),
-    foodAddViewModel: FoodAddViewModel = hiltViewModel()
+    foodAddViewModel: FoodAddViewModel = hiltViewModel(),
+    sleepAddViewModel: SleepAddViewModel = hiltViewModel(),
+    statsViewModel: StatsViewModel = hiltViewModel()
 ) {
 
-    mainViewModel.initiate(diaryViewModel,foodAddViewModel)
+    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel)
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
     LaunchedEffect(key1 = Unit) {//прослушивание нажатий в upBar
@@ -97,8 +101,10 @@ fun MainScreen(
             .onEach { button ->
                 when (button) {
                     // переход в настройки при срабатывании flow
-                    Screen.SleepAdd.AppBarIcons.Done -> Screen.Diary.showDialog()
-                    Screen.SleepAdd.AppBarIcons.Clear -> navController.popBackStack()
+                    Screen.SleepAdd.AppBarIcons.Back -> {
+                        navController.popBackStack()
+                        sleepAddViewModel.updateSleepList(mainViewModel.diaryModel)
+                    }
                 }
             }
             .launchIn(this)

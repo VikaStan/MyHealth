@@ -37,10 +37,14 @@
     <string name="fish">Fish</string>
     <string name="water">Water</string>
     <string name="add_product_btn">Add Product</string>
+    <string name="add_sleep_btn" translatable="false">Ok</string>
     <string name="cancel_btn">Cancel</string>
     <string name="calories_100_gr">Calories per 100 gramm</string>
     <string name="gramm">Gramm</string>
     <string name="calories_summary">Calories Summary</string>
     <string name="description">description</string>
-    <string name="toast_add">first 2 fields not be changed</string>
+    <string name="toast_add">the fields must be non-zero</string>
+    <string name="hours">hours</string>
+    <string name="wake_up_title">"wake up by "</string>
+    <string name="minutes">minutes</string>
 </resources>

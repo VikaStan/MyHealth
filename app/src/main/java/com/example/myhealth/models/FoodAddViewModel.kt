@@ -5,9 +5,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myhealth.R
 import com.example.myhealth.data.Food
 import com.example.myhealth.data.FoodTimeType
@@ -23,13 +21,12 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
     var foodAddDialog by mutableStateOf(false)
     var foodEditDialog by mutableStateOf(false)
     var eatingTimeName = R.string.breakfast_title
-    var eatingFoodTime = MutableStateFlow( Food(emptyList<Product>().toMutableList(), FoodTimeType.Dinner))
+    var eatingFoodTime =
+        MutableStateFlow(Food(emptyList<Product>().toMutableList(), FoodTimeType.Dinner))
     var products = mutableStateListOf<Product>()
     private var editProductIndex by mutableIntStateOf(0)
 
-    /*@OptIn(ExperimentalMaterial3Api::class)
-    val timePickerState = rememberTimePickerState()
-    val showTimePicker by remember { mutableStateOf(false) }*/
+    var isChange = false
 
     fun getEatingTimeName(eatingType: String?) {
         when (eatingType) {
@@ -48,7 +45,7 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
             else -> eatingFoodTime.value = model.selectedDay.value.lunch
         }
         eatingFoodTime.value.products.forEach {
-            if(!products.contains(it))
+            if (!products.contains(it))
                 products.add(it)
         }
     }
@@ -56,44 +53,52 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
     fun foodAddDialogShow(show: Boolean = true) {
         foodAddDialog = show
     }
+
     fun foodEditDialogShow(show: Boolean = true) {
         foodEditDialog = show
     }
 
-    fun onProductItemSelected(product: Product){
-        selectedTypeProduct.value=product
+    fun onProductItemSelected(product: Product) {
+        selectedTypeProduct.value = product
         foodAddDialogShow()
     }
 
-    fun onDelSwipe(product: Product){
+    fun onDelSwipe(product: Product) {
         products.remove(product)
         eatingFoodTime.value.products.remove(product)
     }
 
-    fun onEditSwipe(product: Product){
+    fun onEditSwipe(product: Product) {
         editProductIndex = eatingFoodTime.value.products.indexOf(product)
-        selectedTypeProduct.value=product
-        foodEditDialog=true
+        selectedTypeProduct.value = product
+        foodEditDialog = true
     }
-    fun addProduct(product: Product){
+
+    fun addProduct(product: Product) {
+        isChange = true
         eatingFoodTime.value.products.add(product)
         foodAddDialogShow(false)
     }
 
-    fun editProduct(product: Product){
+    fun editProduct(product: Product) {
+        isChange = true
         eatingFoodTime.value.products[editProductIndex] = product
         products[editProductIndex] = product
         foodEditDialogShow(false)
     }
 
-    fun updateListProducts(model: DiaryViewModel){
-        when (model.selectedEatTimeName.value) {
-            FoodTimeType.Lunch.n -> model.selectedDay.value.lunch.products = products
-            FoodTimeType.Breakfast.n -> model.selectedDay.value.breakfast.products = products
-            FoodTimeType.Dinner.n -> model.selectedDay.value.dinner.products = products
-            else -> model.selectedDay.value.lunch.products = products
+    fun updateListProducts(model: DiaryViewModel) {
+        if (isChange) {
+            when (model.selectedEatTimeName.value) {
+                FoodTimeType.Lunch.n -> model.selectedDay.value.lunch.products = products
+                FoodTimeType.Breakfast.n -> model.selectedDay.value.breakfast.products = products
+                FoodTimeType.Dinner.n -> model.selectedDay.value.dinner.products = products
+                else -> model.selectedDay.value.lunch.products = products
+            }
+            model.selectedDay.value.updateAllCount()
+            isChange = false
         }
-        model.selectedDay.value.updateAllCount()
     }
+
 
 }

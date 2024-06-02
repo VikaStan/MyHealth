@@ -98,26 +98,16 @@ sealed class Screen(
         title = R.string.sleep_title,
         buttomIcon = Icons.Default.MenuBook,
         isAppBarVisible = true,
-        navigationIcon = Icons.Default.Clear,
+        navigationIcon = Icons.Default.ArrowBack,
         onNavigationIconClick = {
-            _buttons.tryEmit(AppBarIcons.Clear)
+            _buttons.tryEmit(AppBarIcons.Back)
         },
         navigationIconContentDescription = null,
-        actions = listOf(
-            ActionMenuItem.IconMenuItem.AlwaysShown(
-                title = "Done",
-                onClick = {
-                    _buttons.tryEmit(AppBarIcons.Done)
-                },
-                icon = Icons.Filled.Settings,
-                contentDescription = null,
-            )
-        )
+        actions = emptyList()
     ){
         // 1
         enum class AppBarIcons {
-            Clear,
-            Done
+            Back,
         }
 
         // 2

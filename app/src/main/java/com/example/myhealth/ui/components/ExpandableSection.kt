@@ -46,7 +46,7 @@ fun ExpandableSectionTitle(
 
     Row(modifier = modifier.padding(8.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
 
-        Image(icon, contentDescription = "")
+        Icon(icon, contentDescription = "")
         Text(text = title, style = MaterialTheme.typography.headlineSmall)
         Image(
             modifier = Modifier.size(32.dp),

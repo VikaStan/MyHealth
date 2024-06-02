@@ -10,9 +10,13 @@ class MainScreenViewModel @Inject constructor(
 
     lateinit var diaryModel: DiaryViewModel
     lateinit var foodAddViewModel: FoodAddViewModel
-    fun initiate(diaryModel: DiaryViewModel, foodAddViewModel: FoodAddViewModel){
-        this.diaryModel=diaryModel
+    lateinit var sleepAddViewModel: SleepAddViewModel
+    lateinit var statsViewModel: StatsViewModel
+    fun initiate(diaryModel: DiaryViewModel, foodAddViewModel: FoodAddViewModel, sleepAddViewModel: SleepAddViewModel, statsViewModel: StatsViewModel){
+        this.diaryModel= diaryModel
         this.foodAddViewModel = foodAddViewModel
+        this.sleepAddViewModel = sleepAddViewModel
+        this.statsViewModel = statsViewModel
     }
 
     //val navController = rememberNavController()
