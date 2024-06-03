@@ -37,10 +37,10 @@ fun BottomNavGraph(
         modifier = modifier
     ) {
         composable(route = Screen.Diary.route) {
-            Diary(navHostController = navController, model = mainScreenViewModel.diaryModel)
+            Diary(navHostController = navController, model = mainScreenViewModel.diaryModel, mainModel = mainScreenViewModel)
         }
         composable(route = Screen.Stats.route) {
-            Stats(mainScreenViewModel.diaryModel)
+            Stats(mainScreenViewModel)
         }
         composable(route = Screen.Account.route) {
             Account("Account")
@@ -50,12 +50,6 @@ fun BottomNavGraph(
         }
         composable(route = Screen.FoodAdd.route + "/{foodType}",
             arguments = listOf(navArgument("foodType") { type = NavType.StringType })) {
-
-
-           /* val parentEntry = remember  {
-                navController.getBackStackEntry( Screen.Diary.route)
-            }
-            val diaryViewModel: DiaryViewModel = hiltViewModel(parentEntry)*/
             FoodAdd(it.arguments?.getString("foodType"), modifier, mainScreenViewModel.diaryModel)
         }
         composable(route = Screen.SleepAdd.route) {

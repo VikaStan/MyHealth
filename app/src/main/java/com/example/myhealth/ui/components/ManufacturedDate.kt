@@ -107,9 +107,9 @@ fun DatePickerWithDialog(
                             if (chooseDate != null) {
                                 val thisMouth = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate().month == chooseDate.month
                                 if (thisMouth){
-                                    model.selected( (chooseDate.dayOfMonth + chooseDate.minusMonths(1).month.length(chooseDate.isLeapYear))-1 )
+                                    model.onSelectedDay( (chooseDate.dayOfMonth + chooseDate.minusMonths(1).month.length(chooseDate.isLeapYear))-1 )
                                 }
-                                else model.selected(   chooseDate.dayOfMonth-1 )
+                                else model.onSelectedDay(   chooseDate.dayOfMonth-1 )
                             }
                         }
                     ) {

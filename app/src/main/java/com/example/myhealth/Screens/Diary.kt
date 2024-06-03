@@ -38,6 +38,7 @@ import com.example.myhealth.data.FoodTimeType
 import com.example.myhealth.data.Product
 import com.example.myhealth.data.Sleep
 import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.ui.components.CalendarItem
 import com.example.myhealth.ui.components.DatePickerWithDialog
 import com.example.myhealth.ui.components.ExpandableSection
@@ -53,10 +54,13 @@ import kotlinx.coroutines.launch
 fun Diary(
     modifier: Modifier = Modifier,
     model: DiaryViewModel = hiltViewModel(),
+    mainModel: MainScreenViewModel,
     navHostController: NavHostController,
 ) {
 
     model.navHostController = navHostController
+    model.getDayData(mainModel.days,mainModel.selectedDayIndex.collectAsState(), mainModel::selected)
+
 
     if (Screen.Diary.dialog.value) DatePickerWithDialog(modifier, model)
 
@@ -86,7 +90,7 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
             CalendarItem(
                 modifier = modifier,
                 onItemClick = {
-                    (model::selected)(dayList.indexOf(day))
+                    model.onSelectedDay(dayList.indexOf(day))
                     coroutineScope.launch() {
                         listState.animateScrollToItem(selectedDayIndex)
                     }

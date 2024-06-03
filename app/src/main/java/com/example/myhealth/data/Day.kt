@@ -31,7 +31,7 @@ class Day(
         FoodTimeType.Dinner
     ),
     var bedTime: MutableList<Sleep> = mutableListOf(
-        Sleep(hours = 9f, " ", true)
+        Sleep(hours = 1f, " ", true)
     )
 ) {
 
@@ -42,6 +42,7 @@ class Day(
     fun updateAllCount(){
         foodCount=0
         totalSleep=0f
+        totalCalories=0
         for (i in listOf(breakfast, lunch, dinner)) {
             if (i.products.isNotEmpty()) {
                 i.products.forEach {

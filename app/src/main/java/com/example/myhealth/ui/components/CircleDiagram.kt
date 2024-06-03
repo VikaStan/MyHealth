@@ -22,7 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,9 +46,9 @@ fun ActivityRings(
     ) {
         // Colors for each ring
         val colors = listOf(
-            Color.Red.copy(0.75f),
-            Color.Green.copy(0.75f),
-            Color.Blue.copy(0.75f)
+            Color.Red,
+            Color.Green,
+            Color.Blue
         )
         val icons = listOf(
             Icons.Default.LocalFireDepartment,
@@ -78,20 +80,26 @@ fun ActivityRings(
                     color = colors[i].copy(alpha = 0.35f),
                     center = center,
                     radius = radii[i],
-                    style = Stroke(width = strokeWidth)
+                    style = Stroke(width = strokeWidth,)
                 )
             }
 
             // Draw the progress rings
             for (i in radii.indices) {
                 drawArc(
-                    color = colors[i],
+                    brush = Brush.sweepGradient( // !!! that what
+                        0f to Color.Transparent,
+                        0.9f to colors[i],
+                        0.91f to colors[i], // there was a problem with start of the gradient, maybe there way to solve it better
+                        1f to colors[i]
+                    ),
+                    //color = colors[i],
                     startAngle = -90f,
                     sweepAngle = 360 * progresses[i],
                     useCenter = false,
                     topLeft = Offset(center.x - radii[i], center.y - radii[i]),
                     size = Size(radii[i] * 2, radii[i] * 2),
-                    style = Stroke(width = strokeWidth)
+                    style = Stroke(width = strokeWidth,)
                 )
             }
         }

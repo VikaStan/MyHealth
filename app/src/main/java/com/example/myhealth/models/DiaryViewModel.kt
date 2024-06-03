@@ -1,5 +1,8 @@
 package com.example.myhealth.models
 
+import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.State
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.myhealth.Screens.Screen
@@ -29,19 +32,15 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
     )
     var selectedEatTimeName = MutableStateFlow("")
 
-    init {
+    var onSelectedDay:(Int)->Unit = {}
+    fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect:(Int) -> Unit){
+        this.days.value=days
+        this.selectedDayIndex.value=selectedDayIndex.value
+        this.selectedDay.value= days[selectedDayIndex.value]
+        this.onSelectedDay=onSelect
         selectedDay.value.updateAllCount()
     }
 
-    fun selected(index: Int) {
-        updateDataInDayList()
-        selectedDayIndex.value = index
-        selectedDay.value = days.value[index]
-        selectedDay.value.breakfast = days.value[index].breakfast
-        selectedDay.value.lunch = days.value[index].lunch
-        selectedDay.value.dinner = days.value[index].dinner
-        selectedDay.value.updateAllCount()
-    }
 
     fun onAddFoodBtnClick(foodTimeName: String) {
         navHostController.navigate(Screen.FoodAdd.route + "/${foodTimeName}")
@@ -76,9 +75,10 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
             list.add(
                 Day(
                     date = day,
-                    foodCount = 1, //получать с базы
+                    foodCount = 2, //получать с базы
                     totalCalories = 0, // рассчитывать и получать с бд
                     //рассчитывать 2 параметра еще
+                    goalSleep = 10f
                 )
             )
         }
