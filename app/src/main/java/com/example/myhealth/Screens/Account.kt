@@ -2,15 +2,18 @@ package com.example.myhealth.Screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.myhealth.models.AccountViewModel
+import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
 
 @Composable
-fun Account(name: String, modifier: Modifier = Modifier) {
+fun Account(
+    mainModel: MainScreenViewModel,
+    model: AccountViewModel = mainModel.accountViewModel
+) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        text = "Hello !",
     )
 }
 
@@ -18,6 +21,6 @@ fun Account(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun AccountPreview() {
     MyHealthTheme {
-        Account("Account")
+        //Account("Account")
     }
 }

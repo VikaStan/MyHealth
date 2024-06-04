@@ -1,12 +1,16 @@
 package com.example.myhealth.models
 
+import android.content.Context
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import com.example.myhealth.R
 import com.example.myhealth.data.Day
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +18,10 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.inject.Inject
-import kotlin.math.max
 
 @HiltViewModel
 class StatsViewModel @Inject constructor() : ViewModel() {
+     lateinit var context : Context
     var selectedDay = mutableStateOf(Day(Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()))
     var days = mutableStateListOf<Day>()
     var daysFiltered = mutableStateListOf<Day>()
@@ -30,17 +34,22 @@ class StatsViewModel @Inject constructor() : ViewModel() {
     var strike = mutableIntStateOf(0)
     var bestStrike = mutableIntStateOf(0)
 
+    var avrCount = mutableStateListOf<Any>()
+    var avrCalories = mutableStateListOf<Any>()
 
     val progressCalories =
         mutableFloatStateOf(selectedDay.value.totalCalories.toFloat() / selectedDay.value.goalCalories)
     val progressSleep =
         mutableFloatStateOf(selectedDay.value.totalSleep / selectedDay.value.goalSleep)
     var onSelectedDay: (Int) -> Unit = {}
-    fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect: (Int) -> Unit) {
+    fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect: (Int) -> Unit, context: Context) {
+        this.context=context
         this.days.clear()
+        this.avrCalories.clear()
+        this.avrCount.clear()
         days.toCollection(this.days)
-        strike.intValue = 0
-        bestStrike.intValue = 0
+        this.strike.intValue = 0
+        this.bestStrike.intValue = 0
         this.selectedDayIndex.value = selectedDayIndex.value
         this.selectedDay.value = days[selectedDayIndex.value]
         this.onSelectedDay = onSelect
@@ -81,22 +90,66 @@ class StatsViewModel @Inject constructor() : ViewModel() {
         updateProgress()
     }
 
-    fun updateProgress() {
+    private fun calculateAverrageParams() {
+        val breakfastProductCount =
+            if (days.count { it.breakfast.products.isNotEmpty() } != 0) days.fold(
+                0
+            ) { a, b -> a + b.breakfast.products.size } / days.count { it.breakfast.products.isNotEmpty() } else context.resources.getString(
+                R.string.no_data
+            )
+
+
+        val lunchProductCount =
+            if (daysFiltered.count { it.lunch.products.isNotEmpty() } != 0)
+                days.fold(0) { a, b -> a + b.lunch.products.size } / days.count { it.lunch.products.isNotEmpty() } else context.resources.getString(
+                R.string.no_data
+            )
+
+        val dinnerProductCount =
+            if (days.count { it.dinner.products.isNotEmpty() } != 0) days.fold(0) { a, b -> a + b.dinner.products.size } / days.count { it.dinner.products.isNotEmpty() } else context.resources.getString(
+                R.string.no_data
+            )
+
+
+        val breakfastCalories =
+            if (days.count { it.breakfast.products.isNotEmpty() } != 0) days.fold(0f) { a, b -> a + b.breakfast.getFoodTimeCalories() } / days.count { it.breakfast.products.isNotEmpty() } else context.resources.getString(
+                R.string.no_data
+            )
+
+
+        val lunchCalories =
+            if (days.count { it.lunch.products.isNotEmpty() } != 0) days.fold(0f) { a, b -> a + b.lunch.getFoodTimeCalories() } / days.count { it.lunch.products.isNotEmpty() } else context.resources.getString(
+                R.string.no_data
+            )
+
+
+        val dinnerCalories =
+            if (days.count { it.dinner.products.isNotEmpty() } != 0) days.fold(0f) { a, b -> a + b.dinner.getFoodTimeCalories() } / days.count { it.dinner.products.isNotEmpty() } else context.resources.getString(
+                R.string.no_data
+
+            )
+
+        listOf(breakfastProductCount, lunchProductCount, dinnerProductCount).toCollection(avrCount)
+        listOf(breakfastCalories, lunchCalories, dinnerCalories).toCollection(avrCalories)
+    }
+
+    private fun updateProgress() {
         progressCalories.floatValue = (daysFiltered.fold(0) { a, b -> a + b.totalCalories }
             .toFloat() / daysFiltered.size) / selectedDay.value.goalCalories
         progressSleep.floatValue = (daysFiltered.fold(0f) { a, b -> a + b.totalSleep }
             .toFloat() / daysFiltered.size) / selectedDay.value.goalSleep
-
-        var maxVal = mutableListOf(0)
-        days.forEach {
+        val maxVal = emptyList<Int>().toMutableList()
+        daysFiltered.forEach {
             if (it.isStrike) {
                 strike.intValue++
             } else {
+                if (!maxVal.contains(strike.intValue)&&strike.intValue!=0)
+                    maxVal.add(strike.intValue)
                 strike.intValue = 0
-                maxVal.add(strike.intValue)
             }
         }
-        bestStrike.intValue = maxVal.max()
+        bestStrike.intValue = if (maxVal.isNotEmpty()) maxVal.max() else strike.intValue
+        //calculateAverrageParams()
     }
 
     private fun getListSize(): Int {

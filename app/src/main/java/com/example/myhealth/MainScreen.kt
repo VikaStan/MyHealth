@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myhealth.Screens.Screen
+import com.example.myhealth.models.AccountViewModel
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
@@ -49,10 +50,11 @@ fun MainScreen(
     diaryViewModel: DiaryViewModel = hiltViewModel(),
     foodAddViewModel: FoodAddViewModel = hiltViewModel(),
     sleepAddViewModel: SleepAddViewModel = hiltViewModel(),
-    statsViewModel: StatsViewModel = hiltViewModel()
+    statsViewModel: StatsViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
 
-    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel)
+    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel, accountViewModel)
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
     LaunchedEffect(key1 = Unit) {//прослушивание нажатий в upBar

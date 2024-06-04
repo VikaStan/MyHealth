@@ -52,5 +52,6 @@
     <string name="avr_calories_title">Средняя калорийность за прием пищи</string>
     <string name="strike_title">Серия</string>
     <string name="best_strike">Лучшая серия</string>
+    <string name="no_data">Нет данных</string>
 
 </resources>

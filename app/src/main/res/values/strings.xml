@@ -53,4 +53,5 @@
     <string name="avr_calories_title">Averrage calories</string>
     <string name="strike_title">Strikes</string>
     <string name="best_strike">Best Strike</string>
+    <string name="no_data">No data</string>
 </resources>

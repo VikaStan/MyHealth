@@ -20,6 +20,7 @@ class MainScreenViewModel @Inject constructor(
     lateinit var foodAddViewModel: FoodAddViewModel
     lateinit var sleepAddViewModel: SleepAddViewModel
     lateinit var statsViewModel: StatsViewModel
+    lateinit var accountViewModel: AccountViewModel
 
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()
     var days =  mutableStateListOf<Day>()
@@ -40,12 +41,14 @@ class MainScreenViewModel @Inject constructor(
         diaryModel: DiaryViewModel,
         foodAddViewModel: FoodAddViewModel,
         sleepAddViewModel: SleepAddViewModel,
-        statsViewModel: StatsViewModel
+        statsViewModel: StatsViewModel,
+        accountViewModel: AccountViewModel
     ) {
         this.diaryModel = diaryModel
         this.foodAddViewModel = foodAddViewModel
         this.sleepAddViewModel = sleepAddViewModel
         this.statsViewModel = statsViewModel
+        this.accountViewModel = accountViewModel
     }
 
     private fun getListSize(): Int {
