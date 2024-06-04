@@ -32,7 +32,7 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
     )
     var selectedEatTimeName = MutableStateFlow("")
 
-    var onSelectedDay:(Int)->Unit = {}
+    var onSelectedDay :(Int)->Unit = {}
     fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect:(Int) -> Unit){
         this.days.value=days
         this.selectedDayIndex.value=selectedDayIndex.value

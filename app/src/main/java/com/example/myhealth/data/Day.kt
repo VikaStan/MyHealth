@@ -11,6 +11,7 @@ class Day(
     var goalCalories: Int = 1000,
     var totalSleep: Float = 0f,
     var goalSleep: Float = 8f,
+    var isStrike: Boolean = false,
 
     var breakfast: Food = Food(
         products = mutableListOf(
@@ -55,6 +56,7 @@ class Day(
         bedTime.forEach { sleep ->
             totalSleep += sleep.hours
         }
+        isStrike = totalSleep<=goalSleep && totalCalories<=goalCalories
     }
     fun dayOfWeekToString() = when (this.date.dayOfWeek.value) {
         1 -> R.string.mon
@@ -90,7 +92,13 @@ class Day(
 class Food(
     var products: MutableList<Product>,
     val foodTimeType: FoodTimeType
-)
+){
+    fun getFoodTimeCalories():Float{
+        var summ=0f
+        products.forEach { summ+=it.caloriesPer100Gramms/100*it.gramms }
+        return summ
+    }
+}
 
 enum class FoodTimeType(val n: String){
     Breakfast("Breakfast"),

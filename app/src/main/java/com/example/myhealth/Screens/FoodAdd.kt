@@ -51,9 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myhealth.R
-import com.example.myhealth.data.Food
 import com.example.myhealth.data.FoodTimeType
 import com.example.myhealth.data.Product
 import com.example.myhealth.data.ProductType
@@ -101,7 +99,7 @@ fun FoodAdd(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        FoodSection(model, eatingFoodTime)
+        FoodSection(Modifier, model::onProductItemSelected, eatingFoodTime.products)
 
         //TODO список выбранных продуктов
         FoodDetailList(model.products, model::onEditSwipe, model::onDelSwipe)
@@ -110,10 +108,12 @@ fun FoodAdd(
 
 @Composable
 fun FoodSection(
-    model: FoodAddViewModel, currEatingFoodType: Food
+    modifier: Modifier = Modifier,
+    onProductItemSelected: (Product) -> Unit,
+    products: MutableList<Product>
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3), modifier = Modifier.padding(8.dp).background(
+        columns = GridCells.Fixed(3), modifier = modifier.padding(8.dp).background(
             color = MaterialTheme.colorScheme.secondaryContainer.copy(
                 alpha = .50f
             ), shape = RoundedCornerShape(8.dp)
@@ -137,9 +137,8 @@ fun FoodSection(
             item {
 
                 Box(contentAlignment = Alignment.TopEnd) {
-                    val count =
-                        currEatingFoodType.products.count { it.productCategory == productList }
-                    FoodSectionItem(productList, model, count)
+                    val count = products.count { it.productCategory == productList }
+                    FoodSectionItem(productList, onProductItemSelected, count)
                     if (count != 0) {
                         Text(
                             count.toString(),
@@ -153,11 +152,7 @@ fun FoodSection(
                                     )
                                 )
                         )
-                    }/*Icon(Icons.Default.Cancel,
-                        "",modifier = Modifier.padding(top = 6.dp, end = 8.dp).clip(
-                        CircleShape
-                    )
-                       .clickable { })*/
+                    }
                 }
 
             }
@@ -167,14 +162,18 @@ fun FoodSection(
 }
 
 @Composable
-fun FoodSectionItem(productType: ProductType, model: FoodAddViewModel, count: Int) {
+fun FoodSectionItem(
+    productType: ProductType,
+    onProductItemSelected: (Product) -> Unit,
+    count: Int
+) {
     val color = if (count > 0) Color.Green.copy(alpha = 0.8f) else Color.Transparent
     Column(
         modifier = Modifier.fillMaxWidth().padding(4.dp)
             .border(2.dp, color = Color.Black, RoundedCornerShape(8.dp)).background(
                 color = color, shape = RoundedCornerShape(8.dp)
             ).clip(RoundedCornerShape(8.dp))
-            .clickable { model.onProductItemSelected(Product(productCategory = productType)) },
+            .clickable { onProductItemSelected(Product(productCategory = productType)) },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 

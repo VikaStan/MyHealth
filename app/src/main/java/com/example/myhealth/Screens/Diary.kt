@@ -13,16 +13,10 @@ import androidx.compose.material.icons.twotone.BreakfastDining
 import androidx.compose.material.icons.twotone.DinnerDining
 import androidx.compose.material.icons.twotone.LunchDining
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Recomposer
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -33,7 +27,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.myhealth.R
 import com.example.myhealth.data.Day
-import com.example.myhealth.data.Food
 import com.example.myhealth.data.FoodTimeType
 import com.example.myhealth.data.Product
 import com.example.myhealth.data.Sleep
@@ -62,11 +55,13 @@ fun Diary(
     model.getDayData(mainModel.days,mainModel.selectedDayIndex.collectAsState(), mainModel::selected)
 
 
-    if (Screen.Diary.dialog.value) DatePickerWithDialog(modifier, model)
+    if (Screen.Diary.dialog.value) DatePickerWithDialog(modifier, model.selectedDay,mainModel::selected)
 
     LazyColumn(modifier.padding(horizontal = 8.dp)) {
+        var items= SnapshotStateList<Day>()
+        model.days.value.toCollection(items)
         item {
-            CalendarList(modifier, model)
+            CalendarList(modifier,items ,model.selectedDayIndex, model.onSelectedDay)
         }
         item { // заполнение приемов пищи/сна
             val selectedDay = model.selectedDay.collectAsState()
@@ -76,9 +71,8 @@ fun Diary(
 }
 
 @Composable
-fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
-    val dayList by model.days.collectAsState()
-    val selectedDayIndex by model.selectedDayIndex.collectAsState()
+fun CalendarList(modifier: Modifier, days: SnapshotStateList<Day>,selectDayIndex: MutableStateFlow<Int>,onSelectedDay: (Int)-> Unit) {
+    val selectedDayIndex by selectDayIndex.collectAsState()
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = selectedDayIndex)
     val coroutineScope = rememberCoroutineScope()
     //календарь
@@ -86,17 +80,17 @@ fun CalendarList(modifier: Modifier, model: DiaryViewModel) {
         modifier.padding(8.dp),
         state = listState
     ) {
-        items(dayList) { day ->
+        items(days) { day ->
             CalendarItem(
                 modifier = modifier,
                 onItemClick = {
-                    model.onSelectedDay(dayList.indexOf(day))
+                    onSelectedDay(days.indexOf(day))
                     coroutineScope.launch() {
                         listState.animateScrollToItem(selectedDayIndex)
                     }
                 },
                 day = day,
-                isSelected = dayList.indexOf(day) == selectedDayIndex
+                isSelected = days.indexOf(day) == selectedDayIndex
             )
             VerticalDivider(thickness = 10.dp)
         }

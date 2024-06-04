@@ -139,9 +139,7 @@ sealed class Screen(
         val dialog = mutableStateOf(false)
 
         fun showDialog(){
-            if (dialog.value)
-                dialog.value=false
-            else dialog.value=true
+            dialog.value = !dialog.value
         }
     }
     object Account : Screen(

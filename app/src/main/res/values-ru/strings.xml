@@ -46,5 +46,11 @@
     <string name="hours">часов</string>
     <string name="wake_up_title">"пробуждение по "</string>
     <string name="minutes">минут</string>
+    <string name="day_btn">День</string>
+    <string name="week_btn">Неделя</string>
+    <string name="mounth_btn">30 дней</string>
+    <string name="avr_calories_title">Средняя калорийность за прием пищи</string>
+    <string name="strike_title">Серия</string>
+    <string name="best_strike">Лучшая серия</string>
 
 </resources>

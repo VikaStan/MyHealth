@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,8 +41,7 @@ fun ActivityRings(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
+            .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
         // Colors for each ring
@@ -103,7 +103,7 @@ fun ActivityRings(
                 )
             }
         }
-        Column(
+        /*Column(
             modifier.size((componentSize * 0.65f).dp).background(
                 androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer.copy(
                     0.5f
@@ -120,7 +120,7 @@ fun ActivityRings(
             }
 
 
-        }
+        }*/
 
     }
 }

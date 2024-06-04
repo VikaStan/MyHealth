@@ -37,7 +37,7 @@
     <string name="fish">Fish</string>
     <string name="water">Water</string>
     <string name="add_product_btn">Add Product</string>
-    <string name="add_sleep_btn" translatable="false">Ok</string>
+    <string name="add_sleep_btn" translatable="false">Oк</string>
     <string name="cancel_btn">Cancel</string>
     <string name="calories_100_gr">Calories per 100 gramm</string>
     <string name="gramm">Gramm</string>
@@ -47,4 +47,10 @@
     <string name="hours">hours</string>
     <string name="wake_up_title">"wake up by "</string>
     <string name="minutes">minutes</string>
+    <string name="day_btn">Day</string>
+    <string name="week_btn">Week</string>
+    <string name="mounth_btn">30 days</string>
+    <string name="avr_calories_title">Averrage calories</string>
+    <string name="strike_title">Strikes</string>
+    <string name="best_strike">Best Strike</string>
 </resources>
