@@ -1,4 +1,4 @@
-package com.example.myhealth
+package com.example.myhealth.Screens
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,24 +19,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myhealth.Screens.Screen
+import com.example.myhealth.BottomNavGraph
 import com.example.myhealth.models.AccountViewModel
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.models.SleepAddViewModel
 import com.example.myhealth.models.StatsViewModel
-import com.example.myhealth.ui.components.DatePickerWithDialog
-import com.example.myhealth.ui.components.ManufacturedDate
 import com.example.myhealth.ui.components.appbar.ActionsMenu
 import com.example.myhealth.ui.components.appbar.AppBarState
 import com.example.myhealth.ui.components.appbar.rememberAppBarState
@@ -57,6 +53,7 @@ fun MainScreen(
     mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel, accountViewModel)
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
+    val inSystem = mainViewModel.inSystem.collectAsState()
     LaunchedEffect(key1 = Unit) {//прослушивание нажатий в upBar
         // 2
         Screen.Diary.buttons
@@ -122,7 +119,9 @@ fun MainScreen(
 
 
     ) {
+        if(inSystem.value)
         BottomNavGraph(navController = navController, modifier = Modifier.padding(it), mainViewModel)
+        else BottomNavGraph(navController = navController, modifier = Modifier.padding(it), mainViewModel, Screen.Account.route)
     }
 }
 

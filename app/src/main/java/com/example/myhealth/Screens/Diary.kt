@@ -58,7 +58,7 @@ fun Diary(
     if (Screen.Diary.dialog.value) DatePickerWithDialog(modifier, model.selectedDay,mainModel::selected)
 
     LazyColumn(modifier.padding(horizontal = 8.dp)) {
-        var items= SnapshotStateList<Day>()
+        val items= SnapshotStateList<Day>()
         model.days.value.toCollection(items)
         item {
             CalendarList(modifier,items ,model.selectedDayIndex, model.onSelectedDay)

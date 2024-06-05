@@ -54,4 +54,13 @@
     <string name="strike_title">Strikes</string>
     <string name="best_strike">Best Strike</string>
     <string name="no_data">No data</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="sex">Sex</string>
+    <string name="name">Name</string>
+    <string name="Age">Age</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
+    <string name="goal_calories">Goal calories</string>
+    <string name="goal_sleep">Goal sleep</string>
 </resources>

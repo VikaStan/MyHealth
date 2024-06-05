@@ -36,7 +36,7 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
     fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect:(Int) -> Unit){
         this.days.value=days
         this.selectedDayIndex.value=selectedDayIndex.value
-        this.selectedDay.value= days[selectedDayIndex.value]
+        this.selectedDay.value = days[selectedDayIndex.value]
         this.onSelectedDay=onSelect
         selectedDay.value.updateAllCount()
     }

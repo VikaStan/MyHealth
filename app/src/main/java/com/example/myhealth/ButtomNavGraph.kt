@@ -2,6 +2,7 @@ package com.example.myhealth
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,10 +31,11 @@ fun BottomNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     mainScreenViewModel: MainScreenViewModel = hiltViewModel(),
+    start:String = Screen.Diary.route
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Diary.route,
+        startDestination = start,
         modifier = modifier
     ) {
         composable(route = Screen.Diary.route) {
@@ -43,7 +45,7 @@ fun BottomNavGraph(
             Stats(mainScreenViewModel)
         }
         composable(route = Screen.Account.route) {
-            Account("Account")
+            Account(mainScreenViewModel)
         }
         composable(route = Screen.Settings.route) {
             Settings(onBackClick = { navController.popBackStack() })

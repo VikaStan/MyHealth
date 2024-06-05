@@ -37,6 +37,6 @@ fun Settings(onBackClick: () -> Unit,
 @Composable
 fun SettingsPreview() {
     MyHealthTheme {
-        Account("Settings")
+        //Account("Settings")
     }
 }

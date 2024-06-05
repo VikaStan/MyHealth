@@ -6,4 +6,5 @@ plugins {
     //alias(libs.plugins.org.jetbrains.kotlin.kapt) apply false
     kotlin("kapt") version "1.9.0"
     id("com.google.dagger.hilt.android") version "2.44" apply false
+    alias(libs.plugins.devtoolsKsp)
 }

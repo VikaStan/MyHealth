@@ -5,7 +5,7 @@ plugins {
     //alias(libs.plugins.org.jetbrains.kotlin.kapt)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-
+    alias(libs.plugins.devtoolsKsp)
 }
 
 android {
@@ -76,12 +76,20 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
-    implementation ("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+    implementation ("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha03")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.1")
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation (libs.androidx.runtime.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    annotationProcessor(libs.androidx.room.room.compiler)
+    ksp(libs.androidx.room.room.compiler)
 
 }
 

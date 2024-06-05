@@ -1,9 +1,13 @@
 package com.example.myhealth.models
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.myhealth.room.PersonRepository
+import com.example.myhealth.room.PersonRoomDatabase
 import com.example.myhealth.data.Day
+import com.example.myhealth.data.Person
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.Instant
@@ -14,8 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
+    application: Application
 ) : ViewModel() {
 
+    private val repository: PersonRepository
     lateinit var diaryModel: DiaryViewModel
     lateinit var foodAddViewModel: FoodAddViewModel
     lateinit var sleepAddViewModel: SleepAddViewModel
@@ -23,7 +29,13 @@ class MainScreenViewModel @Inject constructor(
     lateinit var accountViewModel: AccountViewModel
 
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()
-    var days =  mutableStateListOf<Day>()
+    var days = mutableStateListOf<Day>()
+        get() {
+            field.map { it.goalCalories= person.value?.caloriesGoal?.toInt()?:1000
+            it.goalSleep= person.value?.sleepGoal?:8f
+            }
+            return field
+        }
     var selectedDayIndex = MutableStateFlow(getListSize() - 1)
     var selectedDay = MutableStateFlow(
         Day(
@@ -33,10 +45,31 @@ class MainScreenViewModel @Inject constructor(
             //рассчитывать 2 параметра еще
         )
     )
+    var person: MutableLiveData<Person>
 
     init {
+        val userDb = PersonRoomDatabase.getInstance(application)
+        val personDao = userDb.personDao()
+        val dayDao = userDb.dayDao()
+        repository = PersonRepository(personDao, dayDao)
+        person = repository.person
         initDayList(getListSize()).toCollection(days)
     }
+
+    var inSystem = MutableStateFlow(false)
+        set(value) {
+            days.clear()
+            initDayList(getListSize()).toCollection(days)
+            field = value
+        }
+
+
+
+    init {
+
+            initDayList(getListSize()).toCollection(days)
+    }
+
     fun initiate(
         diaryModel: DiaryViewModel,
         foodAddViewModel: FoodAddViewModel,
@@ -49,6 +82,12 @@ class MainScreenViewModel @Inject constructor(
         this.sleepAddViewModel = sleepAddViewModel
         this.statsViewModel = statsViewModel
         this.accountViewModel = accountViewModel
+        //получать, в системе ли
+    }
+
+    fun updatePersonDate(person: Person) {
+        this.person.value =  person
+        inSystem.value = true
     }
 
     private fun getListSize(): Int {
@@ -67,9 +106,10 @@ class MainScreenViewModel @Inject constructor(
             list.add(
                 Day(
                     date = day,
-                    foodCount = 1, //получать с базы
-                    totalCalories = 0, // рассчитывать и получать с бд
-                    //рассчитывать 2 параметра еще
+                    foodCount = 1,
+                    totalCalories = 0,
+                    goalSleep = person.value?.sleepGoal ?: 8f,
+                    goalCalories =  person.value?.caloriesGoal?.toInt() ?: 1000
                 )
             )
         }

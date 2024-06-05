@@ -1,40 +1,48 @@
 package com.example.myhealth.data
 
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.example.myhealth.room.Converters.DateConverter
 import com.example.myhealth.R
+import org.jetbrains.annotations.NotNull
 import java.time.LocalDate
 import java.util.Calendar
-
+@Entity(tableName = "days")
 class Day(
+    @PrimaryKey()
+    @NotNull
+    @TypeConverters(DateConverter::class)
     val date: LocalDate,
     var foodCount: Int = 0,
     var totalCalories: Int = 0,
     var goalCalories: Int = 1000,
     var totalSleep: Float = 0f,
     var goalSleep: Float = 8f,
-    var isStrike: Boolean = false,
-
+    var isStrike: Boolean = false,) {
+@Ignore
     var breakfast: Food = Food(
         products = mutableListOf(
-            Product(Product.Soup, 100, 100f,10, "Покушал хорошо, все гуд")
         ),
         FoodTimeType.Breakfast
-    ),
+    )
+    @Ignore
     var lunch: Food = Food(
         products = mutableListOf(
-            Product(Product.Eggs, 100, 100f, 10,"")
         ),
         FoodTimeType.Lunch
-    ),
+    )
+    @Ignore
     var dinner: Food = Food(
         products = mutableListOf(
-            Product(Product.Eggs, 100, 100f, 10,"")
         ),
         FoodTimeType.Dinner
-    ),
-    var bedTime: MutableList<Sleep> = mutableListOf(
-        Sleep(hours = 1f, " ", true)
     )
-) {
+    @Ignore
+    var bedTime: MutableList<Sleep> = mutableListOf(
+    )
+
 
     init {
         updateAllCount()
@@ -56,7 +64,7 @@ class Day(
         bedTime.forEach { sleep ->
             totalSleep += sleep.hours
         }
-        isStrike = totalSleep<=goalSleep && totalCalories<=goalCalories
+        isStrike = if (bedTime.isNotEmpty() && foodCount>=3) totalSleep<=goalSleep && totalCalories<=goalCalories else false
     }
     fun dayOfWeekToString() = when (this.date.dayOfWeek.value) {
         1 -> R.string.mon

@@ -53,7 +53,8 @@ fun Stats(
         mainModel.days,
         mainModel.selectedDayIndex.collectAsState(),
         mainModel::selected,
-        LocalContext.current
+        LocalContext.current,
+        mainModel.person
     )
     LaunchedEffect(key1 = Unit) {
         model.onDateSelection(StatsViewModel.DateSelection.Day)

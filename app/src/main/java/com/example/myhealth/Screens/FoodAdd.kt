@@ -312,7 +312,7 @@ fun FoodDetailDialog(
                 OutlinedTextField(caloriesPer100Gramms.intValue.toString(),
                     {
                         if (it != "") {
-                            caloriesPer100Gramms.intValue = it.toInt()
+                            caloriesPer100Gramms.intValue = Integer.parseInt(it)
                             caloriesSummery.floatValue =
                                 ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
                         }
@@ -324,7 +324,7 @@ fun FoodDetailDialog(
                 OutlinedTextField(gramms.intValue.toString(),
                     {
                         if (it != "") {
-                            gramms.intValue = it.toInt()
+                            gramms.intValue = Integer.parseInt(it)
                             caloriesSummery.floatValue =
                                 ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
                         }

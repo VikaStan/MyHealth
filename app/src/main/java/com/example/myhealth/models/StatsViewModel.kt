@@ -9,9 +9,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myhealth.R
 import com.example.myhealth.data.Day
+import com.example.myhealth.data.Person
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.Instant
@@ -22,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StatsViewModel @Inject constructor() : ViewModel() {
      lateinit var context : Context
+    lateinit var person: MutableLiveData<Person>
     var selectedDay = mutableStateOf(Day(Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()))
     var days = mutableStateListOf<Day>()
     var daysFiltered = mutableStateListOf<Day>()
@@ -42,7 +45,7 @@ class StatsViewModel @Inject constructor() : ViewModel() {
     val progressSleep =
         mutableFloatStateOf(selectedDay.value.totalSleep / selectedDay.value.goalSleep)
     var onSelectedDay: (Int) -> Unit = {}
-    fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect: (Int) -> Unit, context: Context) {
+    fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect: (Int) -> Unit, context: Context,person: MutableLiveData<Person>) {
         this.context=context
         this.days.clear()
         this.avrCalories.clear()
@@ -55,6 +58,7 @@ class StatsViewModel @Inject constructor() : ViewModel() {
         this.onSelectedDay = onSelect
         selectedDay.value.updateAllCount()
         updateProgress()
+        this.person=person
     }
 
     fun onDateSelection(sel: DateSelection) {
