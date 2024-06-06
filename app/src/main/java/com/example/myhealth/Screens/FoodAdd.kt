@@ -58,6 +58,8 @@ import com.example.myhealth.data.ProductType
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
+import com.example.myhealth.utility.parseFloat
+import com.example.myhealth.utility.parseInt
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
 
@@ -312,7 +314,8 @@ fun FoodDetailDialog(
                 OutlinedTextField(caloriesPer100Gramms.intValue.toString(),
                     {
                         if (it != "") {
-                            caloriesPer100Gramms.intValue = Integer.parseInt(it)
+
+                            caloriesPer100Gramms.intValue = it.parseInt(it)
                             caloriesSummery.floatValue =
                                 ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
                         }
@@ -324,7 +327,7 @@ fun FoodDetailDialog(
                 OutlinedTextField(gramms.intValue.toString(),
                     {
                         if (it != "") {
-                            gramms.intValue = Integer.parseInt(it)
+                            gramms.intValue = it.parseInt(it)
                             caloriesSummery.floatValue =
                                 ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
                         }
@@ -334,7 +337,7 @@ fun FoodDetailDialog(
                     label = { Text(stringResource(R.string.gramm)) }) //грамм
 
                 OutlinedTextField(caloriesSummery.floatValue.toString(),
-                    { caloriesSummery.floatValue = it.toFloat() },
+                    { caloriesSummery.floatValue = it.parseFloat(it) },
                     enabled = false,
                     leadingIcon = { Icon(Icons.Default.LocalDining, "") },
                     label = { Text(stringResource(R.string.calories_summary)) }) //общие калории

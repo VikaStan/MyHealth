@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,42 +32,55 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.Lifecycle
 import com.example.myhealth.R
 import com.example.myhealth.data.Person
 import com.example.myhealth.models.AccountViewModel
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
+import com.example.myhealth.utility.parseInt
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun Account(
     mainModel: MainScreenViewModel,
     model: AccountViewModel = mainModel.accountViewModel
 ) {
-
     model.getData(mainModel)
-    val registrationDialog  = model.registrationDialog.collectAsState()
-    if (registrationDialog.value) {
-        RegistrationDialog(model::showRegDialog, model::setPersonDate)
+    val registrationDialog = model.registrationDialog.collectAsState()
+    Column (horizontalAlignment = Alignment.CenterHorizontally){
+        if (registrationDialog.value) {
+            RegistrationDialog(model::showRegDialog, model::setPersonDate)
+        } else {
+            AccountSection(model.person.observeAsState(Person()))
+            Button({
+                mainModel.preferencesManager.delData()
+                mainModel.inSystem = MutableStateFlow(false)
+            }) {
+                Text(stringResource(R.string.del_btn))
+            }
+        }
     }
-    else{
-         AccountSection(model.person.observeAsState(Person()))
-    }
-}
-@Composable
-fun AccountSection(person: State<Person>){
 
-    Row(modifier = Modifier.padding(8.dp).fillMaxWidth().background(
-        color = MaterialTheme.colorScheme.secondaryContainer.copy(
-            alpha = .50f
-        ), shape = RoundedCornerShape(8.dp)
-    ), horizontalArrangement = Arrangement.Center
+
+}
+
+@Composable
+fun AccountSection(person: State<Person>) {
+
+    Row(
+        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
+            color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                alpha = .50f
+            ), shape = RoundedCornerShape(8.dp)
+        ), horizontalArrangement = Arrangement.Center
     ) {
-        val icon = remember {  mutableStateOf(if (person.value.sex == "Male") Icons.Default.Man else Icons.Default.Woman)}
+        val icon =
+            remember { mutableStateOf(if (person.value.sex == "Male") Icons.Default.Man else Icons.Default.Woman) }
         Icon(icon.value, "", Modifier.size(128.dp))
 
         Column(Modifier.padding(8.dp)) {
@@ -111,6 +122,7 @@ fun AccountSection(person: State<Person>){
         }
     }
 }
+
 @Composable
 fun RegistrationDialog(
     showDialog: (Boolean) -> Unit,
@@ -143,6 +155,7 @@ fun RegistrationDialog(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
+                Text(stringResource(R.string.reg_title), Modifier.padding(8.dp), textAlign = TextAlign.Center)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.sex) + ": ")
                     sex["Male"]?.let {
@@ -180,7 +193,7 @@ fun RegistrationDialog(
                 OutlinedTextField(age.value.toString(),
                     {
                         if (it != "" && it != "0") {
-                            age.value = Integer.parseInt(it)
+                            age.value = it.parseInt(it)
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -189,7 +202,7 @@ fun RegistrationDialog(
                 OutlinedTextField(weight.value.toString(),
                     {
                         if (it != "" && it != "0") {
-                            weight.value = Integer.parseInt(it)
+                            weight.value =  it.parseInt(it)
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -198,7 +211,7 @@ fun RegistrationDialog(
                 OutlinedTextField(heigth.value.toString(),
                     {
                         if (it != "" && it != "0") {
-                            heigth.value = Integer.parseInt(it)
+                            heigth.value =  it.parseInt(it)
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -207,27 +220,29 @@ fun RegistrationDialog(
                 Button({
                     showDialog(false)
                     onAcceptRegistration(
-                        Person(0,
+                        Person(
+                            0,
                             name.value,
                             age.value,
-                            sex.filter{ it.value }.keys.first(),
+                            sex.filter { it.value }.keys.first(),
                             weight.value,
                             heigth.value
                         )
-                    )}, Modifier.padding(8.dp)) {
+                    )
+                }, Modifier.padding(8.dp)) {
                     Text(stringResource(R.string.add_sleep_btn))
                 }
-                }
-
-
             }
-        }
-    }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun AccountPreview() {
-        MyHealthTheme {
-            //Account("Account")
+
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AccountPreview() {
+    MyHealthTheme {
+        //Account("Account")
+    }
+}

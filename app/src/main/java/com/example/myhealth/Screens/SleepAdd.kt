@@ -55,6 +55,8 @@ import com.example.myhealth.data.Sleep
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.SleepAddViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
+import com.example.myhealth.utility.parseFloat
+import com.example.myhealth.utility.parseInt
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
 
@@ -252,7 +254,7 @@ fun SleepDetailDialog(
                         hours.intValue.toString(),
                         {
                             if (it != "") {
-                                hours.intValue = it.toInt()
+                                hours.intValue = it.parseInt(it)
                                 summeryHours.floatValue = (hours.intValue + (minutes.value / 60)).toFloat()
                             }
                         },
@@ -265,7 +267,7 @@ fun SleepDetailDialog(
                         minutes.intValue.toString(),
                         {
                             if (it != "") {
-                                minutes.intValue = it.toInt()
+                                minutes.intValue = it.parseInt(it)
                                 summeryHours.floatValue = (hours.intValue + (minutes.intValue / 60)).toFloat()
                             }
                         },
@@ -277,7 +279,7 @@ fun SleepDetailDialog(
 
 
                 OutlinedTextField(summeryHours.floatValue.toString(),
-                    { summeryHours.floatValue = it.toFloat() },
+                    { summeryHours.floatValue = it.parseFloat(it) },
                     enabled = false,
                     leadingIcon = { Icon(Icons.Default.Schedule, "") },
                     label = { Text(stringResource(R.string.hours)) }) //общее время

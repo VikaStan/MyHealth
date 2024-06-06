@@ -17,12 +17,12 @@ class Person(
     val weight: Int = 0,
     val heigth: Int = 0,
     var sleepGoal: Float = 8f,
-    var caloriesGoal: Double = 0.0
+    var caloriesGoal: Float = 0f
 ) {
     init {
         //Формула расчета калорийности Тома Венуто
-        caloriesGoal = if (sex.equals("Male")) (66 + (13.7 * weight) + (5 * heigth) - (6.8 * age))
-        else 665 + (9.6 * weight) + (1.8 * heigth) - (4.7 * age)
+        caloriesGoal = if (sex.equals("Male")) (66 + (13.7f * weight) + (5 * heigth) - (6.8f * age))
+        else 665 + (9.6f * weight) + (1.8f * heigth) - (4.7f * age)
     }
 
 }

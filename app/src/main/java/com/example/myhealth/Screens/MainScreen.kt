@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
@@ -26,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myhealth.BottomNavGraph
+import com.example.myhealth.PreferencesManager
 import com.example.myhealth.models.AccountViewModel
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
@@ -50,10 +52,11 @@ fun MainScreen(
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {
 
-    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel, accountViewModel)
+    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel, accountViewModel, LocalContext.current)
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
     val inSystem = mainViewModel.inSystem.collectAsState()
+    val prefs = PreferencesManager(LocalContext.current)
     LaunchedEffect(key1 = Unit) {//прослушивание нажатий в upBar
         // 2
         Screen.Diary.buttons

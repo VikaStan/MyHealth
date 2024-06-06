@@ -17,7 +17,9 @@ class AccountViewModel @Inject constructor() : ViewModel() {
     lateinit var updatePerson: (Person) -> Unit
     fun getData(model: MainScreenViewModel) {
         updatePerson= model::updatePersonDate
+        inSystem = model.inSystem
         if (model.inSystem.value) {
+            model.updatePersonDate(model.preferencesManager.getPerson())
             this.person = model.person
         } else {
             showRegDialog()
@@ -29,6 +31,7 @@ class AccountViewModel @Inject constructor() : ViewModel() {
     fun setPersonDate(person: Person){
         this.person= liveData { person }
         updatePerson(person)
-        //inSystem=true
+        inSystem.value=true
+        showRegDialog(false)
     }
 }

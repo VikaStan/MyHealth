@@ -62,5 +62,7 @@
     <string name="height">Рост</string>
     <string name="goal_calories">Норма калорий в сутки</string>
     <string name="goal_sleep">Норма сна в сутки</string>
+    <string name="del_btn">Удалить данные пользователя</string>
+    <string name="reg_title">Введите данные пользователя</string>
 
 </resources>

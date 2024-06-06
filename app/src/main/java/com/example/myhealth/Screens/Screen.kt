@@ -150,17 +150,8 @@ sealed class Screen(
         navigationIcon = Icons.Default.Person,
         onNavigationIconClick = null,
         navigationIconContentDescription = null,
-        actions = listOf(
-            ActionMenuItem.IconMenuItem.AlwaysShown(
-                title = "Settings",
-                onClick = {
-                    // 3
-                    _buttons.tryEmit(AppBarIcons.Settings)
-                },
-                icon = Icons.Filled.Settings,
-                contentDescription = "null",
-            )
-        )){
+        actions = emptyList()
+    ){
         // 1
         enum class AppBarIcons {
             Settings
