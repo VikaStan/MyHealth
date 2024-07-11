@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PersonRepository (private val userDao: PersonDao, private val dayDao: DayDao){
+/*class PersonRepository (private val userDao: PersonDao, private val dayDao: DayDao){
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     val person: MutableLiveData<Person> = MutableLiveData(userDao.getPerson().value)
@@ -49,4 +49,4 @@ class PersonRepository (private val userDao: PersonDao, private val dayDao: DayD
             userDao.deletePerson(id)
         }
     }
-}
+}*/

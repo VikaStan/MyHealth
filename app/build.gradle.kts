@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-   // alias(libs.plugins.google.dagger.hilt.android)
-    //alias(libs.plugins.org.jetbrains.kotlin.kapt)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     alias(libs.plugins.devtoolsKsp)
@@ -52,6 +50,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -79,16 +80,17 @@ dependencies {
     implementation ("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.1")
+    annotationProcessor ("com.google.dagger:hilt-compiler:2.51.1")
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.3")
+
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.runtime.livedata)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    annotationProcessor(libs.androidx.room.room.compiler)
     ksp(libs.androidx.room.room.compiler)
 
 }

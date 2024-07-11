@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
 import com.example.myhealth.data.Person
 import com.example.myhealth.models.AccountViewModel
@@ -47,19 +48,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun Account(
-    mainModel: MainScreenViewModel,
-    model: AccountViewModel = mainModel.accountViewModel
+    model: AccountViewModel = hiltViewModel()
 ) {
-    model.getData(mainModel)
-    val registrationDialog = model.registrationDialog.collectAsState()
+    val registrationDialog = model.registrationDialog.observeAsState()
+    val person = model.person.observeAsState()
     Column (horizontalAlignment = Alignment.CenterHorizontally){
-        if (registrationDialog.value) {
+        if (registrationDialog.value == true) {
             RegistrationDialog(model::showRegDialog, model::setPersonDate)
         } else {
-            AccountSection(model.person.observeAsState(Person()))
+            AccountSection(person)
             Button({
-                mainModel.preferencesManager.delData()
-                mainModel.inSystem = MutableStateFlow(false)
+                model.inSystem = MutableStateFlow(false)
+                model.person.value?.id?.let { model.delPerson(it) }
+                model.showRegDialog()
             }) {
                 Text(stringResource(R.string.del_btn))
             }
@@ -70,51 +71,57 @@ fun Account(
 }
 
 @Composable
-fun AccountSection(person: State<Person>) {
+fun AccountSection(person: State<Person?>) {
 
     Row(
-        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
-            color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                alpha = .50f
-            ), shape = RoundedCornerShape(8.dp)
-        ), horizontalArrangement = Arrangement.Center
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                    alpha = .50f
+                ), shape = RoundedCornerShape(8.dp)
+            ), horizontalArrangement = Arrangement.Center
     ) {
         val icon =
-            remember { mutableStateOf(if (person.value.sex == "Male") Icons.Default.Man else Icons.Default.Woman) }
+            remember { mutableStateOf(if (person.value?.sex == "Male") Icons.Default.Man else Icons.Default.Woman) }
         Icon(icon.value, "", Modifier.size(128.dp))
 
         Column(Modifier.padding(8.dp)) {
-            OutlinedTextField(person.value.name,
-                {},
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                enabled = false,
-                label = { Text(stringResource(R.string.name)) }) // имя
+            person.value?.name?.let {
+                OutlinedTextField(
+                    it,
+                    {},
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    enabled = false,
+                    label = { Text(stringResource(R.string.name)) })
+            } // имя
 
-            OutlinedTextField(person.value.age.toString(),
+            OutlinedTextField(person.value?.age.toString(),
                 {},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = false,
                 label = { Text(stringResource(R.string.Age)) }) // возраст
 
-            OutlinedTextField(person.value.weight.toString(),
+            OutlinedTextField(person.value?.weight.toString(),
                 {},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = false,
                 label = { Text(stringResource(R.string.weight)) }) // вес
 
-            OutlinedTextField(person.value.heigth.toString(),
+            OutlinedTextField(person.value?.heigth.toString(),
                 {},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = false,
                 label = { Text(stringResource(R.string.height)) }) // рост
 
-            OutlinedTextField(person.value.caloriesGoal.toString(),
+            OutlinedTextField(person.value?.caloriesGoal.toString(),
                 {},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = false,
                 label = { Text(stringResource(R.string.goal_calories)) }) // калории
 
-            OutlinedTextField(person.value.sleepGoal.toString(),
+            OutlinedTextField(person.value?.sleepGoal.toString(),
                 {},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = false,
@@ -150,7 +157,9 @@ fun RegistrationDialog(
             toastShow.value = false
         }
         Surface(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {

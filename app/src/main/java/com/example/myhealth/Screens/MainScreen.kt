@@ -52,11 +52,10 @@ fun MainScreen(
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {
 
-    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel, accountViewModel, LocalContext.current)
+    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel, accountViewModel)
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
     val inSystem = mainViewModel.inSystem.collectAsState()
-    val prefs = PreferencesManager(LocalContext.current)
     LaunchedEffect(key1 = Unit) {//прослушивание нажатий в upBar
         // 2
         Screen.Diary.buttons

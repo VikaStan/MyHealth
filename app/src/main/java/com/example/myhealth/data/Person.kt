@@ -8,9 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "person")
 class Person(
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @ColumnInfo(name = "personId")
-    var id: Int = 0,
+    val id: Int? = null ,
     val name: String = "",
     val age: Int = 0,
     val sex: String = "Male",

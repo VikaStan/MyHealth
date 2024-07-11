@@ -1,17 +1,19 @@
 package com.example.myhealth.models
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.example.myhealth.PreferencesManager
 import com.example.myhealth.data.Day
 import com.example.myhealth.data.Person
-import com.example.myhealth.room.PersonRepository
-import com.example.myhealth.room.PersonRoomDatabase
+import com.example.myhealth.room.HealthRoomDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -20,16 +22,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    application: Application
+     val mainDB: HealthRoomDb
 ) : ViewModel() {
 
-    private val repository: PersonRepository
     lateinit var diaryModel: DiaryViewModel
     lateinit var foodAddViewModel: FoodAddViewModel
     lateinit var sleepAddViewModel: SleepAddViewModel
     lateinit var statsViewModel: StatsViewModel
     lateinit var accountViewModel: AccountViewModel
-    lateinit var context: Context
 
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()
     var days = mutableStateListOf<Day>()
@@ -49,30 +49,16 @@ class MainScreenViewModel @Inject constructor(
             //рассчитывать 2 параметра еще
         )
     )
-    var person: MutableLiveData<Person> = MutableLiveData<Person>(Person())
-        set(value) {
-            if (value.value?.name != "" && value.value?.name != null) {
-                value.value?.let { preferencesManager.savePerson(it) }
-                field = value
-            }
-            else field = value
+    lateinit var person: LiveData<Person>
 
+    private fun getPerson() = viewModelScope.launch {
+        person = liveData {
+            mainDB.personDao.getPerson()
         }
-        get() {
-            if ( field.value?.name != null)
-                return MutableLiveData(preferencesManager.getPerson())
-            else return field
-        }
-
-    lateinit var preferencesManager: PreferencesManager
-
+    }
 
     init {
-        val userDb = PersonRoomDatabase.getInstance(application)
-        val personDao = userDb.personDao()
-        val dayDao = userDb.dayDao()
-        repository = PersonRepository(personDao, dayDao)
-        person = repository.person
+        getPerson()
         initDayList(getListSize()).toCollection(days)
     }
 
@@ -80,11 +66,7 @@ class MainScreenViewModel @Inject constructor(
         set(value) {
             days.clear()
             initDayList(getListSize()).toCollection(days)
-            preferencesManager.saveData("inSystem", value.value)
             field = value
-        }
-        get() {
-            return MutableStateFlow(preferencesManager.getData("inSystem", false))
         }
 
 
@@ -98,21 +80,17 @@ class MainScreenViewModel @Inject constructor(
         sleepAddViewModel: SleepAddViewModel,
         statsViewModel: StatsViewModel,
         accountViewModel: AccountViewModel,
-        context: Context
     ) {
         this.diaryModel = diaryModel
         this.foodAddViewModel = foodAddViewModel
         this.sleepAddViewModel = sleepAddViewModel
         this.statsViewModel = statsViewModel
         this.accountViewModel = accountViewModel
-        this.context = context
-        preferencesManager = PreferencesManager(context)
         //получать, в системе ли
     }
 
     fun updatePersonDate(person: Person) {
         this.person = MutableLiveData(person)
-        preferencesManager.savePerson(person)
         inSystem = MutableStateFlow(true)
     }
 

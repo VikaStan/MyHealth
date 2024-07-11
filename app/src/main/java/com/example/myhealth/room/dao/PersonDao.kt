@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.myhealth.data.Person
@@ -11,14 +12,15 @@ import com.example.myhealth.data.Person
 @Dao
 interface PersonDao {
     @Query("SELECT * FROM person")
-    fun getPerson(): LiveData<Person>
+    suspend fun getPerson(): Person
 
-    @Insert
-    fun addPerson(person: Person)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addPerson(person: Person)
 
     @Update
-    fun updPerson(person: Person)
+    suspend fun updPerson(person: Person)
+
     @Query("DELETE FROM person WHERE personId = :id")
-    fun deletePerson(id:Int)
+    suspend fun deletePerson(id: Int)
 
 }

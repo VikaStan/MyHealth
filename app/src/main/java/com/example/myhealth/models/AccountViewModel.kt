@@ -1,37 +1,63 @@
 package com.example.myhealth.models
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.example.myhealth.data.Person
+import com.example.myhealth.room.HealthRoomDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountViewModel @Inject constructor() : ViewModel() {
-    lateinit var person: LiveData<Person>
+class AccountViewModel @Inject constructor(
+    private val mainDB: HealthRoomDb
+) : ViewModel() {
+    var person = MutableLiveData<Person>()
     var inSystem = MutableStateFlow(false)
-    var registrationDialog = MutableStateFlow(false)
+    var registrationDialog = MutableLiveData(false)
 
-    lateinit var updatePerson: (Person) -> Unit
-    fun getData(model: MainScreenViewModel) {
-        updatePerson= model::updatePersonDate
-        inSystem = model.inSystem
-        if (model.inSystem.value) {
-            model.updatePersonDate(model.preferencesManager.getPerson())
-            this.person = model.person
-        } else {
+
+    private fun getPerson() = viewModelScope.launch {
+        person.value = mainDB.personDao.getPerson()
+    }
+
+    private fun setPerson(person: Person) = viewModelScope.launch {
+        mainDB.personDao.addPerson(person)
+        getPerson()
+    }
+
+    fun delPerson(id: Int) = viewModelScope.launch {
+        mainDB.personDao.deletePerson(id)
+        inSystem.value = false
+        showRegDialog()
+    }
+
+    init {
+        getPerson()
+        if (person.value?.name== "") {
+            inSystem.value = false
             showRegDialog()
+        } else {
+            registrationDialog.value = false
+            inSystem.value = true
         }
+
+
     }
-    fun showRegDialog(value: Boolean=true){
-        registrationDialog.value=value
+
+    fun showRegDialog(value: Boolean = true) {
+        registrationDialog.value = value
     }
-    fun setPersonDate(person: Person){
-        this.person= liveData { person }
-        updatePerson(person)
-        inSystem.value=true
+
+    fun setPersonDate(p: Person) {
+        this.person.value = p
+        setPerson(p)
+        inSystem.value = true
         showRegDialog(false)
     }
 }

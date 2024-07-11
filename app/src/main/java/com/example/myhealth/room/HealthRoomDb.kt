@@ -11,23 +11,25 @@ import com.example.myhealth.room.dao.PersonDao
 import com.example.myhealth.data.Day
 import com.example.myhealth.data.Person
 
-@Database(entities = [(Person::class),(Day::class)], version = 1)
+@Database(
+    entities = [(Person::class), (Day::class)],
+    version = 1,
+)
 @TypeConverters(DateConverter::class)
-abstract class PersonRoomDatabase: RoomDatabase() {
-    abstract fun personDao(): PersonDao
-    abstract fun dayDao(): DayDao
+abstract class HealthRoomDb : RoomDatabase() {
+    abstract val personDao: PersonDao
+    abstract val dayDao: DayDao
 
     // реализуем синглтон
-    companion object {
-        private var INSTANCE: PersonRoomDatabase? = null
-        fun getInstance(context: Context): PersonRoomDatabase {
-
+   /* companion object {
+        private var INSTANCE: HealthRoomDb? = null
+        fun getInstance(context: Context): HealthRoomDb {
             synchronized(this) {
                 var instance = INSTANCE
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        PersonRoomDatabase::class.java,
+                        HealthRoomDb::class.java,
                         "usersdb"
                     ).fallbackToDestructiveMigration().build()
                     INSTANCE = instance
@@ -35,5 +37,5 @@ abstract class PersonRoomDatabase: RoomDatabase() {
                 return instance
             }
         }
-    }
+    }*/
 }

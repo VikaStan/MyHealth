@@ -45,7 +45,7 @@ fun BottomNavGraph(
             Stats(mainScreenViewModel)
         }
         composable(route = Screen.Account.route) {
-            Account(mainScreenViewModel)
+            Account()
         }
         composable(route = Screen.Settings.route) {
             Settings(onBackClick = { navController.popBackStack() })
