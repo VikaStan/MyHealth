@@ -42,7 +42,8 @@ class AccountViewModel @Inject constructor(
         if (person.value?.name== "") {
             inSystem.value = false
             showRegDialog()
-        } else {
+        }
+        else {
             registrationDialog.value = false
             inSystem.value = true
         }
