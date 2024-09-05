@@ -1,15 +1,5 @@
 package com.example.myhealth.room
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.myhealth.room.dao.DayDao
-import com.example.myhealth.room.dao.PersonDao
-import com.example.myhealth.data.Day
-import com.example.myhealth.data.Person
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
 /*class PersonRepository (private val userDao: PersonDao, private val dayDao: DayDao){
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 

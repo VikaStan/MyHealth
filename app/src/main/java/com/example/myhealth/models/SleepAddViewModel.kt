@@ -23,7 +23,7 @@ class SleepAddViewModel @Inject constructor() : ViewModel() {
     private var editSleepIndex by mutableIntStateOf(0)
 
     fun getSleepList(model: DiaryViewModel) {
-            model.selectedDay.value.bedTime.forEach {
+            model.selectedDayOld.value.bedTime.forEach {
             if (!sleepList.contains(it))
                 sleepList.add(it)
         }
@@ -69,8 +69,8 @@ class SleepAddViewModel @Inject constructor() : ViewModel() {
 
     fun updateSleepList(model: DiaryViewModel) {
         if (isChange) {
-            model.selectedDay.value.bedTime = sleepList
-            model.selectedDay.value.updateAllCount()
+            model.selectedDayOld.value.bedTime = sleepList
+            model.selectedDayOld.value.updateAllCount()
             isChange = false
         }
         sleepList= mutableStateListOf<Sleep>()

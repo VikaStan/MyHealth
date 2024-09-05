@@ -17,7 +17,7 @@ import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.myhealth.R
 
-data class Product(
+data class ProductOld(
     val productCategory: ProductType = Bakery,
     val caloriesPer100Gramms: Int = 0,
     val caloriesSummery: Float = 0f,

@@ -1,19 +1,18 @@
 package com.example.myhealth.room
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.myhealth.room.Converters.DateConverter
 import com.example.myhealth.room.dao.DayDao
 import com.example.myhealth.room.dao.PersonDao
-import com.example.myhealth.data.Day
+import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.Person
 
 @Database(
-    entities = [(Person::class), (Day::class)],
+    entities = [(Person::class), (DayOld::class)],
     version = 1,
+    exportSchema = false
 )
 @TypeConverters(DateConverter::class)
 abstract class HealthRoomDb : RoomDatabase() {

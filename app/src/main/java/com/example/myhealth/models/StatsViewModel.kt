@@ -1,19 +1,16 @@
 package com.example.myhealth.models
 
 import android.content.Context
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myhealth.R
-import com.example.myhealth.data.Day
+import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.Person
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,9 +23,9 @@ import javax.inject.Inject
 class StatsViewModel @Inject constructor() : ViewModel() {
      lateinit var context : Context
     lateinit var person: LiveData<Person>
-    var selectedDay = mutableStateOf(Day(Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()))
-    var days = mutableStateListOf<Day>()
-    var daysFiltered = mutableStateListOf<Day>()
+    var selectedDayOld = mutableStateOf(DayOld(date = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()))
+    var dayOlds = mutableStateListOf<DayOld>()
+    var daysFiltered = mutableStateListOf<DayOld>()
     var selectedDayIndex = MutableStateFlow(getListSize() - 1)
     var dateSelectionBtn = mutableStateMapOf(
         DateSelection.Day to true,
@@ -42,22 +39,22 @@ class StatsViewModel @Inject constructor() : ViewModel() {
     var avrCalories = mutableStateListOf<Any>()
 
     val progressCalories =
-        mutableFloatStateOf(selectedDay.value.totalCalories.toFloat() / selectedDay.value.goalCalories)
+        mutableFloatStateOf(selectedDayOld.value.totalCalories.toFloat() / selectedDayOld.value.goalCalories)
     val progressSleep =
-        mutableFloatStateOf(selectedDay.value.totalSleep / selectedDay.value.goalSleep)
+        mutableFloatStateOf(selectedDayOld.value.totalSleep / selectedDayOld.value.goalSleep)
     var onSelectedDay: (Int) -> Unit = {}
-    fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect: (Int) -> Unit, context: Context,person: LiveData<Person>) {
+    fun getDayData(dayOlds: List<DayOld>, selectedDayIndex: State<Int>, onSelect: (Int) -> Unit, context: Context, person: LiveData<Person>) {
         this.context=context
-        this.days.clear()
+        this.dayOlds.clear()
         this.avrCalories.clear()
         this.avrCount.clear()
-        days.toCollection(this.days)
+        dayOlds.toCollection(this.dayOlds)
         this.strike.intValue = 0
         this.bestStrike.intValue = 0
         this.selectedDayIndex.value = selectedDayIndex.value
-        this.selectedDay.value = days[selectedDayIndex.value]
+        this.selectedDayOld.value = dayOlds[selectedDayIndex.value]
         this.onSelectedDay = onSelect
-        selectedDay.value.updateAllCount()
+        selectedDayOld.value.updateAllCount()
         updateProgress()
         this.person=person
     }
@@ -69,7 +66,7 @@ class StatsViewModel @Inject constructor() : ViewModel() {
                 dateSelectionBtn[DateSelection.Week] = false
                 dateSelectionBtn[DateSelection.Mounth] = false
                 daysFiltered.clear()
-                daysFiltered.add(selectedDay.value)
+                daysFiltered.add(selectedDayOld.value)
             }
 
             DateSelection.Week -> {
@@ -79,7 +76,7 @@ class StatsViewModel @Inject constructor() : ViewModel() {
                 daysFiltered.clear()
                 val startIndex =
                     if ((selectedDayIndex.value - 7) >= 0) selectedDayIndex.value - 7 else 0
-                daysFiltered.addAll(days.subList(startIndex, selectedDayIndex.value))
+                daysFiltered.addAll(dayOlds.subList(startIndex, selectedDayIndex.value))
             }
 
             DateSelection.Mounth -> {
@@ -89,7 +86,7 @@ class StatsViewModel @Inject constructor() : ViewModel() {
                 daysFiltered.clear()
                 val startIndex =
                     if ((selectedDayIndex.value - 30) >= 0) selectedDayIndex.value - 30 else 0
-                daysFiltered.addAll(days.subList(startIndex, selectedDayIndex.value))
+                daysFiltered.addAll(dayOlds.subList(startIndex, selectedDayIndex.value))
             }
         }
         updateProgress()
@@ -97,39 +94,39 @@ class StatsViewModel @Inject constructor() : ViewModel() {
 
     private fun calculateAverrageParams() {
         val breakfastProductCount =
-            if (days.count { it.breakfast.products.isNotEmpty() } != 0) days.fold(
+            if (dayOlds.count { it.breakfast.productOlds.isNotEmpty() } != 0) dayOlds.fold(
                 0
-            ) { a, b -> a + b.breakfast.products.size } / days.count { it.breakfast.products.isNotEmpty() } else context.resources.getString(
+            ) { a, b -> a + b.breakfast.productOlds.size } / dayOlds.count { it.breakfast.productOlds.isNotEmpty() } else context.resources.getString(
                 R.string.no_data
             )
 
 
         val lunchProductCount =
-            if (daysFiltered.count { it.lunch.products.isNotEmpty() } != 0)
-                days.fold(0) { a, b -> a + b.lunch.products.size } / days.count { it.lunch.products.isNotEmpty() } else context.resources.getString(
+            if (daysFiltered.count { it.lunch.productOlds.isNotEmpty() } != 0)
+                dayOlds.fold(0) { a, b -> a + b.lunch.productOlds.size } / dayOlds.count { it.lunch.productOlds.isNotEmpty() } else context.resources.getString(
                 R.string.no_data
             )
 
         val dinnerProductCount =
-            if (days.count { it.dinner.products.isNotEmpty() } != 0) days.fold(0) { a, b -> a + b.dinner.products.size } / days.count { it.dinner.products.isNotEmpty() } else context.resources.getString(
+            if (dayOlds.count { it.dinner.productOlds.isNotEmpty() } != 0) dayOlds.fold(0) { a, b -> a + b.dinner.productOlds.size } / dayOlds.count { it.dinner.productOlds.isNotEmpty() } else context.resources.getString(
                 R.string.no_data
             )
 
 
         val breakfastCalories =
-            if (days.count { it.breakfast.products.isNotEmpty() } != 0) days.fold(0f) { a, b -> a + b.breakfast.getFoodTimeCalories() } / days.count { it.breakfast.products.isNotEmpty() } else context.resources.getString(
+            if (dayOlds.count { it.breakfast.productOlds.isNotEmpty() } != 0) dayOlds.fold(0f) { a, b -> a + b.breakfast.getFoodTimeCalories() } / dayOlds.count { it.breakfast.productOlds.isNotEmpty() } else context.resources.getString(
                 R.string.no_data
             )
 
 
         val lunchCalories =
-            if (days.count { it.lunch.products.isNotEmpty() } != 0) days.fold(0f) { a, b -> a + b.lunch.getFoodTimeCalories() } / days.count { it.lunch.products.isNotEmpty() } else context.resources.getString(
+            if (dayOlds.count { it.lunch.productOlds.isNotEmpty() } != 0) dayOlds.fold(0f) { a, b -> a + b.lunch.getFoodTimeCalories() } / dayOlds.count { it.lunch.productOlds.isNotEmpty() } else context.resources.getString(
                 R.string.no_data
             )
 
 
         val dinnerCalories =
-            if (days.count { it.dinner.products.isNotEmpty() } != 0) days.fold(0f) { a, b -> a + b.dinner.getFoodTimeCalories() } / days.count { it.dinner.products.isNotEmpty() } else context.resources.getString(
+            if (dayOlds.count { it.dinner.productOlds.isNotEmpty() } != 0) dayOlds.fold(0f) { a, b -> a + b.dinner.getFoodTimeCalories() } / dayOlds.count { it.dinner.productOlds.isNotEmpty() } else context.resources.getString(
                 R.string.no_data
 
             )
@@ -140,9 +137,9 @@ class StatsViewModel @Inject constructor() : ViewModel() {
 
     private fun updateProgress() {
         progressCalories.floatValue = (daysFiltered.fold(0) { a, b -> a + b.totalCalories }
-            .toFloat() / daysFiltered.size) / selectedDay.value.goalCalories
+            .toFloat() / daysFiltered.size) / selectedDayOld.value.goalCalories
         progressSleep.floatValue = (daysFiltered.fold(0f) { a, b -> a + b.totalSleep }
-            .toFloat() / daysFiltered.size) / selectedDay.value.goalSleep
+            .toFloat() / daysFiltered.size) / selectedDayOld.value.goalSleep
         val maxVal = emptyList<Int>().toMutableList()
         daysFiltered.forEach {
             if (it.isStrike) {

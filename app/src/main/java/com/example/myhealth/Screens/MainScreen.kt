@@ -17,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
@@ -52,7 +51,13 @@ fun MainScreen(
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {
 
-    mainViewModel.initiate(diaryViewModel,foodAddViewModel,sleepAddViewModel, statsViewModel, accountViewModel)
+    mainViewModel.initiate(
+        diaryViewModel,
+        foodAddViewModel,
+        sleepAddViewModel,
+        statsViewModel,
+        accountViewModel
+    )
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
     val inSystem = mainViewModel.inSystem.collectAsState()
@@ -121,9 +126,18 @@ fun MainScreen(
 
 
     ) {
-        if(inSystem.value)
-        BottomNavGraph(navController = navController, modifier = Modifier.padding(it), mainViewModel)
-        else BottomNavGraph(navController = navController, modifier = Modifier.padding(it), mainViewModel, Screen.Account.route)
+        if (inSystem.value)
+            BottomNavGraph(
+                navController = navController,
+                modifier = Modifier.padding(it),
+                mainViewModel
+            )
+        else BottomNavGraph(
+            navController = navController,
+            modifier = Modifier.padding(it),
+            mainViewModel,
+            Screen.Account.route
+        )
     }
 }
 

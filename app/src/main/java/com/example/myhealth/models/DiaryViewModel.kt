@@ -1,12 +1,10 @@
 package com.example.myhealth.models
 
-import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.State
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.myhealth.Screens.Screen
-import com.example.myhealth.data.Day
+import com.example.myhealth.data.DayOld
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.Instant
@@ -20,10 +18,10 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
 
     lateinit var navHostController: NavHostController
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()
-    val days: MutableStateFlow<List<Day>> = MutableStateFlow(initDayList(getListSize()))
+    val days: MutableStateFlow<List<DayOld>> = MutableStateFlow(initDayList(getListSize()))
     var selectedDayIndex = MutableStateFlow(getListSize() - 1)
-    var selectedDay = MutableStateFlow(
-        Day(
+    var selectedDayOld = MutableStateFlow(
+        DayOld(
             date = currDay,
             foodCount = 1, //получать с базы
             totalCalories = 0, // рассчитывать и получать с бд
@@ -33,12 +31,12 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
     var selectedEatTimeName = MutableStateFlow("")
 
     var onSelectedDay :(Int)->Unit = {}
-    fun getDayData(days: List<Day>, selectedDayIndex: State<Int>, onSelect:(Int) -> Unit){
-        this.days.value=days
+    fun getDayData(dayOlds: List<DayOld>, selectedDayIndex: State<Int>, onSelect:(Int) -> Unit){
+        this.days.value=dayOlds
         this.selectedDayIndex.value=selectedDayIndex.value
-        this.selectedDay.value = days[selectedDayIndex.value]
+        this.selectedDayOld.value = dayOlds[selectedDayIndex.value]
         this.onSelectedDay=onSelect
-        selectedDay.value.updateAllCount()
+        selectedDayOld.value.updateAllCount()
     }
 
 
@@ -52,18 +50,18 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun updateDataInDayList() {
-        days.value[selectedDayIndex.value].breakfast = selectedDay.value.breakfast
-        days.value[selectedDayIndex.value].lunch = selectedDay.value.lunch
-        days.value[selectedDayIndex.value].dinner = selectedDay.value.dinner
-        days.value[selectedDayIndex.value].bedTime = selectedDay.value.bedTime
+        days.value[selectedDayIndex.value].breakfast = selectedDayOld.value.breakfast
+        days.value[selectedDayIndex.value].lunch = selectedDayOld.value.lunch
+        days.value[selectedDayIndex.value].dinner = selectedDayOld.value.dinner
+        days.value[selectedDayIndex.value].bedTime = selectedDayOld.value.bedTime
     }
 
     private fun getListSize(): Int {
         return currDay.dayOfMonth + currDay.minusMonths(1).month.length(currDay.isLeapYear)
     }
 
-    private fun initDayList(count: Int): List<Day> {
-        val list: MutableList<Day> = emptyList<Day>().toMutableList()
+    private fun initDayList(count: Int): List<DayOld> {
+        val list: MutableList<DayOld> = emptyList<DayOld>().toMutableList()
         for (i in range(1, count + 1)) {
             val thisMouth = i > currDay.minusMonths(1).month.length(currDay.isLeapYear)
             val day =
@@ -73,7 +71,7 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
                 else currDay.withDayOfMonth(i - currDay.minusMonths(1).month.length(currDay.isLeapYear))
 
             list.add(
-                Day(
+                DayOld(
                     date = day,
                     foodCount = 2, //получать с базы
                     totalCalories = 0, // рассчитывать и получать с бд
@@ -84,7 +82,7 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
         }
         list.forEach { it.updateAllCount() }
 
-        selectedDay = MutableStateFlow(list.last())
+        selectedDayOld = MutableStateFlow(list.last())
         return list
     }
 

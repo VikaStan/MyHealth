@@ -18,23 +18,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myhealth.data.Day
+import com.example.myhealth.data.DayOld
 import java.util.stream.IntStream.range
 
 @Composable
 fun CalendarItem(
     onItemClick: () -> Unit,
-    isSelected: Boolean ,
-    day: Day,
+    isSelected: Boolean,
+    dayOld: DayOld,
     modifier: Modifier,){
 
     val sel: Color = if (isSelected){
@@ -49,12 +45,12 @@ fun CalendarItem(
         .clickable(onClick = { onItemClick()}),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
-        Text(day.date.dayOfMonth.toString(), style = MaterialTheme.typography.titleMedium)
-        Text(stringResource(day.dayOfWeekToString()), style = MaterialTheme.typography.bodyMedium, color = Color.LightGray)
+        Text(dayOld.date.dayOfMonth.toString(), style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(dayOld.dayOfWeekToString()), style = MaterialTheme.typography.bodyMedium, color = Color.LightGray)
 
         Row (modifier= modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center){
-            var j = day.foodCount
+            var j = dayOld.foodCount
             for (i in range(0,3)){
                 if (j>0)
                 {
@@ -69,7 +65,7 @@ fun CalendarItem(
                         .padding(2.dp))
                 }
         }
-           val sleep = if (day.bedTime.isNotEmpty()) Color.Blue else Color.DarkGray
+           val sleep = if (dayOld.bedTime.isNotEmpty()) Color.Blue else Color.DarkGray
 
                 Box(modifier = modifier.size(7.dp)
                 .background(color = sleep, shape = CircleShape)

@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.myhealth.R
-import com.example.myhealth.data.Day
+import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.FoodTimeType
-import com.example.myhealth.data.Product
+import com.example.myhealth.data.ProductOld
 import com.example.myhealth.data.Sleep
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.MainScreenViewModel
@@ -52,26 +52,26 @@ fun Diary(
 ) {
 
     model.navHostController = navHostController
-    model.getDayData(mainModel.days,mainModel.selectedDayIndex.collectAsState(), mainModel::selected)
+    model.getDayData(mainModel.dayOlds,mainModel.selectedDayIndex.collectAsState(), mainModel::selected)
 
 
-    if (Screen.Diary.dialog.value) DatePickerWithDialog(modifier, model.selectedDay,mainModel::selected)
+    if (Screen.Diary.dialog.value) DatePickerWithDialog(modifier, model.selectedDayOld,mainModel::selected)
 
     LazyColumn(modifier.padding(horizontal = 8.dp)) {
-        val items= SnapshotStateList<Day>()
+        val items= SnapshotStateList<DayOld>()
         model.days.value.toCollection(items)
         item {
             CalendarList(modifier,items ,model.selectedDayIndex, model.onSelectedDay)
         }
         item { // заполнение приемов пищи/сна
-            val selectedDay = model.selectedDay.collectAsState()
+            val selectedDay = model.selectedDayOld.collectAsState()
             FoodTimes(selectedDay.value, modifier, model::onAddFoodBtnClick,model::onSleepAddBtnClick)
         }
     }
 }
 
 @Composable
-fun CalendarList(modifier: Modifier, days: SnapshotStateList<Day>,selectDayIndex: MutableStateFlow<Int>,onSelectedDay: (Int)-> Unit) {
+fun CalendarList(modifier: Modifier, dayOlds: SnapshotStateList<DayOld>, selectDayIndex: MutableStateFlow<Int>, onSelectedDay: (Int)-> Unit) {
     val selectedDayIndex by selectDayIndex.collectAsState()
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = selectedDayIndex)
     val coroutineScope = rememberCoroutineScope()
@@ -80,17 +80,17 @@ fun CalendarList(modifier: Modifier, days: SnapshotStateList<Day>,selectDayIndex
         modifier.padding(8.dp),
         state = listState
     ) {
-        items(days) { day ->
+        items(dayOlds) { day ->
             CalendarItem(
                 modifier = modifier,
                 onItemClick = {
-                    onSelectedDay(days.indexOf(day))
+                    onSelectedDay(dayOlds.indexOf(day))
                     coroutineScope.launch() {
                         listState.animateScrollToItem(selectedDayIndex)
                     }
                 },
-                day = day,
-                isSelected = days.indexOf(day) == selectedDayIndex
+                dayOld = day,
+                isSelected = dayOlds.indexOf(day) == selectedDayIndex
             )
             VerticalDivider(thickness = 10.dp)
         }
@@ -102,20 +102,20 @@ fun CalendarList(modifier: Modifier, days: SnapshotStateList<Day>,selectDayIndex
 
 @Composable
 fun FoodTimes(
-    day: Day,
+    dayOld: DayOld,
     modifier: Modifier,
     onAddFoodBtnClick: (String) -> Unit,
     onAddSleepBtnClick: () -> Unit
 ) {
 
-    val brefProducts = SnapshotStateList<Product>()
-    day.breakfast.products.toCollection(brefProducts)
-    val lunchProducts = SnapshotStateList<Product>()
-    day.lunch.products.toCollection(lunchProducts)
-    val dinnerProducts = SnapshotStateList<Product>()
-    day.dinner.products.toCollection(dinnerProducts)
+    val brefProductOlds = SnapshotStateList<ProductOld>()
+    dayOld.breakfast.productOlds.toCollection(brefProductOlds)
+    val lunchProductOlds = SnapshotStateList<ProductOld>()
+    dayOld.lunch.productOlds.toCollection(lunchProductOlds)
+    val dinnerProductOlds = SnapshotStateList<ProductOld>()
+    dayOld.dinner.productOlds.toCollection(dinnerProductOlds)
     val sleeps = SnapshotStateList<Sleep>()
-    day.bedTime.toCollection(sleeps)
+    dayOld.bedTime.toCollection(sleeps)
     ExpandableSection(
         modifier = modifier,
         title = R.string.breakfast_title,
@@ -126,8 +126,8 @@ fun FoodTimes(
         content = {
 
             FoodSectionContent(
-                products =  brefProducts,
-                goalCalories = day.goalCalories
+                productOlds =  brefProductOlds,
+                goalCalories = dayOld.goalCalories
             )
         }) //завтрак
 
@@ -141,8 +141,8 @@ fun FoodTimes(
         },
         content = {
             FoodSectionContent(
-                products = lunchProducts,
-                goalCalories = day.goalCalories
+                productOlds = lunchProductOlds,
+                goalCalories = dayOld.goalCalories
             )
         }) //обед
 
@@ -156,8 +156,8 @@ fun FoodTimes(
         },
         content = {
             FoodSectionContent(
-                products = dinnerProducts,
-                goalCalories = day.goalCalories
+                productOlds = dinnerProductOlds,
+                goalCalories = dayOld.goalCalories
             )
         }) //ужин
 
@@ -173,7 +173,7 @@ fun FoodTimes(
             SleepSectionContent(
                 modifier,
                 sleeps,
-                day.goalSleep
+                dayOld.goalSleep
             )
         })
 

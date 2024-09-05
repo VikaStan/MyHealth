@@ -53,7 +53,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
 import com.example.myhealth.data.FoodTimeType
-import com.example.myhealth.data.Product
+import com.example.myhealth.data.ProductOld
 import com.example.myhealth.data.ProductType
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
@@ -71,7 +71,7 @@ fun FoodAdd(
     model: FoodAddViewModel = hiltViewModel()
 ) {
 
-    val selectedProductType by model.selectedTypeProduct.collectAsState()
+    val selectedProductType by model.selectedTypeProductOld.collectAsState()
     val eatingFoodTime by model.eatingFoodTime.collectAsState()
 
     model.getEatingTimeName(eatingType)
@@ -101,18 +101,18 @@ fun FoodAdd(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        FoodSection(Modifier, model::onProductItemSelected, eatingFoodTime.products)
+        FoodSection(Modifier, model::onProductItemSelected, eatingFoodTime.productOlds)
 
         //TODO список выбранных продуктов
-        FoodDetailList(model.products, model::onEditSwipe, model::onDelSwipe)
+        FoodDetailList(model.productOlds, model::onEditSwipe, model::onDelSwipe)
     }
 }
 
 @Composable
 fun FoodSection(
     modifier: Modifier = Modifier,
-    onProductItemSelected: (Product) -> Unit,
-    products: MutableList<Product>
+    onProductItemSelected: (ProductOld) -> Unit,
+    productOlds: MutableList<ProductOld>
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3), modifier = modifier.padding(8.dp).background(
@@ -122,24 +122,24 @@ fun FoodSection(
         ), horizontalArrangement = Arrangement.Center
     ) {
         listOf(
-            Product.Eggs,
-            Product.Soup,
-            Product.Fish,
-            Product.Meat,
-            Product.Bakery,
-            Product.Candies,
-            Product.Cheese,
-            Product.Fruts,
-            Product.Porridge,
-            Product.Snack,
-            Product.Vegetables,
-            Product.Water,
-            Product.OtherFood,
+            ProductOld.Eggs,
+            ProductOld.Soup,
+            ProductOld.Fish,
+            ProductOld.Meat,
+            ProductOld.Bakery,
+            ProductOld.Candies,
+            ProductOld.Cheese,
+            ProductOld.Fruts,
+            ProductOld.Porridge,
+            ProductOld.Snack,
+            ProductOld.Vegetables,
+            ProductOld.Water,
+            ProductOld.OtherFood,
         ).forEach { productList ->
             item {
 
                 Box(contentAlignment = Alignment.TopEnd) {
-                    val count = products.count { it.productCategory == productList }
+                    val count = productOlds.count { it.productCategory == productList }
                     FoodSectionItem(productList, onProductItemSelected, count)
                     if (count != 0) {
                         Text(
@@ -166,7 +166,7 @@ fun FoodSection(
 @Composable
 fun FoodSectionItem(
     productType: ProductType,
-    onProductItemSelected: (Product) -> Unit,
+    onProductItemSelected: (ProductOld) -> Unit,
     count: Int
 ) {
     val color = if (count > 0) Color.Green.copy(alpha = 0.8f) else Color.Transparent
@@ -175,7 +175,7 @@ fun FoodSectionItem(
             .border(2.dp, color = Color.Black, RoundedCornerShape(8.dp)).background(
                 color = color, shape = RoundedCornerShape(8.dp)
             ).clip(RoundedCornerShape(8.dp))
-            .clickable { onProductItemSelected(Product(productCategory = productType)) },
+            .clickable { onProductItemSelected(ProductOld(productCategory = productType)) },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -193,9 +193,9 @@ fun FoodSectionItem(
 
 @Composable
 fun FoodDetailList(
-    products: SnapshotStateList<Product>,
-    onEditSwipe: (Product) -> Unit,
-    onDelSwipe: (Product) -> Unit
+    productOlds: SnapshotStateList<ProductOld>,
+    onEditSwipe: (ProductOld) -> Unit,
+    onDelSwipe: (ProductOld) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(8.dp).fillMaxWidth().background(
@@ -204,7 +204,7 @@ fun FoodDetailList(
             ), shape = RoundedCornerShape(8.dp)
         )
     ) {
-        items(products) {
+        items(productOlds) {
 
             val delete = SwipeAction(onSwipe = {
                 onDelSwipe(it)
@@ -243,7 +243,7 @@ fun FoodDetailList(
 }
 
 @Composable
-fun FoodDetailListItem(product: Product) {
+fun FoodDetailListItem(productOld: ProductOld) {
     Column(
         modifier = Modifier.padding(8.dp).fillMaxWidth().background(
             color = MaterialTheme.colorScheme.secondaryContainer.copy(
@@ -255,20 +255,20 @@ fun FoodDetailListItem(product: Product) {
         Row(/*verticalAlignment = Alignment.,*/
             modifier = Modifier.padding(4.dp)
         ) {
-            Icon(product.productCategory.icon, stringResource(product.productCategory.name))
+            Icon(productOld.productCategory.icon, stringResource(productOld.productCategory.name))
             Text(
-                stringResource(product.productCategory.name),
+                stringResource(productOld.productCategory.name),
                 Modifier.padding(end = 4.dp),
                 style = MaterialTheme.typography.labelLarge,
 
                 )
             Text(
-                "${(product.gramms.toFloat() / 100) * product.caloriesPer100Gramms} калл. в ${product.gramms} гр",
+                "${(productOld.gramms.toFloat() / 100) * productOld.caloriesPer100Gramms} калл. в ${productOld.gramms} гр",
                 style = MaterialTheme.typography.labelLarge
             )
         }
-        OutlinedTextField(product.description,
-            { product.description = it },
+        OutlinedTextField(productOld.description,
+            { productOld.description = it },
             Modifier.fillMaxWidth().padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
             enabled = false,
             label = { Text(stringResource(R.string.description)) })
@@ -278,16 +278,16 @@ fun FoodDetailListItem(product: Product) {
 @Composable
 fun FoodDetailDialog(
     showDialog: (Boolean) -> Unit,
-    product: Product,
-    onAcceptProduct: (Product) -> Unit,
-    editProduct: (Product) -> Unit,
+    productOld: ProductOld,
+    onAcceptProduct: (ProductOld) -> Unit,
+    editProduct: (ProductOld) -> Unit,
     isEdit: Boolean = false
 ) {
 
-    var caloriesPer100Gramms = remember { mutableIntStateOf(product.caloriesPer100Gramms) }
-    var caloriesSummery = remember { mutableFloatStateOf(product.caloriesSummery) }
-    var gramms = remember { mutableIntStateOf(product.gramms) }
-    var description = remember { mutableStateOf(product.description) }
+    var caloriesPer100Gramms = remember { mutableIntStateOf(productOld.caloriesPer100Gramms) }
+    var caloriesSummery = remember { mutableFloatStateOf(productOld.caloriesSummery) }
+    var gramms = remember { mutableIntStateOf(productOld.gramms) }
+    var description = remember { mutableStateOf(productOld.description) }
     val toastShow = remember { mutableStateOf(false) }
     Dialog(
         onDismissRequest = { showDialog(false) }, DialogProperties(
@@ -307,8 +307,8 @@ fun FoodDetailDialog(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Icon(product.productCategory.icon, "")
-                Text(stringResource(product.productCategory.name))
+                Icon(productOld.productCategory.icon, "")
+                Text(stringResource(productOld.productCategory.name))
 
 
                 OutlinedTextField(caloriesPer100Gramms.intValue.toString(),
@@ -352,8 +352,8 @@ fun FoodDetailDialog(
 
                 Button({
                     if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && !isEdit) onAcceptProduct(
-                        Product(
-                            productCategory = product.productCategory,
+                        ProductOld(
+                            productCategory = productOld.productCategory,
                             caloriesPer100Gramms.intValue,
                             caloriesSummery.floatValue,
                             gramms.intValue,
@@ -362,8 +362,8 @@ fun FoodDetailDialog(
                     )
                     else if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && isEdit) {
                         editProduct(
-                            Product(
-                                productCategory = product.productCategory,
+                            ProductOld(
+                                productCategory = productOld.productCategory,
                                 caloriesPer100Gramms.intValue,
                                 caloriesSummery.floatValue,
                                 gramms.intValue,

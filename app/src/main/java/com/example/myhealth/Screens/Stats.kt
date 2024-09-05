@@ -35,8 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myhealth.R
-import com.example.myhealth.data.Day
-import com.example.myhealth.data.Product
+import com.example.myhealth.data.DayOld
+import com.example.myhealth.data.ProductOld
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.models.StatsViewModel
 import com.example.myhealth.ui.components.ActivityRings
@@ -50,7 +50,7 @@ fun Stats(
     model: StatsViewModel = mainModel.statsViewModel
 ) {
     model.getDayData(
-        mainModel.days,
+        mainModel.dayOlds,
         mainModel.selectedDayIndex.collectAsState(),
         mainModel::selected,
         LocalContext.current,
@@ -62,7 +62,7 @@ fun Stats(
 
     if (Screen.Stats.dialog.value) DatePickerWithDialog(
         Modifier,
-        mainModel.selectedDay,
+        mainModel.selectedDayOld,
         mainModel::selected
     )
 
@@ -101,7 +101,7 @@ fun Stats(
         item {
             CalendarList(
                 Modifier,
-                model.days,
+                model.dayOlds,
                 model.selectedDayIndex,
                 mainModel::selected
             )
@@ -111,23 +111,23 @@ fun Stats(
                 model.strike.intValue.toFloat(),
                 model.progressCalories.floatValue,
                 model.progressSleep.floatValue,
-                model.selectedDay.value,
+                model.selectedDayOld.value,
                 model.daysFiltered.size
             )
         } //activity ring section
         item { StrikeSection(model.strike, model.bestStrike) } //series section
         //item { AverrageCaloriesSection(model.avrCount, model.avrCalories) } //averrage section
         item {
-            val products = SnapshotStateList<Product>()
+            val productOlds = SnapshotStateList<ProductOld>()
             model.daysFiltered.forEach {
-                it.breakfast.products.toCollection(products)
-                it.lunch.products.toCollection(products)
-                it.dinner.products.toCollection(products)
+                it.breakfast.productOlds.toCollection(productOlds)
+                it.lunch.productOlds.toCollection(productOlds)
+                it.dinner.productOlds.toCollection(productOlds)
             }
             FoodSection(
                 Modifier.fillParentMaxSize(),
                 {},
-                products
+                productOlds
             )
         }//product section
     }
@@ -247,7 +247,7 @@ fun ActivitySection(
     comboProgress: Float,
     caloriesProgress: Float,
     sleepProgress: Float,
-    day: Day,
+    dayOld: DayOld,
     daysCount: Int
 ) {
     Row(
@@ -275,7 +275,7 @@ fun ActivitySection(
             Row {
                 Icon(Icons.Default.LocalDining, "", tint = Color.Green)
                 Text(
-                    "${day.totalCalories}/${day.goalCalories}  ${stringResource(R.string.calories)}",
+                    "${dayOld.totalCalories}/${dayOld.goalCalories}  ${stringResource(R.string.calories)}",
                     color = Color.Green
                 )
             }
@@ -283,7 +283,7 @@ fun ActivitySection(
             Row {
                 Icon(Icons.Default.Bedtime, "", tint = Color.Blue)
                 Text(
-                    "${day.totalSleep}/${day.goalSleep} ${stringResource(R.string.hours)}",
+                    "${dayOld.totalSleep}/${dayOld.goalSleep} ${stringResource(R.string.hours)}",
                     color = Color.Blue
                 )
             }

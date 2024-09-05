@@ -1,19 +1,18 @@
 package com.example.myhealth.room.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.myhealth.data.Day
+import com.example.myhealth.data.DayOld
 
 @Dao
 interface DayDao {
     @Query("SELECT * FROM days")
-    fun getDays(): LiveData<List<Day>>
+    fun getDays(): List<DayOld>
     @Insert
-    fun addDay(day: Day)
+    fun addDay(dayOld: DayOld)
 
     @Update
-    fun updDay(day: Day)
+    fun updDay(dayOld: DayOld)
 }

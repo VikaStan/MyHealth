@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.MutableLiveData
 import com.example.myhealth.R
 import com.example.myhealth.data.Person
 import com.example.myhealth.models.AccountViewModel
@@ -51,12 +52,12 @@ fun Account(
     model: AccountViewModel = hiltViewModel()
 ) {
     val registrationDialog = model.registrationDialog.observeAsState()
-    val person = model.person.observeAsState()
+
     Column (horizontalAlignment = Alignment.CenterHorizontally){
         if (registrationDialog.value == true) {
             RegistrationDialog(model::showRegDialog, model::setPersonDate)
         } else {
-            AccountSection(person)
+            AccountSection(model.person)
             Button({
                 model.inSystem = MutableStateFlow(false)
                 model.person.value?.id?.let { model.delPerson(it) }
@@ -71,8 +72,8 @@ fun Account(
 }
 
 @Composable
-fun AccountSection(person: State<Person?>) {
-
+fun AccountSection(p: MutableLiveData<Person>) {
+    val person = p.observeAsState()
     Row(
         modifier = Modifier
             .padding(8.dp)
@@ -83,9 +84,8 @@ fun AccountSection(person: State<Person?>) {
                 ), shape = RoundedCornerShape(8.dp)
             ), horizontalArrangement = Arrangement.Center
     ) {
-        val icon =
-            remember { mutableStateOf(if (person.value?.sex == "Male") Icons.Default.Man else Icons.Default.Woman) }
-        Icon(icon.value, "", Modifier.size(128.dp))
+        val icon = (if (person.value?.sex == "Male") Icons.Default.Man else Icons.Default.Woman)
+        Icon(icon, "", Modifier.size(128.dp))
 
         Column(Modifier.padding(8.dp)) {
             person.value?.name?.let {

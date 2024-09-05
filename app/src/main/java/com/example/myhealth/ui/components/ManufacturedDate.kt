@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myhealth.R
 import com.example.myhealth.Screens.Screen
-import com.example.myhealth.data.Day
+import com.example.myhealth.data.DayOld
 import com.example.myhealth.ui.theme.MyHealthTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.Instant
@@ -65,7 +65,7 @@ fun ManufacturedDate() {
 @Composable
 fun DatePickerWithDialog(
     modifier: Modifier = Modifier,
-    selectedDay: MutableStateFlow<Day>,
+    selectedDayOld: MutableStateFlow<DayOld>,
     onSelectedDay: (Int) -> Unit
 
 ) {
@@ -91,8 +91,8 @@ fun DatePickerWithDialog(
                 return true
             }
         },
-        initialSelectedDateMillis = selectedDay.collectAsState().value.dayToMillis(),
-        initialDisplayedMonthMillis = selectedDay.collectAsState().value.dayToMillis()
+        initialSelectedDateMillis = selectedDayOld.collectAsState().value.dayToMillis(),
+        initialDisplayedMonthMillis = selectedDayOld.collectAsState().value.dayToMillis()
     )
     val chooseDate = dateState.selectedDateMillis?.let {//выбранная дата
         DateUtils().convertMillisToLocalDate(it)
