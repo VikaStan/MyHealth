@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
     alias(libs.plugins.devtoolsKsp)
 }
 
@@ -66,7 +67,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.leanback)
     implementation( libs.swipe.component)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -78,6 +78,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
     implementation ("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
+    implementation("com.google.android.gms:play-services-fitness:21.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.compose.material3:material3:1.3.2")
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
     annotationProcessor ("com.google.dagger:hilt-compiler:2.51.1")

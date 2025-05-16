@@ -5,3 +5,8 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.44.2" apply false
     alias(libs.plugins.devtoolsKsp)
 }
+buildscript {
+    dependencies {
+        classpath("com.google.gms:google-services:4.4.1")
+    }
+}
