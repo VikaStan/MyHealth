@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myhealth.Screens.MainScreen
 import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.presentation.reminder.HydrationReminderWorker
 import com.example.myhealth.ui.theme.MyHealthTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        HydrationReminderWorker.schedule(this)
     }
 }
 
