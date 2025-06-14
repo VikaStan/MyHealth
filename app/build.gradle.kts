@@ -95,20 +95,20 @@ dependencies {
     kapt("androidx.room:room-compiler:2.7.1")
     // Hilt
     implementation ("com.google.dagger:hilt-android:2.51.1")
-    annotationProcessor ("com.google.dagger:hilt-compiler:2.51.1")
-    kapt ("com.google.dagger:hilt-compiler:2.51.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.3")
+    annotationProcessor (libs.google.hilt.compiler)
+    kapt (libs.google.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.9.1")
 
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.runtime.livedata)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     ksp(libs.androidx.room.room.compiler)
-    implementation("com.google.accompanist:accompanist-pager:0.34.0")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.34.0")
+    implementation(libs.accompanist.pager)
+    implementation(libs.google.accompanist.pager.indicators)
 
 }
 

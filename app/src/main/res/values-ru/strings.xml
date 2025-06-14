@@ -64,5 +64,9 @@
     <string name="goal_sleep">Норма сна в сутки</string>
     <string name="del_btn">Удалить данные пользователя</string>
     <string name="reg_title">Введите данные пользователя</string>
+    <string name="dashboard_screen">Главная</string>
+    <string name="steps_label">Шаги: %1$d</string>
+    <string name="water_label">Вода: %1$d мл</string>
+    <string name="add_water_btn">Добавить воды</string>
 
 </resources>

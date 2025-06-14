@@ -12,7 +12,7 @@ interface WaterDao {
     /** Записи за сегодня (поток). */
     @Query(
         """
-        SELECT * FROM water_intake
+        SELECT * FROM water_intake       
         WHERE date(time / 1000, 'unixepoch', 'localtime') = date('now','localtime')
         ORDER BY time DESC
         """

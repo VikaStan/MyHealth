@@ -31,6 +31,7 @@ object DatabaseModule {
             .build()
 
     @Provides
+    @Singleton
     fun provideStatsDao(db: AppDatabase): StatsDao = db.statsDao()
 
     @Provides

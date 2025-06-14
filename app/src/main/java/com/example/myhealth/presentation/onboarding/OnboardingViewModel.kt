@@ -1,6 +1,5 @@
 package com.example.myhealth.presentation.onboarding
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myhealth.domain.usecases.AuthorizeFitUseCase

@@ -200,6 +200,16 @@ sealed class Screen(
         isAppBarVisible = false
     )
 
+    object Dashboard : Screen(
+        route = "dashboard",
+        title = R.string.dashboard_screen,
+        buttomIcon = Icons.Default.Home,
+        isAppBarVisible = false,
+        navigationIcon = null,
+        onNavigationIconClick = null,
+        navigationIconContentDescription = null,
+        actions = emptyList()
+    )
 
 
     fun getScreen(route: String?): Screen? = Screen::class.nestedClasses.map {

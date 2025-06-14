@@ -31,7 +31,7 @@ The statistics screen shows necessary data for the filled days, allowing users t
 git clone https://github.com/your-username/MyHealth.git
 cd MyHealth
 ```
-## Sreenshots
+## Screenshots
 |||
 |-|--------|
 | ![Screenshot_20240723_121434_My Health](https://github.com/user-attachments/assets/6d34adef-679b-4e01-9b55-9fa61202aa8d) | ![Screenshot_20240723_121319_My Health](https://github.com/user-attachments/assets/71787a4b-9d6a-4a38-82b8-38b7bfae6285) |

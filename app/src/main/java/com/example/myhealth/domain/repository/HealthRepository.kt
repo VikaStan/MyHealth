@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface HealthRepository {
     fun todayStats(): Flow<Stats>
     suspend fun addWater(amountML: Float)
+
 }

@@ -109,7 +109,7 @@ fun AccountSection(p: MutableLiveData<Person>) {
                 enabled = false,
                 label = { Text(stringResource(R.string.weight)) }) // вес
 
-            OutlinedTextField(person.value?.heigth.toString(),
+            OutlinedTextField(person.value?.height.toString(),
                 {},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 enabled = false,
@@ -145,7 +145,7 @@ fun RegistrationDialog(
         )
     }
     val weight = remember { mutableStateOf(0) }
-    val heigth = remember { mutableStateOf(0) }
+    val height = remember { mutableStateOf(0) }
 
     Dialog(
         onDismissRequest = { showDialog(false) }, DialogProperties(
@@ -217,10 +217,10 @@ fun RegistrationDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(stringResource(R.string.weight)) }) // вес
 
-                OutlinedTextField(heigth.value.toString(),
+                OutlinedTextField(height.value.toString(),
                     {
                         if (it != "" && it != "0") {
-                            heigth.value =  it.parseInt(it)
+                            height.value =  it.parseInt(it)
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -235,7 +235,7 @@ fun RegistrationDialog(
                             age.value,
                             sex.filter { it.value }.keys.first(),
                             weight.value,
-                            heigth.value
+                            height.value
                         )
                     )
                 }, Modifier.padding(8.dp)) {

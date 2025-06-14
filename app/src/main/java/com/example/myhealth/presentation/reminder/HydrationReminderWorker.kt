@@ -23,7 +23,8 @@ private const val WORK_NAME   = "WaterReminder"
 private const val CHANNEL_ID  = "WATER_CHANNEL"
 private const val NOTIF_ID    = 101
 private const val STEP_MINML  = 100          // уведомляем, если осталось ≥ 100 мл
-private const val PLUS_AMOUNT = 200          // размер «стакана»
+private const val PLUS_AMOUNT = 200        // размер «стакана»
+private const val DAILY_NORM_ML = 2000
 
 @HiltWorker
 class HydrationReminderWorker @AssistedInject constructor(
@@ -36,8 +37,8 @@ class HydrationReminderWorker @AssistedInject constructor(
         createChannel()
 
         // Берём сегодняшнюю статистику
-        val stats = healthRepo.todayStats().first()          // ← имя use-case ИСПРАВЛЕНО
-        val remain = stats.dailyTargetWater - stats.waterDrunk
+        val stats = healthRepo.todayStats().first()
+        val remain = (DAILY_NORM_ML - stats.water.toInt()).coerceAtLeast(0)
 
         if (remain >= STEP_MINML) {
             sendNotification(remain)

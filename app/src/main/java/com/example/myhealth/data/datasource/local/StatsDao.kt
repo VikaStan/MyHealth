@@ -13,9 +13,9 @@ interface StatsDao {
     suspend fun insertWater(entry: WaterEntity)
 
     @Query("""
-        SELECT SUM(amountMl) 
-        FROM water_intake 
-        WHERE date(timestamp/1000,'unixepoch','localtime') = date('now','localtime')
+        SELECT SUM(volume)
+        FROM water_intake
+        WHERE date(time/1000,'unixepoch','localtime') = date('now','localtime')
     """)
     fun waterTodayFlow(): Flow<Float?>
 
@@ -25,4 +25,7 @@ interface StatsDao {
 
     @Query("SELECT * FROM daily_stats WHERE date = date('now','localtime')")
     fun dailyStatsFlow(): Flow<DailyStatsEntity?>
+
+    @Query("SELECT calories FROM daily_stats WHERE date = date('now','localtime')")
+    fun caloriesToday(): Flow<Int?>
 }

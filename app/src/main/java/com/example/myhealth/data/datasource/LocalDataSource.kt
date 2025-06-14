@@ -25,5 +25,5 @@ class LocalDataSource @Inject constructor(
         }
 
     suspend fun addWater(amountMl: Float) =
-        dao.insertWater(WaterEntity(amountMl = amountMl))
+        dao.insertWater(WaterEntity(volume = amountMl))
 }

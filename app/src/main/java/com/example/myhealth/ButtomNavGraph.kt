@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.myhealth.Screens.Account
 import com.example.myhealth.Screens.Diary
+import com.example.myhealth.Screens.DiaryScreen
 import com.example.myhealth.Screens.FoodAdd
 import com.example.myhealth.Screens.Screen
 import com.example.myhealth.Screens.Settings
@@ -24,6 +25,7 @@ import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.presentation.onboarding.OnboardingScreen
+import com.example.myhealth.presentation.dashboard.DashBoardScreen
 
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -40,7 +42,7 @@ fun BottomNavGraph(
         modifier = modifier
     ) {
         composable(route = Screen.Diary.route) {
-            Diary(navHostController = navController, model = mainScreenViewModel.diaryModel, mainModel = mainScreenViewModel)
+            DiaryScreen(navHostController = navController, model = mainScreenViewModel.diaryModel, mainModel = mainScreenViewModel)
         }
         composable(route = Screen.Stats.route) {
             Stats(mainScreenViewModel)
@@ -63,7 +65,12 @@ fun BottomNavGraph(
                 popUpTo(Screen.Onboarding.route) { inclusive = true }
             } }
         }
+        composable(route = Screen.Dashboard.route) {
+            DashBoardScreen()
+        }
 
 
     }
 }
+
+
