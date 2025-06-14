@@ -20,7 +20,7 @@ class LocalDataSource @Inject constructor(
         ) { daily, water ->
             Stats(
                 steps = daily?.steps ?: 0,
-                water = water ?: 0f
+                waterDrunk = water ?: 0f
             )
         }
 

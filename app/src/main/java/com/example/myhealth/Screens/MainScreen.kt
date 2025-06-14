@@ -26,9 +26,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myhealth.BottomNavGraph
-import com.example.myhealth.PreferencesManager
 import com.example.myhealth.models.AccountViewModel
-import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.models.SleepAddViewModel
@@ -44,7 +43,7 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun MainScreen(
     mainViewModel: MainScreenViewModel = hiltViewModel(),
-    diaryViewModel: DiaryViewModel = hiltViewModel(),
+    diaryViewModel: DiaryScreenViewModel = hiltViewModel(),
     foodAddViewModel: FoodAddViewModel = hiltViewModel(),
     sleepAddViewModel: SleepAddViewModel = hiltViewModel(),
     statsViewModel: StatsViewModel = hiltViewModel(),

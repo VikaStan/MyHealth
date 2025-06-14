@@ -14,7 +14,7 @@ import java.util.stream.IntStream.range
 import javax.inject.Inject
 
 @HiltViewModel
-class DiaryViewModel @Inject constructor() : ViewModel() {
+class DiaryScreenViewModel @Inject constructor() : ViewModel() {
 
     lateinit var navHostController: NavHostController
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()

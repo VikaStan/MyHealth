@@ -1,7 +1,5 @@
 package com.example.myhealth.data.repository
 
-import com.example.myhealth.data.datasource.FitnessDataSource
-import com.example.myhealth.data.datasource.LocalDataSource
 import com.example.myhealth.data.datasource.local.StatsDao
 import com.example.myhealth.data.datasource.local.WaterDao
 import com.example.myhealth.data.datasource.local.entity.WaterEntity
@@ -15,8 +13,6 @@ import javax.inject.Singleton
 
 @Singleton
 class HealthRepositoryImpl @Inject constructor(
-    private val local: LocalDataSource,
-    private val fit: FitnessDataSource,
     private val waterDao: WaterDao,
     private val statsDao: StatsDao
 ) : HealthRepository {
@@ -24,9 +20,14 @@ class HealthRepositoryImpl @Inject constructor(
     override fun todayStats(): Flow<Stats> =
         combine(
             waterDao.observeToday()
-                .map { list -> list.sumOf { it.volume} },
-            statsDao.caloriesToday().map { it ?: 0 }
-        ) { water, kcal -> Stats(water, kcal) }
+                .map { list -> list.sumOf { it.volume } },
+            statsDao.dailyStatsFlow()
+        ) { water, daily ->
+            Stats(
+                steps = daily?.steps ?: 0,
+                waterDrunk = water
+            )
+        }
 
     override suspend fun addWater(amountML: Float) {
         waterDao.insert(WaterEntity(volume = amountML, time = System.currentTimeMillis()))

@@ -1,9 +1,11 @@
 package com.example.myhealth.presentation.reminder
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
@@ -23,8 +25,6 @@ private const val WORK_NAME   = "WaterReminder"
 private const val CHANNEL_ID  = "WATER_CHANNEL"
 private const val NOTIF_ID    = 101
 private const val STEP_MINML  = 100          // уведомляем, если осталось ≥ 100 мл
-private const val PLUS_AMOUNT = 200        // размер «стакана»
-private const val DAILY_NORM_ML = 2000
 
 @HiltWorker
 class HydrationReminderWorker @AssistedInject constructor(
@@ -33,12 +33,15 @@ class HydrationReminderWorker @AssistedInject constructor(
     private val healthRepo: HealthRepository
 ) : CoroutineWorker(ctx, params) {
 
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override suspend fun doWork(): Result {
         createChannel()
 
         // Берём сегодняшнюю статистику
         val stats = healthRepo.todayStats().first()
-        val remain = (DAILY_NORM_ML - stats.water.toInt()).coerceAtLeast(0)
+        val remain = (
+                stats.dailyTargetWater - stats.waterDrunk
+                ).toInt().coerceAtLeast(0)
 
         if (remain >= STEP_MINML) {
             sendNotification(remain)
@@ -46,6 +49,7 @@ class HydrationReminderWorker @AssistedInject constructor(
         return Result.success()
     }
 
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     private fun sendNotification(remain: Int) {
         val text = applicationContext.getString(
             R.string.water_reminder_text,

@@ -42,7 +42,7 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getEatingFoodTime(model: DiaryViewModel, eatingType: String?) {
+    fun getEatingFoodTime(model: DiaryScreenViewModel, eatingType: String?) {
         when (eatingType) {
             FoodTimeType.Lunch.n -> eatingFoodTime.value = model.selectedDayOld.value.lunch
             FoodTimeType.Breakfast.n -> eatingFoodTime.value = model.selectedDayOld.value.breakfast
@@ -92,7 +92,7 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
         foodEditDialogShow(false)
     }
 
-    fun updateListProducts(model: DiaryViewModel) {
+    fun updateListProducts(model: DiaryScreenViewModel) {
         if (isChange) {
             when (model.selectedEatTimeName.value) {
                 FoodTimeType.Lunch.n -> model.selectedDayOld.value.lunch.productOlds = productOlds

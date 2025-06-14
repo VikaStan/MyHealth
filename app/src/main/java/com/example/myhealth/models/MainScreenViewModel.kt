@@ -23,7 +23,7 @@ class MainScreenViewModel @Inject constructor(
      val mainDB: HealthRoomDb
 ) : ViewModel() {
 
-    lateinit var diaryModel: DiaryViewModel
+    lateinit var diaryModel: DiaryScreenViewModel
     lateinit var foodAddViewModel: FoodAddViewModel
     lateinit var sleepAddViewModel: SleepAddViewModel
     lateinit var statsViewModel: StatsViewModel
@@ -73,7 +73,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun initiate(
-        diaryModel: DiaryViewModel,
+        diaryModel: DiaryScreenViewModel,
         foodAddViewModel: FoodAddViewModel,
         sleepAddViewModel: SleepAddViewModel,
         statsViewModel: StatsViewModel,

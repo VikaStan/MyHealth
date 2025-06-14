@@ -55,7 +55,7 @@ import com.example.myhealth.R
 import com.example.myhealth.data.FoodTimeType
 import com.example.myhealth.data.ProductOld
 import com.example.myhealth.data.ProductType
-import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
 import com.example.myhealth.utility.parseFloat
@@ -67,7 +67,7 @@ import me.saket.swipe.SwipeableActionsBox
 fun FoodAdd(
     eatingType: String?,
     modifier: Modifier,
-    modelDiary: DiaryViewModel = hiltViewModel(),
+    modelDiary: DiaryScreenViewModel = hiltViewModel(),
     model: FoodAddViewModel = hiltViewModel()
 ) {
 
@@ -389,6 +389,6 @@ fun FoodDetailDialog(
 @Composable
 fun FoodAddPreview() {
     MyHealthTheme {
-        FoodAdd(FoodTimeType.Breakfast.n, modelDiary = DiaryViewModel(), modifier = Modifier)
+        FoodAdd(FoodTimeType.Breakfast.n, modelDiary = DiaryScreenViewModel(), modifier = Modifier)
     }
 }

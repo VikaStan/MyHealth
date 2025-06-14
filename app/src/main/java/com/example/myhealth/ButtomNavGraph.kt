@@ -2,27 +2,21 @@ package com.example.myhealth
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.myhealth.Screens.Account
-import com.example.myhealth.Screens.Diary
 import com.example.myhealth.Screens.DiaryScreen
 import com.example.myhealth.Screens.FoodAdd
 import com.example.myhealth.Screens.Screen
 import com.example.myhealth.Screens.Settings
 import com.example.myhealth.Screens.SleepAdd
 import com.example.myhealth.Screens.Stats
-import com.example.myhealth.models.DiaryViewModel
-import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.presentation.onboarding.OnboardingScreen
 import com.example.myhealth.presentation.dashboard.DashBoardScreen

@@ -41,7 +41,7 @@ import com.example.myhealth.ui.components.ActivityRings
                 comboProgress = stats.value.steps / 10000f,
                 caloriesProgress = 0f,
                 sleepProgress = 0f,
-                waterProgress = stats.value.water / 2000f,
+                waterProgress = stats.value.waterDrunk / stats.value.dailyTargetWater,
                 componentSize = 150
             )
             Text(
@@ -49,7 +49,7 @@ import com.example.myhealth.ui.components.ActivityRings
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = stringResource(R.string.water_label, stats.value.water.toInt()),
+                text = stringResource(R.string.water_label, stats.value.waterDrunk.toInt()),
                 style = MaterialTheme.typography.bodyLarge
             )
             Button(onClick = { waterViewModel.addWater(200f) }) {

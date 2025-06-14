@@ -52,7 +52,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
 import com.example.myhealth.data.Sleep
-import com.example.myhealth.models.DiaryViewModel
+import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.SleepAddViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
 import com.example.myhealth.utility.parseFloat
@@ -63,7 +63,7 @@ import me.saket.swipe.SwipeableActionsBox
 @Composable
 fun SleepAdd(
     modifier: Modifier,
-    modelDiary: DiaryViewModel = hiltViewModel(),
+    modelDiary: DiaryScreenViewModel = hiltViewModel(),
     model: SleepAddViewModel = hiltViewModel()
 ) {
     val sleepList = remember { model.sleepList }
