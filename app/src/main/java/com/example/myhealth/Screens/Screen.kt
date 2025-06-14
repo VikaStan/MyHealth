@@ -193,6 +193,12 @@ sealed class Screen(
         navigationIconContentDescription = null,
         actions = emptyList()
     )
+    object Onboarding : Screen(
+        route = "onboarding",
+        title = R.string.app_name,
+        buttomIcon = Icons.Default.Home,
+        isAppBarVisible = false
+    )
 
 
 

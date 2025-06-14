@@ -2,8 +2,9 @@ package com.example.myhealth.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.myhealth.data.local.AppDatabase
-import com.example.myhealth.data.local.StatsDao
+import com.example.myhealth.data.datasource.local.AppDatabase
+import com.example.myhealth.data.datasource.local.StatsDao
+import com.example.myhealth.data.datasource.local.WaterDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,4 +32,8 @@ object DatabaseModule {
 
     @Provides
     fun provideStatsDao(db: AppDatabase): StatsDao = db.statsDao()
+
+    @Provides
+    @Singleton
+    fun provideWaterDao(db: AppDatabase): WaterDao = db.waterDao()
 }

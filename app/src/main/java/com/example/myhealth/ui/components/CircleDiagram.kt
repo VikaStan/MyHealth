@@ -36,6 +36,7 @@ fun ActivityRings(
     comboProgress: Float,  // Progress for the red ring (0..1)
     caloriesProgress: Float,  // Progress for the green ring (0..1)
     sleepProgress: Float,  // Progress for the blue ring (0..1)
+    waterProgress: Float,
     componentSize: Int = 170,
     modifier: Modifier = Modifier
 ) {

@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatsViewModel @Inject constructor(
-    private val repo: HealthRepository
+    private val healthRepo: HealthRepository
 ) : ViewModel() {
 
     private val _stats = MutableStateFlow(Stats())
@@ -21,7 +21,7 @@ class StatsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repo.getTodayStats().collect { _stats.value = it }
+            healthRepo.todayStats().collect { _stats.value = it }
         }
     }
 }

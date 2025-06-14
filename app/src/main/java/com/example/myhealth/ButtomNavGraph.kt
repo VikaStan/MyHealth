@@ -23,6 +23,7 @@ import com.example.myhealth.Screens.Stats
 import com.example.myhealth.models.DiaryViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.presentation.onboarding.OnboardingScreen
 
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -35,7 +36,7 @@ fun BottomNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = start,
+        startDestination = "onboarding",
         modifier = modifier
     ) {
         composable(route = Screen.Diary.route) {
@@ -57,6 +58,12 @@ fun BottomNavGraph(
         composable(route = Screen.SleepAdd.route) {
             SleepAdd(modifier, mainScreenViewModel.diaryModel, mainScreenViewModel.sleepAddViewModel)
         }
+        composable(Screen.Onboarding.route) {
+            OnboardingScreen { navController.navigate(Screen.Dashboard.route) {
+                popUpTo(Screen.Onboarding.route) { inclusive = true }
+            } }
+        }
+
 
     }
 }

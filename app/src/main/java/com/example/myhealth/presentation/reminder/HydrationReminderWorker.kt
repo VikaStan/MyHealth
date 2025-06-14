@@ -3,73 +3,94 @@ package com.example.myhealth.presentation.reminder
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
+import com.example.myhealth.R
 import com.example.myhealth.domain.repository.HealthRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
 
+private const val WORK_NAME   = "WaterReminder"
+private const val CHANNEL_ID  = "WATER_CHANNEL"
+private const val NOTIF_ID    = 101
+private const val STEP_MINML  = 100          // уведомляем, если осталось ≥ 100 мл
+private const val PLUS_AMOUNT = 200          // размер «стакана»
+
 @HiltWorker
 class HydrationReminderWorker @AssistedInject constructor(
-    @Assisted context: Context,
+    @Assisted ctx: Context,
     @Assisted params: WorkerParameters,
-    private val repo: HealthRepository
-) : CoroutineWorker(context, params) {
+    private val healthRepo: HealthRepository
+) : CoroutineWorker(ctx, params) {
 
     override suspend fun doWork(): Result {
-        val stats = repo.getTodayStats().first()   // <-- import first
-        /* TODO заменить "60" на prefs.weightKg */
-        val norm = 60 * 35
-        if (stats.water < norm - 100) {
-            sendNotification(norm - stats.water)
+        createChannel()
+
+        // Берём сегодняшнюю статистику
+        val stats = healthRepo.todayStats().first()          // ← имя use-case ИСПРАВЛЕНО
+        val remain = stats.dailyTargetWater - stats.waterDrunk
+
+        if (remain >= STEP_MINML) {
+            sendNotification(remain)
         }
         return Result.success()
     }
 
-    private fun sendNotification(missing: Float) {
-        val mgr = applicationContext.getSystemService(
-            Context.NOTIFICATION_SERVICE
-        ) as NotificationManager
+    private fun sendNotification(remain: Int) {
+        val text = applicationContext.getString(
+            R.string.water_reminder_text,
+            remain
+        )
 
-        val channelId = "water_channel"
-        if (mgr.getNotificationChannel(channelId) == null) {
-            mgr.createNotificationChannel(
-                NotificationChannel(
-                    channelId,
-                    "Water",
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-            )
-        }
-
-        val notif = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(res.drawable.ic_water)   // замени на ic_water позже
-            .setContentTitle("Кажется, вы пили мало воды")
-            .setContentText("До нормы осталось ${missing.toInt()} мл")
+        val notif = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_water)          // ИКОНКА ЕСТЬ в res/drawable
+            .setContentTitle(applicationContext.getString(R.string.app_name))
+            .setContentText(text)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
             .build()
 
-        mgr.notify(1, notif)
+        NotificationManagerCompat
+            .from(applicationContext)
+            .notify(NOTIF_ID, notif)
+    }
+
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                applicationContext.getString(R.string.channel_water),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            applicationContext
+                .getSystemService(NotificationManager::class.java)
+                .createNotificationChannel(channel)
+        }
     }
 
     companion object {
-        const val WORK_NAME = "HydrationReminder"
-
+        /** Регистрирует (или обновляет) воркер раз в 45 минут. */
         fun schedule(context: Context) {
-            val req = PeriodicWorkRequestBuilder<HydrationReminderWorker>(
-                1, TimeUnit.HOURS
+            val request = PeriodicWorkRequestBuilder<HydrationReminderWorker>(
+                45, TimeUnit.MINUTES
             )
-                .setFlexIntervalDuration(java.time.Duration.ofMinutes(15))
+                .setFlexIntervalDuration(15, TimeUnit.MINUTES)   // NEW API
                 .build()
 
-            WorkManager.getInstance(context)
-                .enqueueUniquePeriodicWork(
-                    WORK_NAME,
-                    ExistingPeriodicWorkPolicy.KEEP,
-                    req
-                )
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                WORK_NAME,
+                ExistingPeriodicWorkPolicy.UPDATE,               // не плодим дубликаты
+                request
+            )
         }
     }
 }

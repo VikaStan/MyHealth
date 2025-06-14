@@ -1,8 +1,8 @@
-package com.example.myhealth.data.local
+package com.example.myhealth.data.datasource.local
 
 import androidx.room.*
-import com.example.myhealth.data.local.entity.DailyStatsEntity
-import com.example.myhealth.data.local.entity.WaterEntity
+import com.example.myhealth.data.datasource.local.entity.DailyStatsEntity
+import com.example.myhealth.data.datasource.local.entity.WaterEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

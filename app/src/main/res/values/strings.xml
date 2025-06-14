@@ -65,4 +65,13 @@
     <string name="goal_sleep">Goal sleep</string>
     <string name="del_btn">Delete user data</string>
     <string name="reg_title">Add user data</string>
+    <string name="channel_water">Напоминания о воде</string>
+    <string name="water_reminder_text">До нормы осталось %1$d мл</string>
+    <string name="onb_title_1">Следите за гидратацией каждый день</string>
+    <string name="onb_title_2">Импортируем шаги и калории из Google Fit</string>
+    <string name="onb_title_3">Ненавязчивые напоминания каждые 45 минут</string>
+    <string name="onb_title_4">Всё готово к началу!</string>
+    <string name="onb_button">Подключить Google Fit</string>
+    <string name="permission_denied">Чтобы получать шаги и калории, разрешите доступ к активности</string>
+
 </resources>

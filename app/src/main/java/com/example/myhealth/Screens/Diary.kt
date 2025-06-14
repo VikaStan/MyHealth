@@ -44,9 +44,9 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
-fun Diary(
+fun DiaryScreen(
     modifier: Modifier = Modifier,
-    model: DiaryViewModel = hiltViewModel(),
+    model: DiaryScreenViewModel = hiltViewModel(),
     mainModel: MainScreenViewModel,
     navHostController: NavHostController,
 ) {

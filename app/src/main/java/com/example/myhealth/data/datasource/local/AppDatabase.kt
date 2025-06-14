@@ -1,9 +1,9 @@
-package com.example.myhealth.data.local
+package com.example.myhealth.data.datasource.local
 
     import androidx.room.Database
     import androidx.room.RoomDatabase
-    import com.example.myhealth.data.local.entity.WaterEntity
-    import com.example.myhealth.data.local.entity.DailyStatsEntity
+    import com.example.myhealth.data.datasource.local.entity.WaterEntity
+    import com.example.myhealth.data.datasource.local.entity.DailyStatsEntity
 
     @Database(
         entities = [WaterEntity::class, DailyStatsEntity::class],
@@ -12,4 +12,5 @@ package com.example.myhealth.data.local
     )
     abstract class AppDatabase : RoomDatabase() {
         abstract fun statsDao(): StatsDao
+        abstract fun waterDao(): WaterDao
     }

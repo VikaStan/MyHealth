@@ -1,7 +1,7 @@
 package com.example.myhealth.data.datasource
 
-import com.example.myhealth.data.local.StatsDao
-import com.example.myhealth.data.local.entity.WaterEntity
+import com.example.myhealth.data.datasource.local.StatsDao
+import com.example.myhealth.data.datasource.local.entity.WaterEntity
 import com.example.myhealth.domain.models.Stats
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
