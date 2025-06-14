@@ -31,6 +31,13 @@ The statistics screen shows necessary data for the filled days, allowing users t
 git clone https://github.com/your-username/MyHealth.git
 cd MyHealth
 ```
+После клонирования создайте файл `local.properties` в корне проекта со следующим содержимым:
+
+```properties
+sdk.dir=/путь/к/Android/Sdk
+```
+
+Файл не должен коммититься, он уже исключён в `.gitignore`.
 ## Screenshots
 |||
 |-|--------|
