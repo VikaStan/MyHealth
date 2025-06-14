@@ -254,7 +254,7 @@ fun SleepDetailDialog(
                         hours.intValue.toString(),
                         {
                             if (it != "") {
-                                hours.intValue = it.parseInt(it)
+                                hours.intValue = it.parseInt()
                                 summeryHours.floatValue = (hours.intValue + (minutes.value / 60)).toFloat()
                             }
                         },
@@ -267,7 +267,7 @@ fun SleepDetailDialog(
                         minutes.intValue.toString(),
                         {
                             if (it != "") {
-                                minutes.intValue = it.parseInt(it)
+                                minutes.intValue = it.parseInt()
                                 summeryHours.floatValue = (hours.intValue + (minutes.intValue / 60)).toFloat()
                             }
                         },
@@ -279,7 +279,7 @@ fun SleepDetailDialog(
 
 
                 OutlinedTextField(summeryHours.floatValue.toString(),
-                    { summeryHours.floatValue = it.parseFloat(it) },
+                    { summeryHours.floatValue = it.parseFloat() },
                     enabled = false,
                     leadingIcon = { Icon(Icons.Default.Schedule, "") },
                     label = { Text(stringResource(R.string.hours)) }) //общее время

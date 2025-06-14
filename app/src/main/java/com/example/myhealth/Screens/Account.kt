@@ -202,7 +202,7 @@ fun RegistrationDialog(
                 OutlinedTextField(age.value.toString(),
                     {
                         if (it != "" && it != "0") {
-                            age.value = it.parseInt(it)
+                            age.value = it.parseInt()
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -211,7 +211,7 @@ fun RegistrationDialog(
                 OutlinedTextField(weight.value.toString(),
                     {
                         if (it != "" && it != "0") {
-                            weight.value =  it.parseInt(it)
+                            weight.value =  it.parseInt()
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -220,7 +220,7 @@ fun RegistrationDialog(
                 OutlinedTextField(height.value.toString(),
                     {
                         if (it != "" && it != "0") {
-                            height.value =  it.parseInt(it)
+                            height.value =  it.parseInt()
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

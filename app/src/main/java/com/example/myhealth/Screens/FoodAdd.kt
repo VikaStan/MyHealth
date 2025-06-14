@@ -315,7 +315,7 @@ fun FoodDetailDialog(
                     {
                         if (it != "") {
 
-                            caloriesPer100Gramms.intValue = it.parseInt(it)
+                            caloriesPer100Gramms.intValue = it.parseInt()
                             caloriesSummery.floatValue =
                                 ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
                         }
@@ -327,7 +327,7 @@ fun FoodDetailDialog(
                 OutlinedTextField(gramms.intValue.toString(),
                     {
                         if (it != "") {
-                            gramms.intValue = it.parseInt(it)
+                            gramms.intValue = it.parseInt()
                             caloriesSummery.floatValue =
                                 ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
                         }
@@ -337,7 +337,7 @@ fun FoodDetailDialog(
                     label = { Text(stringResource(R.string.gramm)) }) //грамм
 
                 OutlinedTextField(caloriesSummery.floatValue.toString(),
-                    { caloriesSummery.floatValue = it.parseFloat(it) },
+                    { caloriesSummery.floatValue = it.parseFloat() },
                     enabled = false,
                     leadingIcon = { Icon(Icons.Default.LocalDining, "") },
                     label = { Text(stringResource(R.string.calories_summary)) }) //общие калории
