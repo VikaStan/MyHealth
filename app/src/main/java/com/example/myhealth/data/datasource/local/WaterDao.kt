@@ -12,20 +12,28 @@ interface WaterDao {
     /** Записи за сегодня (поток). */
     @Query(
         """
-        SELECT * FROM water_intake       
-        WHERE date(time / 1000, 'unixepoch', 'localtime') = date('now','localtime')
-        ORDER BY time DESC
+           SELECT 
+            strftime('%Y-%m-%d', datetime(time/1000, 'unixepoch', 'localtime')) as day,
+            SUM(volume) as totalMl
+        FROM water_intake
+        WHERE time >= :from
+        GROUP BY day
+        ORDER BY day DESC
+        LIMIT 7
         """
     )
-    fun observeToday(): Flow<List<WaterEntity>>
+    fun getLast7Days(from: Long): Flow<List<WaterDayStat>>
 
     /** Последние N дней. */
     @Query(
         """
-        SELECT * FROM water_intake
-        WHERE time >= strftime('%s','now','localtime','-|| :days ||day')*1000
-        ORDER BY time DESC
+        SELECT SUM(volume) FROM water_intake
+        WHERE date(time/1000, 'unixepoch', 'localtime') = date('now', 'localtime')
         """
     )
-    fun observeLastDays(days: Int): Flow<List<WaterEntity>>
+    fun getToday(): Flow<Int?>
 }
+data class WaterDayStat(
+    val day: String,
+    val totalMl: Int
+)
