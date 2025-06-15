@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
-import com.example.myhealth.presentation.StatsViewModel
+import com.example.myhealth.presentation.statistics.StatsViewModel
 import com.example.myhealth.presentation.WaterLogViewModel
 import com.example.myhealth.ui.components.ActivityRings
 
