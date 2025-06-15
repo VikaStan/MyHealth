@@ -8,6 +8,10 @@ import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.fitness.result.DataReadResponse
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
+import java.util.Locale
+import java.util.Date
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -16,7 +20,6 @@ import javax.inject.Singleton
 @Singleton
 class FitnessDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val accountProvider: () -> com.google.android.gms.auth.api.signin.GoogleSignInAccount
 ) {
     suspend fun getStepsForLastWeek(): List<Pair<String, Int>> {
         val account = GoogleSignIn.getLastSignedInAccount(context) ?: return emptyList()
@@ -37,8 +40,10 @@ class FitnessDataSource @Inject constructor(
 
         val stepsByDay = mutableListOf<Pair<String, Int>>()
         for (bucket in response.buckets) {
-            val dataSet = bucket.getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA)
-            val count = dataSet.dataPoints.sumOf { it.getValue(DataType.AGGREGATE_STEP_COUNT_DELTA.fields[0]).asInt() }
+            val dataSet = bucket.getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA) ?: continue
+            val count = dataSet.dataPoints.sumOf {
+                it.getValue(DataType.AGGREGATE_STEP_COUNT_DELTA.fields[0]).asInt()
+ }
             val day = bucket.getStartTime(TimeUnit.MILLISECONDS)
             // Форматируем дату: yyyy-MM-dd
             val dateStr = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(day))
