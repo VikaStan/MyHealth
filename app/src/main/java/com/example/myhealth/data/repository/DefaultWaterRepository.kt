@@ -1,8 +1,8 @@
 package com.example.myhealth.data.repository
 
 import com.example.myhealth.data.datasource.local.WaterDao
+import com.example.myhealth.data.datasource.local.entity.toDomain
 import com.example.myhealth.data.datasource.local.entity.WaterEntity
-import com.example.myhealth.data.datasource.local.toDomain
 import com.example.myhealth.domain.models.WaterLog
 import com.example.myhealth.di.IoDispatcher
 import com.example.myhealth.domain.repository.WaterRepository
@@ -29,5 +29,5 @@ class DefaultWaterRepository @Inject constructor(
 
     /** Список записей за последние N дней (для журнала). */
     override fun waterLogs(days: Int): Flow<List<WaterLog>> =
-        dao.observeLastDays(days).map { list -> list.map { it. toDomain() } }
+        dao.observeLastDays(days).map { list -> list.map { it.toDomain() } }
 }

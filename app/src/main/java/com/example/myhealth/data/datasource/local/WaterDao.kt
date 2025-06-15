@@ -23,7 +23,7 @@ interface WaterDao {
     @Query(
         """
         SELECT * FROM water_intake
-        WHERE time >= strftime('%s','now','localtime','-:days day')*1000
+        WHERE time >= strftime('%s','now','localtime','-|| :days ||day')*1000
         ORDER BY time DESC
         """
     )

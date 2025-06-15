@@ -1,23 +1,18 @@
 package com.example.myhealth.ui.components
 
+//noinspection UsingMaterialAndMaterial3Libraries
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.LocalDining
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +20,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,7 +32,7 @@ fun ActivityRings(
     sleepProgress: Float,  // Progress for the blue ring (0..1)
     waterProgress: Float,
     componentSize: Int = 170,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Box(
         modifier = Modifier
@@ -104,24 +98,24 @@ fun ActivityRings(
                 )
             }
         }
-        /*Column(
-            modifier.size((componentSize * 0.65f).dp).background(
-                androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer.copy(
-                    0.5f
-                ), shape = CircleShape
-            ),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            listOf(comboProgress, caloriesProgress, sleepProgress).forEachIndexed { i, prm ->
-                Row {
-                    Icon(icons[i], "", tint = colors[i])
-                    Text((prm * 100).toInt().toString() + " %", color = colors[i])
-                }
-            }
-
-
-        }*/
+//        Column(
+//            modifier.size((componentSize * 0.65f).dp).background(
+//                androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer.copy(
+//                    0.5f
+//                ), shape = CircleShape
+//            ),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            listOf(comboProgress, caloriesProgress, sleepProgress).forEachIndexed { i, prm ->
+//                Row {
+//                    Icon(icons[i], "", tint = colors[i])
+//                    Text((prm * 100).toInt().toString() + " %", color = colors[i])
+//                }
+//            }
+//
+//
+//        }
 
     }
 }
@@ -139,6 +133,7 @@ fun ActivityRingsPreview() {
             ActivityRings(
                 comboProgress = 0.75f,
                 caloriesProgress = 0.5f,
+                waterProgress = 0.4f,
                 sleepProgress = 0.9f,
                 modifier = Modifier.size(200.dp)
             )

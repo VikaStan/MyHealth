@@ -1,4 +1,4 @@
-package com.example.myhealth.Screens
+package com.example.myhealth.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background

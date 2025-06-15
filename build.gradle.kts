@@ -2,11 +2,11 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
-    id("com.google.dagger.hilt.android") version "2.44.2" apply false
+    alias(libs.plugins.google.hilt.android.plugin) apply false
     alias(libs.plugins.devtoolsKsp)
 }
 buildscript {
     dependencies {
-        classpath("com.google.gms:google-services:4.4.1")
+        classpath(libs.google.services)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.myhealth.Screens
+package com.example.myhealth.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi

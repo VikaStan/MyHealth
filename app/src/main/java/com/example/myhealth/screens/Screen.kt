@@ -1,24 +1,20 @@
-package com.example.myhealth.Screens
+package com.example.myhealth.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Equalizer
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.myhealth.R
-import com.example.myhealth.Screens.Screen.Diary._buttons
-import com.example.myhealth.Screens.Screen.Settings._buttons
-import com.example.myhealth.Screens.Screen.Account._buttons
-import com.example.myhealth.Screens.Screen.Stats._buttons
-import com.example.myhealth.Screens.Screen.FoodAdd._buttons
-import com.example.myhealth.Screens.Screen.SleepAdd._buttons
+import com.example.myhealth.screens.Screen.Diary._buttons
+import com.example.myhealth.screens.Screen.Settings._buttons
+import com.example.myhealth.screens.Screen.Stats._buttons
+import com.example.myhealth.screens.Screen.FoodAdd._buttons
+import com.example.myhealth.screens.Screen.SleepAdd._buttons
 import com.example.myhealth.ui.components.appbar.ActionMenuItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -199,6 +195,8 @@ sealed class Screen(
         buttomIcon = Icons.Default.Home,
         isAppBarVisible = false
     )
+
+
 
     object Dashboard : Screen(
         route = "dashboard",

@@ -3,7 +3,7 @@ package com.example.myhealth.models
 import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
-import com.example.myhealth.Screens.Screen
+import com.example.myhealth.screens.Screen
 import com.example.myhealth.data.DayOld
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

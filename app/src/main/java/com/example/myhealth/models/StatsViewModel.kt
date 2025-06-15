@@ -151,7 +151,7 @@ class StatsViewModel @Inject constructor() : ViewModel() {
             }
         }
         bestStrike.intValue = if (maxVal.isNotEmpty()) maxVal.max() else strike.intValue
-        //calculateAverrageParams()
+            calculateAverrageParams()
     }
 
     private fun getListSize(): Int {

@@ -1,4 +1,4 @@
-package com.example.myhealth.Screens
+package com.example.myhealth.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -116,7 +116,7 @@ fun Stats(
             )
         } //activity ring section
         item { StrikeSection(model.strike, model.bestStrike) } //series section
-        //item { AverrageCaloriesSection(model.avrCount, model.avrCalories) } //averrage section
+        item { AverrageCaloriesSection(model.avrCount, model.avrCalories) } //averrage section
         item {
             val productOlds = SnapshotStateList<ProductOld>()
             model.daysFiltered.forEach {
@@ -262,6 +262,7 @@ fun ActivitySection(
             comboProgress / daysCount,
             caloriesProgress,
             sleepProgress,
+            waterProgress = 0f,
             componentSize = 100,
             modifier = Modifier.padding(30.dp).wrapContentSize()
         )

@@ -2,19 +2,19 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.hilt.android.plugin)
     id("com.google.gms.google-services")
     alias(libs.plugins.devtoolsKsp)
 }
 
 android {
     namespace = "com.example.myhealth"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.myhealth"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -80,25 +80,21 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
 
-    implementation ("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
-    implementation("com.google.android.gms:play-services-fitness:21.2.0")
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
-    implementation("androidx.hilt:hilt-work:1.2.0")
-    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.google.play.services.fitness)
+    implementation(libs.gms.play.services.auth)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
 
-    implementation("androidx.compose.material3:material3:1.3.2")
-
-    implementation("androidx.room:room-runtime:2.7.1")
-    implementation("androidx.room:room-ktx:2.7.1")
-    kapt("androidx.room:room-compiler:2.7.1")
     // Hilt
-    implementation ("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.google.hilt.android)
     annotationProcessor (libs.google.hilt.compiler)
     kapt (libs.google.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.9.1")
+    implementation (libs.androidx.lifecycle.runtime.compose)
 
     implementation(libs.androidx.datastore.preferences)
 

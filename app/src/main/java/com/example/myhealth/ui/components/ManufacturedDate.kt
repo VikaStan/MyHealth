@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myhealth.R
-import com.example.myhealth.Screens.Screen
+import com.example.myhealth.screens.Screen
 import com.example.myhealth.data.DayOld
 import com.example.myhealth.ui.theme.MyHealthTheme
 import kotlinx.coroutines.flow.MutableStateFlow

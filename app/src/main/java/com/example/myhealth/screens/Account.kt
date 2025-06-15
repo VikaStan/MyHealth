@@ -1,4 +1,4 @@
-package com.example.myhealth.Screens
+package com.example.myhealth.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -21,8 +21,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +40,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.myhealth.R
 import com.example.myhealth.data.Person
 import com.example.myhealth.models.AccountViewModel
-import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
 import com.example.myhealth.utility.parseInt
 import kotlinx.coroutines.flow.MutableStateFlow
