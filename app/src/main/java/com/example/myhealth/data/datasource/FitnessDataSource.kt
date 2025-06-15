@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.myhealth.data.datasource
 
 import android.content.Context
