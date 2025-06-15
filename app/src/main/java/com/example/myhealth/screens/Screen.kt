@@ -1,20 +1,15 @@
 package com.example.myhealth.screens
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.myhealth.R
-import com.example.myhealth.screens.Screen.Diary._buttons
-import com.example.myhealth.screens.Screen.Settings._buttons
-import com.example.myhealth.screens.Screen.Stats._buttons
-import com.example.myhealth.screens.Screen.FoodAdd._buttons
-import com.example.myhealth.screens.Screen.SleepAdd._buttons
 import com.example.myhealth.ui.components.appbar.ActionMenuItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,23 +20,19 @@ sealed class Screen(
     val title: Int,
     val buttomIcon: ImageVector,
     val isAppBarVisible: Boolean = true,
-    val navigationIcon: ImageVector?,
-    val navigationIconContentDescription: String?,
-    val onNavigationIconClick: (() -> Unit)?,
-    val actions: List<ActionMenuItem>
+    val navigationIcon: ImageVector? = null,
+    val navigationIconContentDescription: String? = null,
+    var onNavigationIconClick: (() -> Unit)? = null,
+    val actions: List<ActionMenuItem> = emptyList()
 ) {
 
     object Diary : Screen(
         route = "diary",
         title = R.string.diary_screen,
-        buttomIcon = Icons.Default.MenuBook,
+        buttomIcon = Icons.AutoMirrored.Filled.MenuBook,
         isAppBarVisible = true,
-        navigationIcon = Icons.Default.CalendarMonth,
-        onNavigationIconClick = {
-            _buttons.tryEmit(AppBarIcons.Calendar)
-        },
-        navigationIconContentDescription = null,
-        actions = emptyList()){
+        navigationIcon = Icons.Default.CalendarMonth
+    ){
         // 1
         enum class AppBarIcons {
             Calendar
@@ -52,24 +43,21 @@ sealed class Screen(
 
         val dialog = mutableStateOf(false)
 
+        init {
+            onNavigationIconClick = { _buttons.tryEmit(AppBarIcons.Calendar) }
+        }
+
         fun showDialog(){
-            if (dialog.value)
-                dialog.value=false
-            else dialog.value=true
+            dialog.value = !dialog.value
         }
     }
 
     object FoodAdd : Screen(
         route = "food_add",
         title = R.string.food_add,
-        buttomIcon = Icons.Default.MenuBook,
+        buttomIcon = Icons.AutoMirrored.Filled.MenuBook,
         isAppBarVisible = true,
-        navigationIcon = Icons.Default.ArrowBack,
-        onNavigationIconClick = {
-            _buttons.tryEmit(AppBarIcons.Back)
-        },
-        navigationIconContentDescription = null,
-        actions = emptyList()
+        navigationIcon = Icons.AutoMirrored.Filled.ArrowBack
     ){
         // 1
         enum class AppBarIcons {
@@ -79,27 +67,23 @@ sealed class Screen(
 
         val dialog = mutableStateOf(false)
         fun showDialog(){
-            if (dialog.value)
-                dialog.value=false
-            else dialog.value=true
+            dialog.value = !dialog.value
         }
-
         // 2
         private val _buttons = MutableSharedFlow<AppBarIcons>(extraBufferCapacity = 1)
         val buttons: Flow<AppBarIcons> = _buttons.asSharedFlow()
+
+        init {
+            onNavigationIconClick = { _buttons.tryEmit(AppBarIcons.Back) }
+        }
     }
 
     object SleepAdd : Screen(
         route = "sleep_add",
         title = R.string.sleep_title,
-        buttomIcon = Icons.Default.MenuBook,
+        buttomIcon = Icons.AutoMirrored.Filled.MenuBook,
         isAppBarVisible = true,
-        navigationIcon = Icons.Default.ArrowBack,
-        onNavigationIconClick = {
-            _buttons.tryEmit(AppBarIcons.Back)
-        },
-        navigationIconContentDescription = null,
-        actions = emptyList()
+        navigationIcon = Icons.AutoMirrored.Filled.ArrowBack
     ){
         // 1
         enum class AppBarIcons {
@@ -109,6 +93,10 @@ sealed class Screen(
         // 2
         private val _buttons = MutableSharedFlow<AppBarIcons>(extraBufferCapacity = 1)
         val buttons: Flow<AppBarIcons> = _buttons.asSharedFlow()
+
+        init {
+            onNavigationIconClick = { _buttons.tryEmit(AppBarIcons.Back) }
+        }
     }
 
     object Stats : Screen(
@@ -116,12 +104,7 @@ sealed class Screen(
         title = R.string.stats_screen,
         buttomIcon = Icons.Default.Equalizer,
         isAppBarVisible = true,
-        navigationIcon = Icons.Default.CalendarMonth,
-        onNavigationIconClick = {
-            _buttons.tryEmit(AppBarIcons.Calendar)
-        },
-        navigationIconContentDescription = null,
-        actions = emptyList()
+        navigationIcon = Icons.Default.CalendarMonth
     ){
         // 1
         enum class AppBarIcons {
@@ -131,6 +114,11 @@ sealed class Screen(
         // 2
         private val _buttons = MutableSharedFlow<AppBarIcons>(extraBufferCapacity = 1)
         val buttons: Flow<AppBarIcons> = _buttons.asSharedFlow()
+
+        init {
+            onNavigationIconClick = { _buttons.tryEmit(AppBarIcons.Calendar) }
+        }
+
 
         val dialog = mutableStateOf(false)
 
@@ -163,12 +151,7 @@ sealed class Screen(
         title = R.string.settings_screen,
         buttomIcon = Icons.Default.Person,
         isAppBarVisible = true,
-        navigationIcon = Icons.Default.ArrowBack,
-        onNavigationIconClick = {
-            _buttons.tryEmit(AppBarIcons.NavigationIcon)
-        },
-        navigationIconContentDescription = null,
-        actions = emptyList()
+        navigationIcon = Icons.AutoMirrored.Filled.ArrowBack
     )
     {
         enum class AppBarIcons {
@@ -177,6 +160,10 @@ sealed class Screen(
 
         private val _buttons = MutableSharedFlow<AppBarIcons>(extraBufferCapacity = 1)
         val buttons: Flow<AppBarIcons> = _buttons.asSharedFlow()
+
+        init {
+            onNavigationIconClick = { _buttons.tryEmit(AppBarIcons.NavigationIcon) }
+        }
     }
 
     object Data : Screen(
@@ -184,19 +171,22 @@ sealed class Screen(
         title = R.string.data,
         buttomIcon = Icons.Default.CalendarMonth,
         isAppBarVisible = false,
-        navigationIcon = Icons.Default.ArrowBack,
+        navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
         onNavigationIconClick = null,
         navigationIconContentDescription = null,
         actions = emptyList()
     )
+
     object Onboarding : Screen(
         route = "onboarding",
         title = R.string.app_name,
         buttomIcon = Icons.Default.Home,
-        isAppBarVisible = false
+        isAppBarVisible = false,
+        navigationIcon = null,
+        onNavigationIconClick = null,
+        navigationIconContentDescription = null,
+        actions = emptyList()
     )
-
-
 
     object Dashboard : Screen(
         route = "dashboard",
