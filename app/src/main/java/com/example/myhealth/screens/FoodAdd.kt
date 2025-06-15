@@ -1,5 +1,6 @@
 package com.example.myhealth.screens
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -385,6 +386,7 @@ fun FoodDetailDialog(
 
 }
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun FoodAddPreview() {

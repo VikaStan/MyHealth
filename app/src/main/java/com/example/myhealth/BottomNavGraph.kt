@@ -16,10 +16,10 @@ import com.example.myhealth.screens.FoodAdd
 import com.example.myhealth.screens.Screen
 import com.example.myhealth.screens.Settings
 import com.example.myhealth.screens.SleepAdd
-import com.example.myhealth.screens.Stats
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.presentation.onboarding.OnboardingScreen
 import com.example.myhealth.presentation.dashboard.DashBoardScreen
+import com.example.myhealth.presentation.statistics.StatisticsScreen
 
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -39,7 +39,7 @@ fun BottomNavGraph(
             DiaryScreen(navHostController = navController, model = mainScreenViewModel.diaryModel, mainModel = mainScreenViewModel)
         }
         composable(route = Screen.Stats.route) {
-            Stats(mainScreenViewModel)
+            StatisticsScreen()
         }
         composable(route = Screen.Account.route) {
             Account()

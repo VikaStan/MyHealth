@@ -19,10 +19,9 @@ class HealthRepositoryImpl @Inject constructor(
 
     override fun todayStats(): Flow<Stats> =
         combine(
-            waterDao.observeToday()
-                .map { list -> list.sumOf { it.volume } },
-            statsDao.dailyStatsFlow()
-        ) { water, daily ->
+            statsDao.dailyStatsFlow(),
+            waterDao.getToday().map { it?.toFloat() ?: 0f }
+        ) { daily, water ->
             Stats(
                 steps = daily?.steps ?: 0,
                 waterDrunk = water
