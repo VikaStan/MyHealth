@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import java.time.Duration
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -86,7 +85,6 @@ class HydrationReminderWorker @AssistedInject constructor(
             val request = PeriodicWorkRequestBuilder<HydrationReminderWorker>(
                 45, TimeUnit.MINUTES
             )
-                .(Duration.ofMinutes(15)) // NEW API
                 .build()
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
