@@ -5,7 +5,8 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import androidx.room.TypeConverters
-import com.example.myhealth.room.Converters.DateConverter
+import com.example.myhealth.room.converters.DateConverter
+import com.example.myhealth.room.converters.ProductOldListConverter
 import com.example.myhealth.R
 import java.time.LocalDate
 import java.util.Calendar
@@ -107,7 +108,9 @@ class DayOld(
 
 @Entity(tableName = "foods")
 class Food(
+    @PrimaryKey(autoGenerate = true)
     val food_id: Int = 0,
+    @TypeConverters(ProductOldListConverter::class)
     var productOlds: MutableList<ProductOld>,
     val foodTimeType: FoodTimeType
 ) {

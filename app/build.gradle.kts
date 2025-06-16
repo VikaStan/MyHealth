@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.compose)
     id("kotlin-kapt")
     alias(libs.plugins.google.hilt.android.plugin)
     id("com.google.gms.google-services")
@@ -44,7 +45,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.9.0"
+        kotlinCompilerExtensionVersion = "2.1.0"
     }
     packaging {
         resources {
@@ -95,6 +96,7 @@ dependencies {
     kapt (libs.google.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation (libs.androidx.lifecycle.runtime.compose)
+
 
     implementation(libs.androidx.datastore.preferences)
 

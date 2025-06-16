@@ -1,10 +1,8 @@
-package com.example.myhealth.room.Converters
+package com.example.myhealth.room.converters
 
 import androidx.room.TypeConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalQueries.localDate
-import java.util.Arrays
 
 
 class DateConverter {
