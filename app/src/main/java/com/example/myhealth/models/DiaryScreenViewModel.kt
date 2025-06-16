@@ -2,11 +2,17 @@ package com.example.myhealth.models
 
 import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.myhealth.screens.Screen
 import com.example.myhealth.data.DayOld
+import com.example.myhealth.data.datasource.local.entity.MealEntity
+import com.example.myhealth.domain.repository.MealTimeRepository
+import com.example.myhealth.presentation.diary.MealType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -19,6 +25,37 @@ class DiaryScreenViewModel @Inject constructor() : ViewModel() {
     lateinit var navHostController: NavHostController
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()
     val days: MutableStateFlow<List<DayOld>> = MutableStateFlow(initDayList(getListSize()))
+    val mealsToday: StateFlow<List<MealEntity>> = MealTimeRepository.getMealsForToday()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val totalCaloriesToday: Int
+        get() = mealsToday.value.sumOf { it.calories }
+
+    val totalProteinsToday: Int
+        get() = mealsToday.value.sumOf { it.proteins }
+
+    val totalFatsToday: Int
+        get() = mealsToday.value.sumOf { it.fats }
+
+    val totalCarbsToday: Int
+        get() = mealsToday.value.sumOf { it.carbs }
+
+    val breakfastMeals: List<MealEntity>
+        get() = mealsToday.value.filter { it.type == MealType.BREAKFAST }
+
+    val lunchMeals: List<MealEntity>
+        get() = mealsToday.value.filter { it.type == MealType.LUNCH }
+
+    val dinnerMeals: List<MealEntity>
+        get() = mealsToday.value.filter { it.type == MealType.DINNER }
+
+    val caloriesTarget: Int
+        get() = PersonRepository.getCaloriesTarget() // берёшь из профиля или настроек
+
+
+    fun onAddMeal(type: MealType) {
+        // открытие формы добавления блюда с выбранным типом (передавай type)
+    }
+
     var selectedDayIndex = MutableStateFlow(getListSize() - 1)
     var selectedDayOld = MutableStateFlow(
         DayOld(

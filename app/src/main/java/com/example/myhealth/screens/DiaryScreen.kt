@@ -2,41 +2,32 @@ package com.example.myhealth.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Bedtime
-import androidx.compose.material.icons.twotone.BreakfastDining
-import androidx.compose.material.icons.twotone.DinnerDining
-import androidx.compose.material.icons.twotone.LunchDining
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import com.example.myhealth.R
 import com.example.myhealth.data.DayOld
-import com.example.myhealth.data.FoodTimeType
-import com.example.myhealth.data.ProductOld
-import com.example.myhealth.data.Sleep
+import com.example.myhealth.data.datasource.local.entity.MealEntity
 import com.example.myhealth.models.DiaryScreenViewModel
-import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.ui.components.CalendarItem
-import com.example.myhealth.ui.components.DatePickerWithDialog
-import com.example.myhealth.ui.components.ExpandableSection
-import com.example.myhealth.ui.components.FoodSectionContent
-import com.example.myhealth.ui.components.SleepSectionContent
 import com.example.myhealth.ui.theme.MyHealthTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -45,27 +36,98 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun DiaryScreen(
-    modifier: Modifier = Modifier,
-    model: DiaryScreenViewModel = hiltViewModel(),
-    mainModel: MainScreenViewModel,
-    navHostController: NavHostController,
+    viewModel: DiaryScreenViewModel = hiltViewModel()
 ) {
 
-    model.navHostController = navHostController
-    model.getDayData(mainModel.dayOlds,mainModel.selectedDayIndex.collectAsState(), mainModel::selected)
+    val mealsToday by viewModel.mealsToday.collectAsState()
+    val totalCalories = viewModel.totalCaloriesToday
+    val caloriesTarget = viewModel.caloriesTarget
+    val proteins = viewModel.totalProteinsToday
+    val fats = viewModel.totalFatsToday
+    val carbs = viewModel.totalCarbsToday
 
+    val breakfastMeals = viewModel.breakfastMeals
+    val lunchMeals = viewModel.lunchMeals
+    val dinnerMeals = viewModel.dinnerMeals
 
-    if (Screen.Diary.dialog.value) DatePickerWithDialog(modifier, model.selectedDayOld,mainModel::selected)
-
-    LazyColumn(modifier.padding(horizontal = 8.dp)) {
-        val items= SnapshotStateList<DayOld>()
-        model.days.value.toCollection(items)
-        item {
-            CalendarList(modifier,items ,model.selectedDayIndex, model.onSelectedDay)
+    Column(Modifier.fillMaxSize().background(Color(0xFFE8F4FF))) {
+        // 1. Верхний блок — калории и БЖУ
+        Card(
+            Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Row(
+                Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Круг калорий
+                Box(Modifier.size(70.dp)) {
+                    CircularProgressIndicator(
+                        progress = (totalCalories.toFloat() / caloriesTarget).coerceIn(0f, 1f),
+                        strokeWidth = 7.dp,
+                        color = Color(0xFF6098FF)
+                    )
+                    Text(
+                        "$totalCalories/\n$caloriesTarget",
+                        Modifier.align(Alignment.Center),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Spacer(Modifier.width(20.dp))
+                Column {
+                    Text("белки   $proteins г")
+                    Text("жиры    $fats г")
+                    Text("углеводы $carbs г")
+                }
+            }
         }
-        item { // заполнение приемов пищи/сна
-            val selectedDay = model.selectedDayOld.collectAsState()
-            FoodTimes(selectedDay.value, modifier, model::onAddFoodBtnClick,model::onSleepAddBtnClick)
+        // 2. Три карточки приёмов пищи
+        MealSection("завтрак", breakfastMeals) { viewModel.onAddMeal(MealType.BREAKFAST) }
+        MealSection("обед", lunchMeals) { viewModel.onAddMeal(MealType.LUNCH) }
+        MealSection("ужин", dinnerMeals) { viewModel.onAddMeal(MealType.DINNER) }
+
+        Spacer(Modifier.weight(1f))
+        // Нижняя навигация, если нужно
+        // MyBottomNavigation()
+    }
+}
+
+@Composable
+fun MealSection(
+    mealName: String,
+    meals: List<MealEntity>,
+    onAddMeal: () -> Unit
+) {
+    Card(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Column {
+            Row(
+                Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    mealName,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = onAddMeal) {
+                    Icon(Icons.Default.Add, contentDescription = "Добавить блюдо", tint = Color(0xFF6098FF))
+                }
+            }
+            if (meals.isNotEmpty()) {
+                Column(Modifier.padding(start = 24.dp, bottom = 12.dp)) {
+                    meals.forEach {
+                        Text("${it.name} — ${it.calories} ккал")
+                    }
+                }
+            }
         }
     }
 }
@@ -98,85 +160,6 @@ fun CalendarList(modifier: Modifier, dayOlds: SnapshotStateList<DayOld>, selectD
             listState.animateScrollToItem(selectedDayIndex)
         }
     }
-}
-
-@Composable
-fun FoodTimes(
-    dayOld: DayOld,
-    modifier: Modifier,
-    onAddFoodBtnClick: (String) -> Unit,
-    onAddSleepBtnClick: () -> Unit
-) {
-
-    val brefProductOlds = SnapshotStateList<ProductOld>()
-    dayOld.breakfast.productOlds.toCollection(brefProductOlds)
-    val lunchProductOlds = SnapshotStateList<ProductOld>()
-    dayOld.lunch.productOlds.toCollection(lunchProductOlds)
-    val dinnerProductOlds = SnapshotStateList<ProductOld>()
-    dayOld.dinner.productOlds.toCollection(dinnerProductOlds)
-    val sleeps = SnapshotStateList<Sleep>()
-    dayOld.bedTime.toCollection(sleeps)
-    ExpandableSection(
-        modifier = modifier,
-        title = R.string.breakfast_title,
-        Icons.TwoTone.BreakfastDining,
-        onAddClick = {
-            onAddFoodBtnClick(FoodTimeType.Breakfast.n)
-        },
-        content = {
-
-            FoodSectionContent(
-                productOlds =  brefProductOlds,
-                goalCalories = dayOld.goalCalories
-            )
-        }) //завтрак
-
-    HorizontalDivider(thickness = 8.dp, color = Color.Transparent)
-    ExpandableSection(
-        modifier = modifier,
-        title = R.string.lunch_title,
-        Icons.TwoTone.LunchDining,
-        onAddClick = {
-            onAddFoodBtnClick(FoodTimeType.Lunch.n)
-        },
-        content = {
-            FoodSectionContent(
-                productOlds = lunchProductOlds,
-                goalCalories = dayOld.goalCalories
-            )
-        }) //обед
-
-    HorizontalDivider(thickness = 8.dp, color = Color.Transparent)
-    ExpandableSection(
-        modifier = modifier,
-        title = R.string.dinner_title,
-        Icons.TwoTone.DinnerDining,
-        onAddClick = {
-            onAddFoodBtnClick(FoodTimeType.Dinner.n)
-        },
-        content = {
-            FoodSectionContent(
-                productOlds = dinnerProductOlds,
-                goalCalories = dayOld.goalCalories
-            )
-        }) //ужин
-
-    HorizontalDivider(thickness = 8.dp, color = Color.Transparent)
-    ExpandableSection(
-        modifier = modifier,
-        title = R.string.sleep_title,
-        Icons.TwoTone.Bedtime,
-        onAddClick = {
-            onAddSleepBtnClick()
-        },
-        content = {
-            SleepSectionContent(
-                modifier,
-                sleeps,
-                dayOld.goalSleep
-            )
-        })
-
 }
 
 
