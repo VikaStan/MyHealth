@@ -51,7 +51,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
-import com.example.myhealth.data.Sleep
+import com.example.myhealth.domain.models.SleepTime
 import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.SleepAddViewModel
 import com.example.myhealth.ui.theme.MyHealthTheme
@@ -59,6 +59,7 @@ import com.example.myhealth.utility.parseFloat
 import com.example.myhealth.utility.parseInt
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
+import java.time.Duration
 
 @Composable
 fun SleepAdd(
@@ -100,7 +101,16 @@ fun SleepAdd(
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(end = 8.dp)
             )
-            FloatingActionButton(onClick = { model.onAddSleepClick(Sleep())}) {
+            FloatingActionButton(onClick = {
+                model.onAddSleepClick(
+                    SleepTime(
+                        0,
+                        Duration.ZERO,
+                        "",
+                        false
+                    )
+                )
+            }) {
                 Icon(Icons.Default.Add, contentDescription = "Добавить")
             }
         }
@@ -115,16 +125,19 @@ fun SleepAdd(
 
 @Composable
 fun SleepDetailList(
-    sleeps: SnapshotStateList<Sleep>,
-    onEditSwipe: (Sleep) -> Unit,
-    onDelSwipe: (Sleep) -> Unit
+    sleeps: SnapshotStateList<SleepTime>,
+    onEditSwipe: (SleepTime) -> Unit,
+    onDelSwipe: (SleepTime) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
-            color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                alpha = .50f
-            ), shape = RoundedCornerShape(8.dp)
-        )
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                    alpha = .50f
+                ), shape = RoundedCornerShape(8.dp)
+            )
     ) {
         items(sleeps) {
 
@@ -165,13 +178,16 @@ fun SleepDetailList(
 }
 
 @Composable
-fun SleepDetailListItem(sleep: Sleep) {
+fun SleepDetailListItem(sleep: SleepTime) {
     Column(
-        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
-            color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                alpha = .50f
-            ), shape = RoundedCornerShape(8.dp)
-        ), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                    alpha = .50f
+                ), shape = RoundedCornerShape(8.dp)
+            ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Column(
@@ -203,7 +219,9 @@ fun SleepDetailListItem(sleep: Sleep) {
         }
         OutlinedTextField(sleep.description,
             { sleep.description = it },
-            Modifier.fillMaxWidth().padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
             enabled = false,
             label = { Text(stringResource(R.string.description)) })
     }
@@ -212,9 +230,9 @@ fun SleepDetailListItem(sleep: Sleep) {
 @Composable
 fun SleepDetailDialog(
     showDialog: (Boolean) -> Unit,
-    sleep: Sleep = Sleep(),
-    onAcceptSleep: (Sleep) -> Unit,
-    editSleep: (Sleep) -> Unit,
+    sleep: SleepTime = SleepTime(0, Duration.ZERO, "", false),
+    onAcceptSleep: (SleepTime) -> Unit,
+    editSleep: (SleepTime) -> Unit,
     isEdit: Boolean = false
 ) {
 
@@ -234,7 +252,10 @@ fun SleepDetailDialog(
             toastShow.value = false
         }
         Surface(
-            modifier = Modifier.fillMaxWidth().height(500.dp).padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(500.dp)
+                .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
@@ -246,7 +267,9 @@ fun SleepDetailDialog(
                 HorizontalDivider(thickness = 4.dp, color = Color.Transparent)
 
                 Row(
-                    Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
 
@@ -260,7 +283,9 @@ fun SleepDetailDialog(
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         label = { Text(stringResource(R.string.hours)) },
-                        modifier = Modifier.padding(end = 8.dp).width(80.dp)
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .width(80.dp)
                     ) // часы
 
                     OutlinedTextField(
@@ -309,18 +334,20 @@ fun SleepDetailDialog(
                 Button({
                     if (!isEdit && (hours.intValue!=0 || minutes.intValue!=0))
                         onAcceptSleep(
-                            Sleep(
-                                summeryHours.floatValue,
-                                description.value,
-                                isAlarmed.value
+                            SleepTime(
+                                id = 0,
+                                duration = Duration.ofMinutes((summeryHours.floatValue * 60).toLong()),
+                                description = description.value,
+                                isAlarmed = isAlarmed.value
                             )
                         )
                     else if (isEdit && (hours.intValue!=0 || minutes.intValue!=0)) {
                         editSleep(
-                            Sleep(
-                                summeryHours.floatValue,
-                                description.value,
-                                isAlarmed.value
+                            SleepTime(
+                                id = 0,
+                                duration = Duration.ofMinutes((summeryHours.floatValue * 60).toLong()),
+                                description = description.value,
+                                isAlarmed = isAlarmed.value
                             )
                         )
                     } else toastShow.value = true

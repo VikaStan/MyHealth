@@ -3,19 +3,26 @@ package com.example.myhealth.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.myhealth.data.Person
+import com.example.myhealth.data.datasource.local.entity.DayEntity
 import com.example.myhealth.room.converters.DateConverter
-import com.example.myhealth.room.converters.ProductOldListConverter
+import com.example.myhealth.room.converters.MealTimeListConverter
+import com.example.myhealth.room.converters.ProductListConverter
+import com.example.myhealth.room.converters.SleepTimeListConverter
 import com.example.myhealth.room.dao.DayDao
 import com.example.myhealth.room.dao.PersonDao
-import com.example.myhealth.data.DayOld
-import com.example.myhealth.data.Person
 
 @Database(
-    entities = [(Person::class), (DayOld::class)],
+    entities = [(Person::class), (DayEntity::class)],
     version = 1,
     exportSchema = false
 )
-@TypeConverters(DateConverter::class, ProductOldListConverter::class)
+@TypeConverters(
+    DateConverter::class,
+    ProductListConverter::class,
+    MealTimeListConverter::class,
+    SleepTimeListConverter::class
+)
 abstract class HealthRoomDb : RoomDatabase() {
     abstract val personDao: PersonDao
     abstract val dayDao: DayDao

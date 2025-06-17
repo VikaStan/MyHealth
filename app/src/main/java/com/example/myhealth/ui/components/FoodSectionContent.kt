@@ -23,16 +23,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myhealth.R
-import com.example.myhealth.data.ProductOld
+import com.example.myhealth.domain.models.Product
 
 @Composable
 fun FoodSectionContent(
-    modifier: Modifier = Modifier, productOlds: SnapshotStateList<ProductOld>, goalCalories: Int
+    modifier: Modifier = Modifier, productOlds: SnapshotStateList<Product>, goalCalories: Int
 ) {
 
     val currentCalories = productOlds.fold(0f) { a, b -> a + b.caloriesSummery }
     Row(
-modifier.fillMaxWidth().padding(8.dp).height(60.dp),
+modifier
+    .fillMaxWidth()
+    .padding(8.dp)
+    .height(60.dp),
 horizontalArrangement = Arrangement.SpaceAround,
 verticalAlignment = Alignment.CenterVertically
 ) {
@@ -60,14 +63,20 @@ verticalAlignment = Alignment.CenterVertically
             progress = currentCalories / goalCalories,
             color = color,
             strokeCap = StrokeCap.Round,
-            modifier = modifier.padding(2.dp).height(30.dp).border(1.dp,Color.Black, RoundedCornerShape(16.dp))
+            modifier = modifier
+                .padding(2.dp)
+                .height(30.dp)
+                .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
         )
 
         Text(
             str,
-            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodySmall,
             minLines = 2,
-            modifier = modifier.padding(4.dp).padding(top = 15.dp).fillMaxWidth()
+            modifier = modifier
+                .padding(4.dp)
+                .padding(top = 15.dp)
+                .fillMaxWidth()
                 .align(Alignment.Center),
             textAlign = TextAlign.Center
         )

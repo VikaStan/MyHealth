@@ -23,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocalDining
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Scale
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -53,11 +52,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
-import com.example.myhealth.data.FoodTimeType
-import com.example.myhealth.data.ProductOld
-import com.example.myhealth.data.ProductType
+import com.example.myhealth.domain.models.Product
+import com.example.myhealth.domain.models.ProductType
 import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.FoodAddViewModel
+import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.ui.theme.MyHealthTheme
 import com.example.myhealth.utility.parseFloat
 import com.example.myhealth.utility.parseInt
@@ -102,7 +101,7 @@ fun FoodAdd(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        FoodSection(Modifier, model::onProductItemSelected, eatingFoodTime.productOlds)
+        FoodSection(Modifier, model::onProductItemSelected, eatingFoodTime.productList)
 
         //TODO список выбранных продуктов
         FoodDetailList(model.productOlds, model::onEditSwipe, model::onDelSwipe)
@@ -112,30 +111,32 @@ fun FoodAdd(
 @Composable
 fun FoodSection(
     modifier: Modifier = Modifier,
-    onProductItemSelected: (ProductOld) -> Unit,
-    productOlds: MutableList<ProductOld>
+    onProductItemSelected: (Product) -> Unit,
+    productOlds: MutableList<Product>
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3), modifier = modifier.padding(8.dp).background(
-            color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                alpha = .50f
-            ), shape = RoundedCornerShape(8.dp)
-        ), horizontalArrangement = Arrangement.Center
+        columns = GridCells.Fixed(3), modifier = modifier
+            .padding(8.dp)
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                    alpha = .50f
+                ), shape = RoundedCornerShape(8.dp)
+            ), horizontalArrangement = Arrangement.Center
     ) {
         listOf(
-            ProductOld.Eggs,
-            ProductOld.Soup,
-            ProductOld.Fish,
-            ProductOld.Meat,
-            ProductOld.Bakery,
-            ProductOld.Candies,
-            ProductOld.Cheese,
-            ProductOld.Fruts,
-            ProductOld.Porridge,
-            ProductOld.Snack,
-            ProductOld.Vegetables,
-            ProductOld.Water,
-            ProductOld.OtherFood,
+            ProductType.Eggs,
+            ProductType.Soup,
+            ProductType.Fish,
+            ProductType.Meat,
+            ProductType.Bakery,
+            ProductType.Candies,
+            ProductType.Cheese,
+            ProductType.Fruts,
+            ProductType.Porridge,
+            ProductType.Snack,
+            ProductType.Vegetables,
+            ProductType.Water,
+            ProductType.OtherFood,
         ).forEach { productList ->
             item {
 
@@ -147,8 +148,11 @@ fun FoodSection(
                             count.toString(),
                             style = MaterialTheme.typography.labelSmall,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.size(27.dp).padding(top = 6.dp, end = 6.dp)
-                                .border(1.dp, color = Color.Black, CircleShape).clip(CircleShape)
+                            modifier = Modifier
+                                .size(27.dp)
+                                .padding(top = 6.dp, end = 6.dp)
+                                .border(1.dp, color = Color.Black, CircleShape)
+                                .clip(CircleShape)
                                 .background(
                                     color = MaterialTheme.colorScheme.secondaryContainer.copy(
                                         0.5f
@@ -167,16 +171,31 @@ fun FoodSection(
 @Composable
 fun FoodSectionItem(
     productType: ProductType,
-    onProductItemSelected: (ProductOld) -> Unit,
+    onProductItemSelected: (Product) -> Unit,
     count: Int
 ) {
     val color = if (count > 0) Color.Green.copy(alpha = 0.8f) else Color.Transparent
     Column(
-        modifier = Modifier.fillMaxWidth().padding(4.dp)
-            .border(2.dp, color = Color.Black, RoundedCornerShape(8.dp)).background(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+            .border(2.dp, color = Color.Black, RoundedCornerShape(8.dp))
+            .background(
                 color = color, shape = RoundedCornerShape(8.dp)
-            ).clip(RoundedCornerShape(8.dp))
-            .clickable { onProductItemSelected(ProductOld(productCategory = productType)) },
+            )
+            .clip(RoundedCornerShape(8.dp))
+            .clickable {
+                onProductItemSelected(
+                    Product(
+                        0,
+                        productType.name.toString(),
+                        0,
+                        0,
+                        0,
+                        ""
+                    )
+                )
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -194,16 +213,19 @@ fun FoodSectionItem(
 
 @Composable
 fun FoodDetailList(
-    productOlds: SnapshotStateList<ProductOld>,
-    onEditSwipe: (ProductOld) -> Unit,
-    onDelSwipe: (ProductOld) -> Unit
+    productOlds: SnapshotStateList<Product>,
+    onEditSwipe: (Product) -> Unit,
+    onDelSwipe: (Product) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
-            color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                alpha = .50f
-            ), shape = RoundedCornerShape(8.dp)
-        )
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                    alpha = .50f
+                ), shape = RoundedCornerShape(8.dp)
+            )
     ) {
         items(productOlds) {
 
@@ -244,13 +266,16 @@ fun FoodDetailList(
 }
 
 @Composable
-fun FoodDetailListItem(productOld: ProductOld) {
+fun FoodDetailListItem(productOld: Product) {
     Column(
-        modifier = Modifier.padding(8.dp).fillMaxWidth().background(
-            color = MaterialTheme.colorScheme.secondaryContainer.copy(
-                alpha = .50f
-            ), shape = RoundedCornerShape(8.dp)
-        ), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(
+                    alpha = .50f
+                ), shape = RoundedCornerShape(8.dp)
+            ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Row(/*verticalAlignment = Alignment.,*/
@@ -270,7 +295,9 @@ fun FoodDetailListItem(productOld: ProductOld) {
         }
         OutlinedTextField(productOld.description,
             { productOld.description = it },
-            Modifier.fillMaxWidth().padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
             enabled = false,
             label = { Text(stringResource(R.string.description)) })
     }
@@ -279,9 +306,9 @@ fun FoodDetailListItem(productOld: ProductOld) {
 @Composable
 fun FoodDetailDialog(
     showDialog: (Boolean) -> Unit,
-    productOld: ProductOld,
-    onAcceptProduct: (ProductOld) -> Unit,
-    editProduct: (ProductOld) -> Unit,
+    productOld: Product,
+    onAcceptProduct: (Product) -> Unit,
+    editProduct: (Product) -> Unit,
     isEdit: Boolean = false
 ) {
 
@@ -300,7 +327,9 @@ fun FoodDetailDialog(
             toastShow.value = false
         }
         Surface(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
@@ -322,7 +351,7 @@ fun FoodDetailDialog(
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    leadingIcon = { Icon(Icons.Default.MenuBook, "") },
+                    leadingIcon = { Icon(Icons.AutoMirrored.Filled.MenuBook, "") },
                     label = { Text(stringResource(R.string.calories_100_gr)) }) // калорий на 100 гр
 
                 OutlinedTextField(gramms.intValue.toString(),
@@ -353,22 +382,24 @@ fun FoodDetailDialog(
 
                 Button({
                     if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && !isEdit) onAcceptProduct(
-                        ProductOld(
-                            productCategory = productOld.productCategory,
-                            caloriesPer100Gramms.intValue,
-                            caloriesSummery.floatValue,
-                            gramms.intValue,
-                            description.value
+                        Product(
+                            id = productOld.id,
+                            name = productOld.name,
+                            caloriesPer100Gramm = caloriesPer100Gramms.intValue,
+                            gramms = gramms.intValue,
+                            caloriesPerGramm = productOld.caloriesPerGramm,
+                            description = description.value
                         )
                     )
                     else if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && isEdit) {
                         editProduct(
-                            ProductOld(
-                                productCategory = productOld.productCategory,
-                                caloriesPer100Gramms.intValue,
-                                caloriesSummery.floatValue,
-                                gramms.intValue,
-                                description.value
+                            Product(
+                                id = productOld.id,
+                                name = productOld.name,
+                                caloriesPer100Gramm = caloriesPer100Gramms.intValue,
+                                gramms = gramms.intValue,
+                                caloriesPerGramm = productOld.caloriesPerGramm,
+                                description = description.value
                             )
                         )
                     } else toastShow.value = true
@@ -391,6 +422,6 @@ fun FoodDetailDialog(
 @Composable
 fun FoodAddPreview() {
     MyHealthTheme {
-        FoodAdd(FoodTimeType.Breakfast.n, modelDiary = DiaryScreenViewModel(), modifier = Modifier)
+        FoodAdd(MealType.BREAKFAST.value, modelDiary = DiaryScreenViewModel(), modifier = Modifier)
     }
 }

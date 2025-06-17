@@ -4,15 +4,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.myhealth.data.DayOld
+import com.example.myhealth.data.datasource.local.entity.DayEntity
 
 @Dao
 interface DayDao {
     @Query("SELECT * FROM days")
-    fun getDays(): List<DayOld>
+    fun getDays(): List<DayEntity>
     @Insert
-    fun addDay(dayOld: DayOld)
+    fun addDay(dayOld: DayEntity)
 
     @Update
-    fun updDay(dayOld: DayOld)
+    fun updDay(dayOld: DayEntity)
 }

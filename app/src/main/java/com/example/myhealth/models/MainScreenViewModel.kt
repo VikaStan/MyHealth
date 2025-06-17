@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.Person
+import com.example.myhealth.domain.models.Day
+import com.example.myhealth.domain.models.MealTime
+import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.presentation.statistics.StatsViewModel
 import com.example.myhealth.room.HealthRoomDb
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +33,7 @@ class MainScreenViewModel @Inject constructor(
     lateinit var accountViewModel: AccountViewModel
 
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()
-    var dayOlds = mutableStateListOf<DayOld>()
+    var dayOlds = mutableStateListOf<Day>()
         get() {
             field.map {
                 it.goalCalories = person.value?.caloriesGoal?.toInt() ?: 1000
@@ -41,11 +43,16 @@ class MainScreenViewModel @Inject constructor(
         }
     var selectedDayIndex = MutableStateFlow(getListSize() - 1)
     var selectedDayOld = MutableStateFlow(
-        DayOld(
+        Day(
             date = currDay,
-            foodCount = 1, //получать с базы
-            totalCalories = 0, // рассчитывать и получать с бд
-            //рассчитывать 2 параметра еще
+            goalCalories = 0,
+            goalSleep = 0f,
+            mealTimeList = mutableListOf(
+                MealTime(0, MealType.BREAKFAST.value, 0, 0, 0, mutableListOf()),
+                MealTime(1, MealType.LUNCH.value, 0, 0, 0, mutableListOf()),
+                MealTime(2, MealType.DINNER.value, 0, 0, 0, mutableListOf())
+            ),
+            sleepTimeList = mutableListOf()
         )
     )
     lateinit var person: LiveData<Person>
@@ -92,8 +99,8 @@ class MainScreenViewModel @Inject constructor(
         return currDay.dayOfMonth + currDay.minusMonths(1).month.length(currDay.isLeapYear)
     }
 
-    private fun initDayList(count: Int): List<DayOld> {
-        val list: MutableList<DayOld> = emptyList<DayOld>().toMutableList()
+    private fun initDayList(count: Int): List<Day> {
+        val list: MutableList<Day> = emptyList<Day>().toMutableList()
         for (i in IntStream.range(1, count + 1)) {
             val day =
                 if (i <= currDay.minusMonths(1).month.length(currDay.isLeapYear)) currDay.minusMonths(
@@ -102,12 +109,16 @@ class MainScreenViewModel @Inject constructor(
                 else currDay.withDayOfMonth(i - currDay.minusMonths(1).month.length(currDay.isLeapYear))
 
             list.add(
-                DayOld(
+                Day(
                     date = day,
-                    foodCount = 1,
-                    totalCalories = 0,
                     goalSleep = person.value?.sleepGoal ?: 8f,
-                    goalCalories = person.value?.caloriesGoal?.toInt() ?: 1000
+                    goalCalories = person.value?.caloriesGoal?.toInt() ?: 1000,
+                    mealTimeList = mutableListOf(
+                        MealTime(0, MealType.BREAKFAST.value, 0, 0, 0, mutableListOf()),
+                        MealTime(1, MealType.LUNCH.value, 0, 0, 0, mutableListOf()),
+                        MealTime(2, MealType.DINNER.value, 0, 0, 0, mutableListOf())
+                    ),
+                    sleepTimeList = mutableListOf()
                 )
             )
         }
@@ -118,20 +129,16 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun updateDataInDayList() {
-        dayOlds[selectedDayIndex.value].breakfast = selectedDayOld.value.breakfast
-        dayOlds[selectedDayIndex.value].lunch = selectedDayOld.value.lunch
-        dayOlds[selectedDayIndex.value].dinner = selectedDayOld.value.dinner
-        dayOlds[selectedDayIndex.value].bedTime = selectedDayOld.value.bedTime
+        dayOlds[selectedDayIndex.value].mealTimeList = selectedDayOld.value.mealTimeList
+        dayOlds[selectedDayIndex.value].sleepTimeList = selectedDayOld.value.sleepTimeList
     }
 
     fun selected(index: Int) {
         updateDataInDayList()
         selectedDayIndex.value = index
         selectedDayOld.value = dayOlds[index]
-        selectedDayOld.value.breakfast = dayOlds[index].breakfast
-        selectedDayOld.value.lunch = dayOlds[index].lunch
-        selectedDayOld.value.dinner = dayOlds[index].dinner
-        selectedDayOld.value.bedTime = dayOlds[index].bedTime
+        selectedDayOld.value.mealTimeList = dayOlds[index].mealTimeList
+        selectedDayOld.value.sleepTimeList = dayOlds[index].sleepTimeList
         selectedDayOld.value.updateAllCount()
     }
 }

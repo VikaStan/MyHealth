@@ -23,26 +23,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myhealth.data.DayOld
+import com.example.myhealth.domain.models.Day
 import java.util.stream.IntStream.range
 
 @Composable
 fun CalendarItem(
     onItemClick: () -> Unit,
     isSelected: Boolean,
-    dayOld: DayOld,
-    modifier: Modifier,){
+    dayOld: Day,
+    modifier: Modifier,
+){
 
     val sel: Color = if (isSelected){
         Color.Green
     }
     else Color.DarkGray
 
-    Column(modifier.height(75.dp)
+    Column(modifier
+        .height(75.dp)
         .width(50.dp)
         .border(width = 2.dp, color = sel, shape = RoundedCornerShape(16.dp))
         .padding(3.dp)
-        .clickable(onClick = { onItemClick()}),
+        .clickable(onClick = { onItemClick() }),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
         Text(dayOld.date.dayOfMonth.toString(), style = MaterialTheme.typography.titleMedium)
@@ -50,26 +52,29 @@ fun CalendarItem(
 
         Row (modifier= modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center){
-            var j = dayOld.foodCount
+            var j = dayOld.mealTimeList.sumOf { it.productCount }
             for (i in range(0,3)){
                 if (j>0)
                 {
-                    Box(modifier = modifier.size(7.dp)
+                    Box(modifier = modifier
+                        .size(7.dp)
                         .background(color = Color.Green, shape = CircleShape)
                         .padding(2.dp))
                     j--
                 }
                 else{
-                    Box(modifier = modifier.size(7.dp)
+                    Box(modifier = modifier
+                        .size(7.dp)
                         .background(color = Color.DarkGray, shape = CircleShape)
                         .padding(2.dp))
                 }
         }
-           val sleep = if (dayOld.bedTime.isNotEmpty()) Color.Blue else Color.DarkGray
+            val sleep = if (dayOld.sleepTimeList.isNotEmpty()) Color.Blue else Color.DarkGray
 
-                Box(modifier = modifier.size(7.dp)
-                .background(color = sleep, shape = CircleShape)
-                .padding(2.dp))
+                Box(modifier = modifier
+                    .size(7.dp)
+                    .background(color = sleep, shape = CircleShape)
+                    .padding(2.dp))
         }
     }
 }

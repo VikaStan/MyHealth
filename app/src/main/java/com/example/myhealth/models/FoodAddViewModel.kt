@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.myhealth.R
-import com.example.myhealth.data.Food
-import com.example.myhealth.data.FoodTimeType
-import com.example.myhealth.data.ProductOld
+import com.example.myhealth.domain.models.MealTime
+import com.example.myhealth.domain.models.Product
+import com.example.myhealth.presentation.diary.MealType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -17,39 +17,49 @@ import javax.inject.Inject
 @HiltViewModel
 class FoodAddViewModel @Inject constructor() : ViewModel() {
 
-    var selectedTypeProductOld = MutableStateFlow(ProductOld())
+    var selectedTypeProductOld = MutableStateFlow(Product(0, "", 0, 0, 0, ""))
     var foodAddDialog by mutableStateOf(false)
     var foodEditDialog by mutableStateOf(false)
     var eatingTimeName = R.string.breakfast_title
     var eatingFoodTime =
         MutableStateFlow(
-            Food(
-                productOlds = emptyList<ProductOld>().toMutableList(),
-                foodTimeType = FoodTimeType.Dinner
+            MealTime(
+                id = 0,
+                name = MealType.DINNER.value,
+                productCount = 0,
+                totalCalories = 0,
+                goalCalories = 0,
+                productList = mutableListOf()
             )
         )
-    var productOlds = mutableStateListOf<ProductOld>()
+    var productOlds = mutableStateListOf<Product>()
     private var editProductIndex by mutableIntStateOf(0)
 
     var isChange = false
 
     fun getEatingTimeName(eatingType: String?) {
         when (eatingType) {
-            FoodTimeType.Lunch.n -> eatingTimeName = R.string.lunch_title
-            FoodTimeType.Breakfast.n -> eatingTimeName = R.string.breakfast_title
-            FoodTimeType.Dinner.n -> eatingTimeName = R.string.dinner_title
+            MealType.LUNCH.value -> eatingTimeName = R.string.lunch_title
+            MealType.BREAKFAST.value -> eatingTimeName = R.string.breakfast_title
+            MealType.DINNER.value -> eatingTimeName = R.string.dinner_title
             else -> eatingTimeName = R.string.lunch_title
         }
     }
 
     fun getEatingFoodTime(model: DiaryScreenViewModel, eatingType: String?) {
         when (eatingType) {
-            FoodTimeType.Lunch.n -> eatingFoodTime.value = model.selectedDayOld.value.lunch
-            FoodTimeType.Breakfast.n -> eatingFoodTime.value = model.selectedDayOld.value.breakfast
-            FoodTimeType.Dinner.n -> eatingFoodTime.value = model.selectedDayOld.value.dinner
-            else -> eatingFoodTime.value = model.selectedDayOld.value.lunch
+            MealType.LUNCH.value -> eatingFoodTime.value =
+                model.selectedDayOld.value.mealTimeList[1]
+
+            MealType.BREAKFAST.value -> eatingFoodTime.value =
+                model.selectedDayOld.value.mealTimeList[0]
+
+            MealType.DINNER.value -> eatingFoodTime.value =
+                model.selectedDayOld.value.mealTimeList[2]
+
+            else -> eatingFoodTime.value = model.selectedDayOld.value.mealTimeList[1]
         }
-        eatingFoodTime.value.productOlds.forEach {
+        eatingFoodTime.value.productList.forEach {
             if (!productOlds.contains(it))
                 productOlds.add(it)
         }
@@ -63,31 +73,31 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
         foodEditDialog = show
     }
 
-    fun onProductItemSelected(productOld: ProductOld) {
+    fun onProductItemSelected(productOld: Product) {
         selectedTypeProductOld.value = productOld
         foodAddDialogShow()
     }
 
-    fun onDelSwipe(productOld: ProductOld) {
+    fun onDelSwipe(productOld: Product) {
         productOlds.remove(productOld)
-        eatingFoodTime.value.productOlds.remove(productOld)
+        eatingFoodTime.value.productList.remove(productOld)
     }
 
-    fun onEditSwipe(productOld: ProductOld) {
-        editProductIndex = eatingFoodTime.value.productOlds.indexOf(productOld)
+    fun onEditSwipe(productOld: Product) {
+        editProductIndex = eatingFoodTime.value.productList.indexOf(productOld)
         selectedTypeProductOld.value = productOld
         foodEditDialog = true
     }
 
-    fun addProduct(productOld: ProductOld) {
+    fun addProduct(productOld: Product) {
         isChange = true
-        eatingFoodTime.value.productOlds.add(productOld)
+        eatingFoodTime.value.productList.add(productOld)
         foodAddDialogShow(false)
     }
 
-    fun editProduct(productOld: ProductOld) {
+    fun editProduct(productOld: Product) {
         isChange = true
-        eatingFoodTime.value.productOlds[editProductIndex] = productOld
+        eatingFoodTime.value.productList[editProductIndex] = productOld
         productOlds[editProductIndex] = productOld
         foodEditDialogShow(false)
     }
@@ -95,10 +105,16 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
     fun updateListProducts(model: DiaryScreenViewModel) {
         if (isChange) {
             when (model.selectedEatTimeName.value) {
-                FoodTimeType.Lunch.n -> model.selectedDayOld.value.lunch.productOlds = productOlds
-                FoodTimeType.Breakfast.n -> model.selectedDayOld.value.breakfast.productOlds = productOlds
-                FoodTimeType.Dinner.n -> model.selectedDayOld.value.dinner.productOlds = productOlds
-                else -> model.selectedDayOld.value.lunch.productOlds = productOlds
+                MealType.LUNCH.value -> model.selectedDayOld.value.mealTimeList[1].productList =
+                    productOlds
+
+                MealType.BREAKFAST.value -> model.selectedDayOld.value.mealTimeList[0].productList =
+                    productOlds
+
+                MealType.DINNER.value -> model.selectedDayOld.value.mealTimeList[2].productList =
+                    productOlds
+
+                else -> model.selectedDayOld.value.mealTimeList[1].productList = productOlds
             }
             model.selectedDayOld.value.updateAllCount()
             isChange = false

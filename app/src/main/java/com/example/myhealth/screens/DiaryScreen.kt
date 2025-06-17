@@ -2,16 +2,31 @@ package com.example.myhealth.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,10 +39,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.myhealth.models.MainScreenViewModel
-import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.datasource.local.entity.MealEntity
+import com.example.myhealth.domain.models.Day
 import com.example.myhealth.models.DiaryScreenViewModel
+import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.ui.components.CalendarItem
 import com.example.myhealth.ui.theme.MyHealthTheme
@@ -63,7 +78,9 @@ fun DiaryScreen(
     val lunchMeals = model.lunchMeals
     val dinnerMeals = model.dinnerMeals
 
-    Column(Modifier.fillMaxSize().background(Color(0xFFE8F4FF))) {
+    Column(Modifier
+        .fillMaxSize()
+        .background(Color(0xFFE8F4FF))) {
         // 1. Верхний блок — калории и БЖУ
         Card(
             Modifier
@@ -78,9 +95,10 @@ fun DiaryScreen(
                 // Круг калорий
                 Box(Modifier.size(70.dp)) {
                     CircularProgressIndicator(
-                        progress = (totalCalories.toFloat() / caloriesTarget).coerceIn(0f, 1f),
+                        progress = { (totalCalories.toFloat() / caloriesTarget).coerceIn(0f, 1f) },
+                        color = Color(0xFF6098FF),
                         strokeWidth = 7.dp,
-                        color = Color(0xFF6098FF)
+                        trackColor = ProgressIndicatorDefaults.circularTrackColor,
                     )
                     Text(
                         "$totalCalories/\n$caloriesTarget",
@@ -146,7 +164,12 @@ fun MealSection(
 }
 
 @Composable
-fun CalendarList(modifier: Modifier, dayOlds: SnapshotStateList<DayOld>, selectDayIndex: MutableStateFlow<Int>, onSelectedDay: (Int)-> Unit) {
+fun CalendarList(
+    modifier: Modifier,
+    dayOlds: SnapshotStateList<Day>,
+    selectDayIndex: MutableStateFlow<Int>,
+    onSelectedDay: (Int) -> Unit
+) {
     val selectedDayIndex by selectDayIndex.collectAsState()
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = selectedDayIndex)
     val coroutineScope = rememberCoroutineScope()
@@ -160,7 +183,7 @@ fun CalendarList(modifier: Modifier, dayOlds: SnapshotStateList<DayOld>, selectD
                 modifier = modifier,
                 onItemClick = {
                     onSelectedDay(dayOlds.indexOf(day))
-                    coroutineScope.launch() {
+                    coroutineScope.launch {
                         listState.animateScrollToItem(selectedDayIndex)
                     }
                 },
@@ -169,7 +192,7 @@ fun CalendarList(modifier: Modifier, dayOlds: SnapshotStateList<DayOld>, selectD
             )
             VerticalDivider(thickness = 10.dp)
         }
-        coroutineScope.launch() {
+        coroutineScope.launch {
             listState.animateScrollToItem(selectedDayIndex)
         }
     }

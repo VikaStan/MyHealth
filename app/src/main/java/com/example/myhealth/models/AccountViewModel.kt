@@ -1,10 +1,7 @@
 package com.example.myhealth.models
 
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.myhealth.data.Person
 import com.example.myhealth.room.HealthRoomDb
@@ -22,8 +19,19 @@ class AccountViewModel @Inject constructor(
     var registrationDialog = MutableLiveData(false)
 
 
-    private fun getPerson() = viewModelScope.launch {
-        person.value = mainDB.personDao.getPerson()
+    private fun getPerson() {
+        viewModelScope.launch {
+            runCatching { mainDB.personDao.getPerson() }
+                .onSuccess {
+                    person.value = it
+                    inSystem.value = true
+                    registrationDialog.value = false
+                }
+                .onFailure {
+                    inSystem.value = false
+                    registrationDialog.value = true
+                }
+        }
     }
 
     private fun setPerson(person: Person) = viewModelScope.launch {
@@ -39,16 +47,6 @@ class AccountViewModel @Inject constructor(
 
     init {
         getPerson()
-        if (person.value?.name== "") {
-            inSystem.value = false
-            showRegDialog()
-        }
-        else {
-            registrationDialog.value = false
-            inSystem.value = true
-        }
-
-
     }
 
     fun showRegDialog(value: Boolean = true) {
