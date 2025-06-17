@@ -26,6 +26,7 @@ class PreferencesManager(context: Context) {
         editor.putInt("height", person.height)
         editor.putFloat("caloriesGoal", person.caloriesGoal)
         editor.putFloat("sleepGoal", person.sleepGoal)
+        editor.putFloat("waterGoal", person.waterGoal)
         editor.putInt("weight", person.weight)
         editor.apply()
     }
@@ -54,6 +55,7 @@ class PreferencesManager(context: Context) {
             weight = getData("weight", 0),
             sleepGoal = getData("sleepGoal", 8f),
             caloriesGoal = getData("caloriesGoal", 100f),
+            waterGoal = getData("waterGoal", 2000f)
         )
     }
     fun delData(){

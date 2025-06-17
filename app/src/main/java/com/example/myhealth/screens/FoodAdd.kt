@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocalDining
@@ -184,18 +185,7 @@ fun FoodSectionItem(
                 color = color, shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
-            .clickable {
-                onProductItemSelected(
-                    Product(
-                        0,
-                        productType.name.toString(),
-                        0,
-                        0,
-                        0,
-                        ""
-                    )
-                )
-            },
+            .clickable { onProductItemSelected(Product(0, "", 0, 0, 0, "", productType)) },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -289,7 +279,7 @@ fun FoodDetailListItem(productOld: Product) {
 
                 )
             Text(
-                "${(productOld.gramms.toFloat() / 100) * productOld.caloriesPer100Gramms} калл. в ${productOld.gramms} гр",
+                "${(productOld.gramms.toFloat() / 100) * productOld.caloriesPer100Gramm} калл. в ${productOld.gramms} гр",
                 style = MaterialTheme.typography.labelLarge
             )
         }
@@ -312,7 +302,7 @@ fun FoodDetailDialog(
     isEdit: Boolean = false
 ) {
 
-    var caloriesPer100Gramms = remember { mutableIntStateOf(productOld.caloriesPer100Gramms) }
+    var caloriesPer100Gramm = remember { mutableIntStateOf(productOld.caloriesPer100Gramm) }
     var caloriesSummery = remember { mutableFloatStateOf(productOld.caloriesSummery) }
     var gramms = remember { mutableIntStateOf(productOld.gramms) }
     var description = remember { mutableStateOf(productOld.description) }
@@ -341,13 +331,14 @@ fun FoodDetailDialog(
                 Text(stringResource(productOld.productCategory.name))
 
 
-                OutlinedTextField(caloriesPer100Gramms.intValue.toString(),
+                OutlinedTextField(
+                    caloriesPer100Gramm.intValue.toString(),
                     {
                         if (it != "") {
 
-                            caloriesPer100Gramms.intValue = it.parseInt()
+                            caloriesPer100Gramm.intValue = it.parseInt()
                             caloriesSummery.floatValue =
-                                ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
+                                ((caloriesPer100Gramm.intValue.toFloat() / 100 * gramms.intValue))
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -359,7 +350,7 @@ fun FoodDetailDialog(
                         if (it != "") {
                             gramms.intValue = it.parseInt()
                             caloriesSummery.floatValue =
-                                ((caloriesPer100Gramms.intValue.toFloat() / 100 * gramms.intValue))
+                                ((caloriesPer100Gramm.intValue.toFloat() / 100 * gramms.intValue))
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -381,22 +372,22 @@ fun FoodDetailDialog(
 
 
                 Button({
-                    if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && !isEdit) onAcceptProduct(
+                    if (caloriesPer100Gramm.intValue != 0 && gramms.intValue != 0 && !isEdit) onAcceptProduct(
                         Product(
                             id = productOld.id,
                             name = productOld.name,
-                            caloriesPer100Gramm = caloriesPer100Gramms.intValue,
+                            caloriesPer100Gramm = caloriesPer100Gramm.intValue,
                             gramms = gramms.intValue,
                             caloriesPerGramm = productOld.caloriesPerGramm,
                             description = description.value
                         )
                     )
-                    else if (caloriesPer100Gramms.intValue != 0 && gramms.intValue != 0 && isEdit) {
+                    else if (caloriesPer100Gramm.intValue != 0 && gramms.intValue != 0 && isEdit) {
                         editProduct(
                             Product(
                                 id = productOld.id,
                                 name = productOld.name,
-                                caloriesPer100Gramm = caloriesPer100Gramms.intValue,
+                                caloriesPer100Gramm = caloriesPer100Gramm.intValue,
                                 gramms = gramms.intValue,
                                 caloriesPerGramm = productOld.caloriesPerGramm,
                                 description = description.value

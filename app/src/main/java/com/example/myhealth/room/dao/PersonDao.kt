@@ -1,13 +1,12 @@
 package com.example.myhealth.room.dao
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.myhealth.data.Person
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PersonDao {
@@ -23,4 +22,6 @@ interface PersonDao {
     @Query("DELETE FROM person WHERE personId = :id")
     suspend fun deletePerson(id: Int)
 
+    @Query("SELECT * FROM person LIMIT 1")
+    fun observePerson(): Flow<Person?>
 }

@@ -20,6 +20,12 @@ object MainModule {
             app,
             HealthRoomDb::class.java,
             "info.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(false)
+            .build()
     }
+
+    @Provides
+    @Singleton
+    fun providePersonDao(db: HealthRoomDb) = db.personDao
 }

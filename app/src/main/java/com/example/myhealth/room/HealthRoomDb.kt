@@ -14,7 +14,7 @@ import com.example.myhealth.room.dao.PersonDao
 
 @Database(
     entities = [(Person::class), (DayEntity::class)],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(

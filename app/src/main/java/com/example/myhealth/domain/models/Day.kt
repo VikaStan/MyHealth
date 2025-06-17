@@ -32,4 +32,8 @@ class Day(
     fun dayToMillis(): Long = java.util.Calendar.getInstance().apply {
         set(date.year, date.month.value - 1, date.dayOfMonth)
     }.timeInMillis
+
+    fun dayOfWeekToString(): Int {
+        TODO("Not yet implemented")
+    }
 }

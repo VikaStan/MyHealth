@@ -7,5 +7,8 @@ class Product(
     var gramms: Int,
     var caloriesPerGramm: Int,
     var description: String,
-    ) {
+    var productCategory: ProductType = ProductType.OtherFood,
+) {
+    val caloriesSummery: Float
+        get() = (caloriesPer100Gramm.toFloat() / 100) * gramms
 }
