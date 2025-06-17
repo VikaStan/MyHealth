@@ -41,11 +41,15 @@ sdk.dir=/путь/к/Android/Sdk
 ## Screenshots
 |||
 |-|--------|
-| ![Screenshot_20240723_121434_My Health](https://github.com/user-attachments/assets/6d34adef-679b-4e01-9b55-9fa61202aa8d) | ![Screenshot_20240723_121319_My Health](https://github.com/user-attachments/assets/71787a4b-9d6a-4a38-82b8-38b7bfae6285) |
-| ![Screenshot_20240723_121245_My Health](https://github.com/user-attachments/assets/63d6f9c1-fcdc-4725-9bf1-3259f15bdb43) | ![Screenshot_20240723_121200_My Health](https://github.com/user-attachments/assets/562abf58-a4c9-4af3-b277-e5dcde431035) |
-| ![Screenshot_20240723_121152_My Health](https://github.com/user-attachments/assets/db002c59-103f-4999-b49b-08c980ca403b) | ![Screenshot_20240723_121440_My Health](https://github.com/user-attachments/assets/35bb9e0f-891f-4a9a-a9c6-ae06587c7a6c) |
+![5 экранов входа](https://github.com/user-attachments/assets/72348e2a-b6e6-4b73-8234-6057df1dc775)
+![dashboard](https://github.com/user-attachments/assets/225f0c9b-dbbb-4f65-b287-a7aaef43e01a)
+![экран дневника питания](https://github.com/user-attachments/assets/acf33deb-ede8-4208-8cde-f60daf8d68e1)
+![экран аккаунта пользователя](https://github.com/user-attachments/assets/419da077-2fbd-4cb3-ba5d-a0fa8c0101b0)
 
-## Demo Preview
-|||
-|-|--------|
-| ![Screen_Recording_20240723_121358_My Health (2)](https://github.com/user-attachments/assets/707573f3-7c6e-498d-834a-e97bc86b145f) | ![Screen_Recording_20240723_134211_My Health (1)](https://github.com/user-attachments/assets/467044d2-091d-4aa3-80e6-15b7f289f1a9) |
+
+
+
+
+
+
+
