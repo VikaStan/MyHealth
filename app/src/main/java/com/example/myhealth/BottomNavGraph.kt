@@ -10,16 +10,15 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.presentation.dashboard.DashBoardScreen
+import com.example.myhealth.presentation.onboarding.OnboardingScreen
+import com.example.myhealth.presentation.statistics.StatisticsScreen
 import com.example.myhealth.screens.Account
 import com.example.myhealth.screens.DiaryScreen
 import com.example.myhealth.screens.FoodAdd
 import com.example.myhealth.screens.Screen
 import com.example.myhealth.screens.Settings
-import com.example.myhealth.screens.SleepAdd
-import com.example.myhealth.models.MainScreenViewModel
-import com.example.myhealth.presentation.onboarding.OnboardingScreen
-import com.example.myhealth.presentation.dashboard.DashBoardScreen
-import com.example.myhealth.presentation.statistics.StatisticsScreen
 
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -51,9 +50,7 @@ fun BottomNavGraph(
             arguments = listOf(navArgument("foodType") { type = NavType.StringType })) {
             FoodAdd(it.arguments?.getString("foodType"), modifier, mainScreenViewModel.diaryModel)
         }
-        composable(route = Screen.SleepAdd.route) {
-            SleepAdd(modifier, mainScreenViewModel.diaryModel, mainScreenViewModel.sleepAddViewModel)
-        }
+
         composable(Screen.Onboarding.route) {
             OnboardingScreen { navController.navigate(Screen.Dashboard.route) {
                 popUpTo(Screen.Onboarding.route) { inclusive = true }

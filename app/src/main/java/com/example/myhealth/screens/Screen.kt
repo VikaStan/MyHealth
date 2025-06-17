@@ -79,27 +79,6 @@ sealed class Screen(
         }
     }
 
-    object SleepAdd : Screen(
-        route = "sleep_add",
-        title = R.string.sleep_title,
-        buttomIcon = Icons.AutoMirrored.Filled.MenuBook,
-        isAppBarVisible = true,
-        navigationIcon = Icons.AutoMirrored.Filled.ArrowBack
-    ){
-        // 1
-        enum class AppBarIcons {
-            Back,
-        }
-
-        // 2
-        private val _buttons = MutableSharedFlow<AppBarIcons>(extraBufferCapacity = 1)
-        val buttons: Flow<AppBarIcons> = _buttons.asSharedFlow()
-
-        init {
-            onNavigationIconClick = { _buttons.tryEmit(AppBarIcons.Back) }
-        }
-    }
-
     object Stats : Screen(
         route = "stats",
         title = R.string.stats_screen,

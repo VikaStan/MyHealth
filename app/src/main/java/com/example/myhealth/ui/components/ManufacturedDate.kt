@@ -122,7 +122,7 @@ fun DatePickerWithDialog(
                         }
                     }
                 ) {
-                    Text(text = stringResource(R.string.add_sleep_btn))
+                    Text(text = stringResource(android.R.string.ok))
                 }
             },
             dismissButton = {

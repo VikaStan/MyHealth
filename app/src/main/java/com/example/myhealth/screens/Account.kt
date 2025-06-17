@@ -125,11 +125,6 @@ fun AccountSection(p: MutableLiveData<Person>) {
                 enabled = false,
                 label = { Text(stringResource(R.string.goal_water)) }) // вода
 
-            OutlinedTextField(person.value?.sleepGoal.toString(),
-                {},
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                enabled = false,
-                label = { Text(stringResource(R.string.goal_sleep)) }) // калории
         }
     }
 }
@@ -243,7 +238,7 @@ fun RegistrationDialog(
                         )
                     )
                 }, Modifier.padding(8.dp)) {
-                    Text(stringResource(R.string.add_sleep_btn))
+                    Text(stringResource(android.R.string.ok))
                 }
             }
 

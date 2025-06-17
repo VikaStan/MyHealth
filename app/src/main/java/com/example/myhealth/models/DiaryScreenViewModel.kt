@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -62,43 +61,18 @@ class DiaryScreenViewModel @Inject constructor(
         // открытие формы добавления блюда с выбранным типом (передавай type)
     }
 
-    fun addMeal(
-        name: String,
-        calories: Int,
-        proteins: Int,
-        fats: Int,
-        carbs: Int,
-        type: String
-    ) {
-        viewModelScope.launch {
-            val meal = MealEntity(
-                name = name,
-                calories = calories,
-                proteins = proteins,
-                fats = fats,
-                carbs = carbs,
-                type = type,
-                id = TODO(),
-                time = TODO()
-            )
-            MealTimeRepository.addMeal(meal)
-        }
-    }
-
     var selectedDayIndex = MutableStateFlow(getListSize() - 1)
     var selectedDayOld = MutableStateFlow(
         Day(
             date = currDay,
             goalCalories = 0,
-            goalSleep = 0f,
             mealTimeList = mutableListOf(
                 MealTime(0, MealType.BREAKFAST.value, 0, 0, 0, mutableListOf()),
                 MealTime(1, MealType.LUNCH.value, 0, 0, 0, mutableListOf()),
                 MealTime(2, MealType.DINNER.value, 0, 0, 0, mutableListOf())
-            ),
-            sleepTimeList = mutableListOf()
         )
     )
+
     var selectedEatTimeName = MutableStateFlow("")
 
     var onSelectedDay :(Int)->Unit = {}
@@ -116,13 +90,8 @@ class DiaryScreenViewModel @Inject constructor(
         selectedEatTimeName.value = foodTimeName //для последующего обновления списка продуктов
     }
 
-    fun onSleepAddBtnClick() {
-        navHostController.navigate(Screen.SleepAdd.route)
-    }
-
     private fun updateDataInDayList() {
         days.value[selectedDayIndex.value].mealTimeList = selectedDayOld.value.mealTimeList
-        days.value[selectedDayIndex.value].sleepTimeList = selectedDayOld.value.sleepTimeList
     }
 
     private fun getListSize(): Int {
@@ -143,14 +112,12 @@ class DiaryScreenViewModel @Inject constructor(
                 Day(
                     date = day,
                     goalCalories = 0,
-                    goalSleep = 10f,
                     mealTimeList = mutableListOf(
                         MealTime(0, MealType.BREAKFAST.value, 0, 0, 0, mutableListOf()),
                         MealTime(1, MealType.LUNCH.value, 0, 0, 0, mutableListOf()),
                         MealTime(2, MealType.DINNER.value, 0, 0, 0, mutableListOf())
-                    ),
-                    sleepTimeList = mutableListOf()
                 )
+            )
             )
         }
         list.forEach { it.updateAllCount() }

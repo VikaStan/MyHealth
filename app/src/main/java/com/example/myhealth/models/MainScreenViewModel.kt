@@ -28,7 +28,6 @@ class MainScreenViewModel @Inject constructor(
 
     lateinit var diaryModel: DiaryScreenViewModel
     lateinit var foodAddViewModel: FoodAddViewModel
-    lateinit var sleepAddViewModel: SleepAddViewModel
     lateinit var statsViewModel: StatsViewModel
     lateinit var accountViewModel: AccountViewModel
 
@@ -37,7 +36,6 @@ class MainScreenViewModel @Inject constructor(
         get() {
             field.map {
                 it.goalCalories = person.value?.caloriesGoal?.toInt() ?: 1000
-                it.goalSleep = person.value?.sleepGoal ?: 8f
             }
             return field
         }
@@ -46,13 +44,11 @@ class MainScreenViewModel @Inject constructor(
         Day(
             date = currDay,
             goalCalories = 0,
-            goalSleep = 0f,
             mealTimeList = mutableListOf(
                 MealTime(0, MealType.BREAKFAST.value, 0, 0, 0, mutableListOf()),
                 MealTime(1, MealType.LUNCH.value, 0, 0, 0, mutableListOf()),
                 MealTime(2, MealType.DINNER.value, 0, 0, 0, mutableListOf())
-            ),
-            sleepTimeList = mutableListOf()
+            )
         )
     )
     lateinit var person: LiveData<Person>
@@ -78,13 +74,11 @@ class MainScreenViewModel @Inject constructor(
     fun initiate(
         diaryModel: DiaryScreenViewModel,
         foodAddViewModel: FoodAddViewModel,
-        sleepAddViewModel: SleepAddViewModel,
         statsViewModel: StatsViewModel,
         accountViewModel: AccountViewModel,
     ) {
         this.diaryModel = diaryModel
         this.foodAddViewModel = foodAddViewModel
-        this.sleepAddViewModel = sleepAddViewModel
         this.statsViewModel = statsViewModel
         this.accountViewModel = accountViewModel
         //получать, в системе ли
@@ -111,14 +105,12 @@ class MainScreenViewModel @Inject constructor(
             list.add(
                 Day(
                     date = day,
-                    goalSleep = person.value?.sleepGoal ?: 8f,
                     goalCalories = person.value?.caloriesGoal?.toInt() ?: 1000,
                     mealTimeList = mutableListOf(
                         MealTime(0, MealType.BREAKFAST.value, 0, 0, 0, mutableListOf()),
                         MealTime(1, MealType.LUNCH.value, 0, 0, 0, mutableListOf()),
                         MealTime(2, MealType.DINNER.value, 0, 0, 0, mutableListOf())
-                    ),
-                    sleepTimeList = mutableListOf()
+                    )
                 )
             )
         }
@@ -130,7 +122,6 @@ class MainScreenViewModel @Inject constructor(
 
     private fun updateDataInDayList() {
         dayOlds[selectedDayIndex.value].mealTimeList = selectedDayOld.value.mealTimeList
-        dayOlds[selectedDayIndex.value].sleepTimeList = selectedDayOld.value.sleepTimeList
     }
 
     fun selected(index: Int) {
@@ -138,7 +129,6 @@ class MainScreenViewModel @Inject constructor(
         selectedDayIndex.value = index
         selectedDayOld.value = dayOlds[index]
         selectedDayOld.value.mealTimeList = dayOlds[index].mealTimeList
-        selectedDayOld.value.sleepTimeList = dayOlds[index].sleepTimeList
         selectedDayOld.value.updateAllCount()
     }
 }

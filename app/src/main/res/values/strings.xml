@@ -8,7 +8,6 @@
     <string name="breakfast_title">Breakfast</string>
     <string name="lunch_title">Lunch</string>
     <string name="dinner_title">Dinner</string>
-    <string name="sleep_title">Sleep</string>
     <string name="mon">Mon</string>
     <string name="thu">Thu</string>
     <string name="wed">Wed</string>
@@ -16,13 +15,8 @@
     <string name="sat">Sat</string>
     <string name="sun">Sun</string>
     <string name="food_add">Add food</string>
-    <string name="sleep_add">Add bed time</string>
     <string name="products">products count</string>
     <string name="calories">calories</string>
-    <string name="sleep_count">Sleep count</string>
-    <string name="lack_of_sleep">lack of sleep</string>
-    <string name="sleep_time">hours</string>
-    <string name="sleep_more">sleep more</string>
     <string name="bakery">Bakery</string>
     <string name="porridge">Porridge</string>
     <string name="eggs">Eggs</string>
@@ -62,7 +56,6 @@
     <string name="weight">Weight</string>
     <string name="height">Height</string>
     <string name="goal_calories">Goal calories</string>
-    <string name="goal_sleep">Goal sleep</string>
     <string name="del_btn">Delete user data</string>
     <string name="reg_title">Add user data</string>
     <string name="channel_water" translatable="false">Напоминания о воде</string>

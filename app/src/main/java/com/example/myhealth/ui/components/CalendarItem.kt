@@ -68,13 +68,7 @@ fun CalendarItem(
                         .background(color = Color.DarkGray, shape = CircleShape)
                         .padding(2.dp))
                 }
-        }
-            val sleep = if (dayOld.sleepTimeList.isNotEmpty()) Color.Blue else Color.DarkGray
-
-                Box(modifier = modifier
-                    .size(7.dp)
-                    .background(color = sleep, shape = CircleShape)
-                    .padding(2.dp))
+            }
         }
     }
 }

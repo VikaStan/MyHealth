@@ -1,13 +1,20 @@
 package com.example.myhealth.screens
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -31,7 +38,6 @@ import com.example.myhealth.models.AccountViewModel
 import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
-import com.example.myhealth.models.SleepAddViewModel
 import com.example.myhealth.presentation.statistics.StatsViewModel
 import com.example.myhealth.ui.components.appbar.ActionsMenu
 import com.example.myhealth.ui.components.appbar.AppBarState
@@ -46,7 +52,6 @@ fun MainScreen(
     mainViewModel: MainScreenViewModel = hiltViewModel(),
     diaryViewModel: DiaryScreenViewModel = hiltViewModel(),
     foodAddViewModel: FoodAddViewModel = hiltViewModel(),
-    sleepAddViewModel: SleepAddViewModel = hiltViewModel(),
     statsViewModel: StatsViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {
@@ -54,7 +59,6 @@ fun MainScreen(
     mainViewModel.initiate(
         diaryViewModel,
         foodAddViewModel,
-        sleepAddViewModel,
         statsViewModel,
         accountViewModel
     )
@@ -103,17 +107,6 @@ fun MainScreen(
             }
             .launchIn(this)
 
-        Screen.SleepAdd.buttons
-            .onEach { button ->
-                when (button) {
-                    // переход в настройки при срабатывании flow
-                    Screen.SleepAdd.AppBarIcons.Back -> {
-                        navController.popBackStack()
-                        sleepAddViewModel.updateSleepList(mainViewModel.diaryModel)
-                    }
-                }
-            }
-            .launchIn(this)
     }
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },

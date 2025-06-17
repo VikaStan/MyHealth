@@ -1,6 +1,5 @@
 package com.example.myhealth.domain.models
 
-import java.time.Duration
 import java.time.LocalDate
 
 
@@ -8,11 +7,8 @@ class Day(
     val date: LocalDate,
     var totalCalories: Int = 0,
     var goalCalories: Int,
-    var totalSleep: Duration = Duration.ofMinutes(0),
-    var goalSleep: Float,
     var isStrike: Boolean = false,
     var mealTimeList: MutableList<MealTime>,
-    var sleepTimeList: MutableList<SleepTime>
 ) {
     fun updateAllCount() {
         totalCalories = 0
@@ -23,10 +19,7 @@ class Day(
             totalCalories += meal.totalCalories
             foodCount += meal.productCount
         }
-        totalSleep = Duration.ofMinutes(sleepTimeList.sumOf { it.duration.toMinutes() })
-        isStrike = if (sleepTimeList.isNotEmpty() && foodCount >= 3) {
-            totalSleep.toHours() <= goalSleep && totalCalories <= goalCalories
-        } else false
+        isStrike = foodCount >= 3 && totalCalories <= goalCalories
     }
 
     fun dayToMillis(): Long = java.util.Calendar.getInstance().apply {

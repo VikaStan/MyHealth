@@ -8,7 +8,6 @@ import com.example.myhealth.data.datasource.local.entity.DayEntity
 import com.example.myhealth.room.converters.DateConverter
 import com.example.myhealth.room.converters.MealTimeListConverter
 import com.example.myhealth.room.converters.ProductListConverter
-import com.example.myhealth.room.converters.SleepTimeListConverter
 import com.example.myhealth.room.dao.DayDao
 import com.example.myhealth.room.dao.PersonDao
 
@@ -20,8 +19,7 @@ import com.example.myhealth.room.dao.PersonDao
 @TypeConverters(
     DateConverter::class,
     ProductListConverter::class,
-    MealTimeListConverter::class,
-    SleepTimeListConverter::class
+    MealTimeListConverter::class
 )
 abstract class HealthRoomDb : RoomDatabase() {
     abstract val personDao: PersonDao
