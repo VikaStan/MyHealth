@@ -93,4 +93,6 @@ data class ProductOld(
 sealed class ProductType(
     val icon: ImageVector,
     val name: Int,
-)
+){
+    // Здесь могут быть определены подклассы или вспомогательные объекты
+}

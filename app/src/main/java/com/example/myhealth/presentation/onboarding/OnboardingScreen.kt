@@ -1,5 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.myhealth.presentation.onboarding
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,8 +17,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.*
 import com.example.myhealth.R
+import androidx.compose.ui.platform.LocalContext
 
-@OptIn(ExperimentalPagerApi::class)
+
+@RequiresApi(Build.VERSION_CODES.Q)
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel = androidx.hilt.navigation.compose.hiltViewModel(),
@@ -20,6 +29,7 @@ fun OnboardingScreen(
 ) {
     val pagerState = rememberPagerState()
     val uiState by viewModel.uiState.collectAsState()
+    val activity = LocalContext.current as Activity
 
     Column(
         Modifier
@@ -48,7 +58,7 @@ fun OnboardingScreen(
 
         val lastPage = pagerState.currentPage == 3
         Button(
-            onClick = { viewModel.onButtonClick(onFinish) },
+            onClick = { viewModel.onButtonClick(activity, onFinish) },
             enabled = lastPage,
             modifier = Modifier.fillMaxWidth()
         ) {

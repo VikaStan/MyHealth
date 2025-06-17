@@ -1,5 +1,8 @@
 package com.example.myhealth.presentation.onboarding
 
+import android.app.Activity
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myhealth.domain.usecases.AuthorizeFitUseCase
@@ -19,9 +22,13 @@ class OnboardingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(OnboardingUiState())
     val uiState: StateFlow<OnboardingUiState> = _uiState
 
-    fun onButtonClick(onSuccessNavigate: () -> Unit) = viewModelScope.launch {
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun onButtonClick(
+        caller: Activity,
+        onSuccessNavigate: () -> Unit
+    ) = viewModelScope.launch {
         val ctx = permissionHelper.context
-        if (permissionHelper.requestActivityRecognition()) {
+        if (permissionHelper.requestActivityRecognition(caller)) {
             val result = authUseCase(ctx)
             if (result.isSuccess) onSuccessNavigate()
         } else {

@@ -8,6 +8,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.Person
+import com.example.myhealth.presentation.statistics.StatsViewModel
 import com.example.myhealth.room.HealthRoomDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,11 +68,6 @@ class MainScreenViewModel @Inject constructor(
             field = value
         }
 
-
-    init {
-        initDayList(getListSize()).toCollection(dayOlds)
-    }
-
     fun initiate(
         diaryModel: DiaryScreenViewModel,
         foodAddViewModel: FoodAddViewModel,
@@ -91,7 +87,6 @@ class MainScreenViewModel @Inject constructor(
         this.person = MutableLiveData(person)
         inSystem = MutableStateFlow(true)
     }
-
 
     private fun getListSize(): Int {
         return currDay.dayOfMonth + currDay.minusMonths(1).month.length(currDay.isLeapYear)

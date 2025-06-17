@@ -1,11 +1,22 @@
 package com.example.myhealth.data.datasource.local
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.myhealth.data.datasource.local.entity.MealEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MealDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+
+    suspend fun insert(meal: MealEntity)
+
+    @Query("SELECT * FROM meals WHERE date(time/1000, 'unixepoch', 'localtime') = date('now', 'localtime')")
+
+    fun getMealsForToday(): Flow<List<MealEntity>>
+
     // Калории за последние 7 дней (группировка по дням)
     @Query("""
         SELECT 
@@ -41,6 +52,7 @@ interface MealDao {
         SELECT SUM(carbs) FROM meals WHERE date(time/1000, 'unixepoch', 'localtime') = date('now', 'localtime')
     """)
     fun getTodayCarbs(): Flow<Int?>
+
 }
 
 // Модель для статистики еды по дням

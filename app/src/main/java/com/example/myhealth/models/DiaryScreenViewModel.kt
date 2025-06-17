@@ -9,10 +9,14 @@ import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.datasource.local.entity.MealEntity
 import com.example.myhealth.domain.repository.MealTimeRepository
 import com.example.myhealth.presentation.diary.MealType
+import com.example.myhealth.room.PersonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -20,12 +24,14 @@ import java.util.stream.IntStream.range
 import javax.inject.Inject
 
 @HiltViewModel
-class DiaryScreenViewModel @Inject constructor() : ViewModel() {
+class DiaryScreenViewModel @Inject constructor(
+    private val mealsRepo: MealTimeRepository
+) : ViewModel() {
 
     lateinit var navHostController: NavHostController
     private val currDay: LocalDate = Instant.now().atZone(ZoneId.of("UTC+3")).toLocalDate()
     val days: MutableStateFlow<List<DayOld>> = MutableStateFlow(initDayList(getListSize()))
-    val mealsToday: StateFlow<List<MealEntity>> = MealTimeRepository.getMealsForToday()
+    val mealsToday: StateFlow<List<MealEntity>> = mealsRepo.getMealsForToday()
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val totalCaloriesToday: Int
         get() = mealsToday.value.sumOf { it.calories }
@@ -40,13 +46,13 @@ class DiaryScreenViewModel @Inject constructor() : ViewModel() {
         get() = mealsToday.value.sumOf { it.carbs }
 
     val breakfastMeals: List<MealEntity>
-        get() = mealsToday.value.filter { it.type == MealType.BREAKFAST }
+        get() = mealsToday.value.filter {it.type == MealType.BREAKFAST.value}
 
     val lunchMeals: List<MealEntity>
-        get() = mealsToday.value.filter { it.type == MealType.LUNCH }
+        get() = mealsToday.value.filter { it.type == MealType.LUNCH.value }
 
     val dinnerMeals: List<MealEntity>
-        get() = mealsToday.value.filter { it.type == MealType.DINNER }
+        get() = mealsToday.value.filter { it.type == MealType.DINNER.value }
 
     val caloriesTarget: Int
         get() = PersonRepository.getCaloriesTarget() // берёшь из профиля или настроек
@@ -54,6 +60,29 @@ class DiaryScreenViewModel @Inject constructor() : ViewModel() {
 
     fun onAddMeal(type: MealType) {
         // открытие формы добавления блюда с выбранным типом (передавай type)
+    }
+
+    fun addMeal(
+        name: String,
+        calories: Int,
+        proteins: Int,
+        fats: Int,
+        carbs: Int,
+        type: String
+    ) {
+        viewModelScope.launch {
+            val meal = MealEntity(
+                name = name,
+                calories = calories,
+                proteins = proteins,
+                fats = fats,
+                carbs = carbs,
+                type = type,
+                id = TODO(),
+                time = TODO()
+            )
+            MealTimeRepository.addMeal(meal)
+        }
     }
 
     var selectedDayIndex = MutableStateFlow(getListSize() - 1)

@@ -23,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.data.DayOld
 import com.example.myhealth.data.datasource.local.entity.MealEntity
 import com.example.myhealth.models.DiaryScreenViewModel
@@ -36,19 +38,30 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun DiaryScreen(
-    viewModel: DiaryScreenViewModel = hiltViewModel()
+    navHostController: NavHostController,
+    model: DiaryScreenViewModel = hiltViewModel(),
+    mainModel: MainScreenViewModel = hiltViewModel()
 ) {
 
-    val mealsToday by viewModel.mealsToday.collectAsState()
-    val totalCalories = viewModel.totalCaloriesToday
-    val caloriesTarget = viewModel.caloriesTarget
-    val proteins = viewModel.totalProteinsToday
-    val fats = viewModel.totalFatsToday
-    val carbs = viewModel.totalCarbsToday
+    model.navHostController = navHostController
+    LaunchedEffect(Unit) {
+        model.getDayData(
+            mainModel.dayOlds,
+            mainModel.selectedDayIndex.collectAsState(),
+            mainModel::selected
+        )
+    }
 
-    val breakfastMeals = viewModel.breakfastMeals
-    val lunchMeals = viewModel.lunchMeals
-    val dinnerMeals = viewModel.dinnerMeals
+    val mealsToday by model.mealsToday.collectAsState()
+    val totalCalories = model.totalCaloriesToday
+    val caloriesTarget = model.caloriesTarget
+    val proteins = model.totalProteinsToday
+    val fats = model.totalFatsToday
+    val carbs = model.totalCarbsToday
+
+    val breakfastMeals = model.breakfastMeals
+    val lunchMeals = model.lunchMeals
+    val dinnerMeals = model.dinnerMeals
 
     Column(Modifier.fillMaxSize().background(Color(0xFFE8F4FF))) {
         // 1. Верхний блок — калории и БЖУ
@@ -85,9 +98,9 @@ fun DiaryScreen(
             }
         }
         // 2. Три карточки приёмов пищи
-        MealSection("завтрак", breakfastMeals) { viewModel.onAddMeal(MealType.BREAKFAST) }
-        MealSection("обед", lunchMeals) { viewModel.onAddMeal(MealType.LUNCH) }
-        MealSection("ужин", dinnerMeals) { viewModel.onAddMeal(MealType.DINNER) }
+        MealSection("завтрак", breakfastMeals) { model.onAddMeal(MealType.BREAKFAST) }
+        MealSection("обед", lunchMeals) { model.onAddMeal(MealType.LUNCH) }
+        MealSection("ужин", dinnerMeals) { model.onAddMeal(MealType.DINNER) }
 
         Spacer(Modifier.weight(1f))
         // Нижняя навигация, если нужно

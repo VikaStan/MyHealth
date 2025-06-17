@@ -11,5 +11,6 @@ data class MealEntity(
     val proteins: Int,
     val fats: Int,
     val carbs: Int,
+    val type: String, // "breakfast", "lunch", "dinner"
     val time: Long
 )
