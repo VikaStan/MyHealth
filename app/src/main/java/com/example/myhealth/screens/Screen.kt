@@ -2,11 +2,12 @@ package com.example.myhealth.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.myhealth.R
@@ -131,8 +132,7 @@ sealed class Screen(
         title = R.string.account_screen,
         buttomIcon = Icons.Default.Person,
         isAppBarVisible = true,
-        navigationIcon = Icons.Default.Person,
-        onNavigationIconClick = null,
+        navigationIcon = Icons.Default.Settings,
         navigationIconContentDescription = null,
         actions = emptyList()
     ){
@@ -144,6 +144,10 @@ sealed class Screen(
         // 2
         private val _buttons = MutableSharedFlow<AppBarIcons>(extraBufferCapacity = 1)
         val buttons: Flow<AppBarIcons> = _buttons.asSharedFlow()
+
+        init {
+            onNavigationIconClick = { _buttons.tryEmit(AppBarIcons.Settings) }
+        }
     }
 
     object Settings : Screen(

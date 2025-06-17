@@ -1,8 +1,8 @@
 package com.example.myhealth.data
 
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "person")
@@ -16,12 +16,16 @@ class Person(
     val weight: Int = 0,
     val height: Int = 0,
     var sleepGoal: Float = 8f,
-    var caloriesGoal: Float = 0f
+    var caloriesGoal: Float = 0f,
+    var caloriesGoal: Float = 0f,
+    @Ignore
+    var waterGoal: Int = 0
 ) {
     init {
         //Формула расчета калорийности Тома Венуто
         caloriesGoal = if (sex.equals("Male")) (66 + (13.7f * weight) + (5 * height) - (6.8f * age))
         else 665 + (9.6f * weight) + (1.8f * height) - (4.7f * age)
+        waterGoal = weight * 30
     }
 
 }

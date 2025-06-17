@@ -118,6 +118,13 @@ fun AccountSection(p: MutableLiveData<Person>) {
                 enabled = false,
                 label = { Text(stringResource(R.string.goal_calories)) }) // калории
 
+            OutlinedTextField(
+                person.value?.waterGoal.toString(),
+                {},
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                enabled = false,
+                label = { Text(stringResource(R.string.goal_water)) }) // вода
+
             OutlinedTextField(person.value?.sleepGoal.toString(),
                 {},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

@@ -66,6 +66,7 @@
     <string name="del_btn">Delete user data</string>
     <string name="reg_title">Add user data</string>
     <string name="channel_water" translatable="false">Напоминания о воде</string>
+    <string name="goal_water">Goal water (ml)</string>
     <string name="water_reminder_text" translatable="false">До нормы осталось %1$d мл</string>
     <string name="onb_title_1" translatable="false">Следите за гидратацией каждый день</string>
     <string name="onb_title_2" translatable="false">Импортируем шаги и калории из Google Fit</string>
