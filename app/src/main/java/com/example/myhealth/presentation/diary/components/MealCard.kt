@@ -26,8 +26,8 @@ import com.example.myhealth.ui.theme.PrimaryBlue
 @Composable
 fun MealCard(
     title: String,
-    onAdd: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAdd: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),

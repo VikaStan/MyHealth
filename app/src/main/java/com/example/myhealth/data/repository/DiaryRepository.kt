@@ -1,8 +1,11 @@
 package com.example.myhealth.data.repository
 
+import com.example.myhealth.data.datasource.local.MealDao
+import com.example.myhealth.data.datasource.local.entity.MealEntity
 import com.example.myhealth.presentation.diary.MealType
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,16 +27,48 @@ data class DiaryState(
 )
 
 @Singleton
-class DiaryRepository @Inject constructor() {
-    private val _diaryState = MutableStateFlow(DiaryState())
-    val diaryState: StateFlow<DiaryState> = _diaryState
+class DiaryRepository @Inject constructor(
+    private val mealDao: MealDao
+) {
+
+    /** Актуальное состояние дневника за сегодня. */
+    val diaryState: Flow<DiaryState> =
+        combine(
+            mealDao.getTodayCalories(),
+            mealDao.getTodayProteins(),
+            mealDao.getTodayFats(),
+            mealDao.getTodayCarbs(),
+        ) { calories, proteins, fats, carbs ->
+            DiaryState(
+                calories = calories ?: 0,
+                protein = proteins ?: 0,
+                fat = fats ?: 0,
+                carbs = carbs ?: 0,
+            )
+        }
 
     suspend fun addFood(type: MealType, food: Food) {
-        _diaryState.value = _diaryState.value.copy(
-            calories = _diaryState.value.calories + food.calories,
-            protein = _diaryState.value.protein + food.protein,
-            fat = _diaryState.value.fat + food.fat,
-            carbs = _diaryState.value.carbs + food.carbs
+        mealDao.insert(
+            MealEntity(
+                name = food.name,
+                calories = food.calories,
+                proteins = food.protein,
+                fats = food.fat,
+                carbs = food.carbs,
+                type = type.value,
+                time = System.currentTimeMillis()
+            )
         )
+    }
+
+    /** Список приёмов пищи за сегодня. */
+    fun mealsForToday(): Flow<List<MealEntity>> = mealDao.getMealsForToday()
+
+    /** Суммарные калории за последние 7 дней. */
+    fun caloriesForLastWeek(): Flow<List<Int>> {
+        val weekAgo = System.currentTimeMillis() - 6 * 24 * 60 * 60 * 1000L
+        return mealDao.getLast7DaysCalories(weekAgo).map { stats ->
+            stats.sortedBy { it.day }.map { it.totalCalories }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.myhealth.domain.models
 
+import com.example.myhealth.R
 import java.time.LocalDate
 
 
@@ -27,6 +28,14 @@ class Day(
     }.timeInMillis
 
     fun dayOfWeekToString(): Int {
-        TODO("Not yet implemented")
+        return when (date.dayOfWeek) {
+            java.time.DayOfWeek.MONDAY -> R.string.mon
+            java.time.DayOfWeek.TUESDAY -> R.string.tue
+            java.time.DayOfWeek.WEDNESDAY -> R.string.wed
+            java.time.DayOfWeek.THURSDAY -> R.string.tue
+            java.time.DayOfWeek.FRIDAY -> R.string.fri
+            java.time.DayOfWeek.SATURDAY -> R.string.sat
+            java.time.DayOfWeek.SUNDAY -> R.string.sun
+        }
     }
 }
