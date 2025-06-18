@@ -63,7 +63,7 @@ fun BottomNavGraph(
             } }
         }
         composable(route = Screen.Dashboard.route) {
-            DashBoardScreen()
+            DashBoardScreen(navController = navController)
         }
 
 
