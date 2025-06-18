@@ -22,8 +22,7 @@ class OnboardingViewModel @Inject constructor(
     fun connectGoogleFit() {
         viewModelScope.launch {
             uiState = uiState.copy(inProgress = true)
-            // TODO: вызвать use-case AuthorizeFitUseCase()
-            val success = authorizeFitUseCase().isSuccess
+            val success = authUseCase().isSuccess
             uiState = GoogleFitAuthState(connected = success)
         }
     }
