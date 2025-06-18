@@ -5,6 +5,7 @@ package com.example.myhealth.presentation.onboarding
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -45,7 +46,7 @@ fun OnboardingScreen(
 ) {
     val pagerState = rememberPagerState()
     val uiState by viewModel.uiState.collectAsState()
-    val activity = LocalContext.current as Activity
+    val activity = LocalContext.current as ComponentActivity
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()

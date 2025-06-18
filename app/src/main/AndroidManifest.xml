@@ -23,7 +23,8 @@
             android:exported="true"
             android:label="MyHealth"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.MyHealth">
+            android:theme="@style/Theme.MyHealth"
+            tools:ignore="RedundantLabel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

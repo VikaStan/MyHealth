@@ -128,8 +128,7 @@ fun MainScreen(
         else BottomNavGraph(
             navController = navController,
             modifier = Modifier.padding(it),
-            mainViewModel,
-            Screen.Account.route
+            mainViewModel
         )
     }
 }

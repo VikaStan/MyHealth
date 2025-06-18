@@ -3,6 +3,7 @@ package com.example.myhealth.presentation.onboarding
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -31,7 +32,7 @@ class OnboardingViewModel @Inject constructor(
         caller: Activity,
         launcher: ActivityResultLauncher<Intent>
     ) = viewModelScope.launch {
-        if (permissionHelper.requestActivityRecognition(caller)) {
+        if (permissionHelper.requestActivityRecognition(caller as ComponentActivity)) {
             val intent = authUseCase.getSignInIntent(caller)
             launcher.launch(intent)
         } else {

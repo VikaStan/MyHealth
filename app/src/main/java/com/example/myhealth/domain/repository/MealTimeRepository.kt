@@ -19,7 +19,6 @@ class MealTimeRepository @Inject constructor(
             stats.sortedBy { it.day }.map { it.totalCalories }
         }
     }
-
     // Белки за сегодня
     fun getProteinsToday(): Flow<Int> = mealDao.getTodayProteins().map { it ?: 0 }
 
@@ -31,4 +30,7 @@ class MealTimeRepository @Inject constructor(
 
     /** Список приёмов пищи за сегодня. */
     fun getMealsForToday(): Flow<List<MealEntity>> = mealDao.getMealsForToday()
+
+    /** Суммарные калории за сегодня. */
+    fun getTodayCalories(): Flow<Int> = mealDao.getTodayCalories().map { it ?: 0 }
 }

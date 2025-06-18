@@ -10,7 +10,6 @@ import com.example.myhealth.domain.models.Stats
 import com.example.myhealth.domain.repository.HealthRepository
 import com.example.myhealth.domain.repository.MealTimeRepository
 import com.example.myhealth.domain.repository.WaterRepository
-import com.example.myhealth.presentation.statistics.StatsTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,6 +42,9 @@ class StatsViewModel @Inject constructor(
     // Вода за последние 7 дней
     val waterData: StateFlow<List<Int>> = waterRepo.getWaterForLastWeek()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    val caloriesToday: StateFlow<Int> = mealsRepo.getTodayCalories()
+        .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
     // Суммарные БЖУ за сегодня
     val proteinsToday: StateFlow<Int> = mealsRepo.getProteinsToday()

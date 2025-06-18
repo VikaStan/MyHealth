@@ -29,7 +29,6 @@ fun BottomNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     mainScreenViewModel: MainScreenViewModel = hiltViewModel(),
-    start:String = Screen.Diary.route
 ) {
     val context = LocalContext.current
     val prefs = remember(context) { PreferencesManager(context) }

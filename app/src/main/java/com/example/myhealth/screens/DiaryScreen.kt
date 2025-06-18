@@ -99,7 +99,7 @@ fun DiaryScreen(
                         progress = { (totalCalories.toFloat() / caloriesTarget).coerceIn(0f, 1f) },
                         color = Color(0xFF6098FF),
                         strokeWidth = 7.dp,
-                        trackColor = ProgressIndicatorDefaults.circularTrackColor,
+                        trackColor = ProgressIndicatorDefaults.circularDeterminateTrackColor,
                     )
                     Text(
                         "$totalCalories/\n$caloriesTarget",
