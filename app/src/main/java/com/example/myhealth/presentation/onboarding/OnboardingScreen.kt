@@ -1,7 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.myhealth.presentation.onboarding
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,12 +33,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
@@ -45,28 +48,23 @@ fun OnboardingScreen(
     val pages = OnboardingPage.pages
     val pagerState = rememberPagerState()
     val authState = viewModel.uiState
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    val systemUiController = rememberSystemUiController()
-    val darkIcons = !isSystemInDarkTheme()
-    LaunchedEffect(darkIcons) {
-        systemUiController.setStatusBarColor(Color.Transparent, darkIcons)
-    }
+    /* авто-переход после успешного подключения */
     if (authState.connected && pagerState.currentPage == 4) {
         LaunchedEffect(Unit) {
-            delay(1500)
+            delay(1_500)
             onFinished()
         }
     }
-
-    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("MyHealth") },
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.onPrimary)
+                    IconButton(onClick = { /* profile */ }) {
+                        Icon(Icons.Default.Person, contentDescription = null)
                     }
                 }
             )
@@ -83,15 +81,17 @@ fun OnboardingScreen(
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { inner ->
+    ) { innerPadding ->
+
         Box(
             Modifier
-                .padding(inner)
+                .padding(innerPadding)
                 .fillMaxSize()
         ) {
 
+            /* ---------- Пагер ---------- */
             HorizontalPager(
-                pageCount = pages.size,
+                count = pages.size,
                 state = pagerState,
                 userScrollEnabled = !authState.connected,
                 modifier = Modifier.fillMaxSize()
@@ -99,20 +99,24 @@ fun OnboardingScreen(
                 OnboardingPageContent(page = pages[page])
             }
 
+            /* ---------- Индикатор ---------- */
             HorizontalPagerIndicator(
-                pagerState,
+                pagerState = pagerState,
+                pageCount = pages.size,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(24.dp)
             )
         }
+
+        /* Snackbar после подключения */
         if (authState.connected && pagerState.currentPage == 3) {
             LaunchedEffect(Unit) {
                 snackbarHostState.showSnackbar("Подключено!")
             }
         }
-        }
     }
+}
 
 @Composable
 private fun OnboardingPageContent(page: OnboardingPage) {
