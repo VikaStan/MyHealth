@@ -3,8 +3,11 @@ package com.example.myhealth.data.repository
 import com.example.myhealth.data.datasource.FitnessDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class StepsRepository(
+@Singleton
+class StepsRepository @Inject constructor(
     private val fitnessDataSource: FitnessDataSource
 ) {
     fun getStepsForLastWeek(): Flow<List<Int>> = flow {

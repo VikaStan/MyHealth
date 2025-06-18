@@ -3,9 +3,9 @@ package com.example.myhealth.di
 import android.content.Context
 import androidx.room.Room
 import com.example.myhealth.data.datasource.local.AppDatabase
+import com.example.myhealth.data.datasource.local.MealDao
 import com.example.myhealth.data.datasource.local.StatsDao
 import com.example.myhealth.data.datasource.local.WaterDao
-import com.example.myhealth.data.datasource.local.MealDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +28,7 @@ object DatabaseModule {
             "myhealth.db"
         )
             // для прототипа допускаю destructiveMigration;
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(false)
             .build()
 
     @Provides
