@@ -5,6 +5,8 @@ package com.example.myhealth.presentation.onboarding
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -44,6 +47,19 @@ fun OnboardingScreen(
     val uiState by viewModel.uiState.collectAsState()
     val activity = LocalContext.current as Activity
 
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        viewModel.onAuthResult(result.resultCode == Activity.RESULT_OK)
+    }
+
+    if (uiState.onboardingComplete) {
+        LaunchedEffect(Unit) {
+            pagerState.animateScrollToPage(4)
+            onFinish()
+        }
+    }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -51,7 +67,7 @@ fun OnboardingScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HorizontalPager(
-            count = 5,
+            count = if (uiState.onboardingComplete) 5 else 4,
             state = pagerState,
             modifier = Modifier.weight(1f)
         ) { page ->
@@ -70,9 +86,9 @@ fun OnboardingScreen(
             activeColor = MaterialTheme.colorScheme.primary
         )
 
-        val lastPage = pagerState.currentPage == 4
+        val lastPage = pagerState.currentPage == 3 && !uiState.onboardingComplete
         Button(
-            onClick = { viewModel.onButtonClick(activity, onFinish) },
+            onClick = { viewModel.onButtonClick(activity, launcher) },
             enabled = lastPage,
             modifier = Modifier.fillMaxWidth()
         ) {

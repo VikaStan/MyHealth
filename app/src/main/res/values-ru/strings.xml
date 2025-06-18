@@ -8,7 +8,6 @@
     <string name="breakfast_title">Завтрак</string>
     <string name="lunch_title">Обед</string>
     <string name="dinner_title">Ужин</string>
-    <string name="sleep_title">Сон</string>
     <string name="mon">Пн</string>
     <string name="thu">Вт</string>
     <string name="wed">Ср</string>
@@ -16,13 +15,8 @@
     <string name="sat">Сб</string>
     <string name="sun">Вс</string>
     <string name="food_add">Добавление еды</string>
-    <string name="sleep_add">Добавление сна</string>
     <string name="products">продуктов</string>
     <string name="calories">калл</string>
-    <string name="sleep_count">снов</string>
-    <string name="lack_of_sleep">недосып</string>
-    <string name="sleep_time">часов</string>
-    <string name="sleep_more">больше на</string>
     <string name="bakery">Выпечка</string>
     <string name="porridge">Каша</string>
     <string name="eggs">Яйца</string>
@@ -62,7 +56,6 @@
     <string name="height">Рост</string>
     <string name="goal_calories">Норма калорий в сутки</string>
     <string name="goal_water">Норма воды в сутки (мл)</string>
-    <string name="goal_sleep">Норма сна в сутки</string>
     <string name="del_btn">Удалить данные пользователя</string>
     <string name="reg_title">Введите данные пользователя</string>
     <string name="dashboard_screen">Главная</string>

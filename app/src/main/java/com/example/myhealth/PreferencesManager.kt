@@ -5,6 +5,11 @@ import android.content.SharedPreferences
 import com.example.myhealth.data.Person
 
 class PreferencesManager(context: Context) {
+
+    companion object {
+        const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
+    }
+
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 
@@ -12,7 +17,9 @@ class PreferencesManager(context: Context) {
         val editor = sharedPreferences.edit()
         editor.putString(key, value)
         editor.apply()
-    }fun saveData(key: String, value: Boolean) {
+    }
+
+    fun saveData(key: String, value: Boolean) {
         val editor = sharedPreferences.edit()
         editor.putBoolean(key, value)
         editor.apply()
@@ -62,6 +69,13 @@ class PreferencesManager(context: Context) {
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
+    }
+
+    fun isOnboardingComplete(): Boolean =
+        getData(KEY_ONBOARDING_COMPLETE, false)
+
+    fun setOnboardingComplete() {
+        saveData(KEY_ONBOARDING_COMPLETE, true)
     }
 
 

@@ -70,9 +70,9 @@ class DiaryScreenViewModel @Inject constructor(
                 MealTime(0, MealType.BREAKFAST.value, 0, 0, 0, mutableListOf()),
                 MealTime(1, MealType.LUNCH.value, 0, 0, 0, mutableListOf()),
                 MealTime(2, MealType.DINNER.value, 0, 0, 0, mutableListOf())
+            )
         )
     )
-
     var selectedEatTimeName = MutableStateFlow("")
 
     var onSelectedDay :(Int)->Unit = {}
@@ -101,7 +101,7 @@ class DiaryScreenViewModel @Inject constructor(
     private fun initDayList(count: Int): List<Day> {
         val list: MutableList<Day> = emptyList<Day>().toMutableList()
         for (i in range(1, count + 1)) {
-            val thisMouth = i > currDay.minusMonths(1).month.length(currDay.isLeapYear)
+            i > currDay.minusMonths(1).month.length(currDay.isLeapYear)
             val day =
                 if (i <= currDay.minusMonths(1).month.length(currDay.isLeapYear)) currDay.minusMonths(
                     1

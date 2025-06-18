@@ -3,7 +3,9 @@ package com.example.myhealth
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -29,9 +31,14 @@ fun BottomNavGraph(
     mainScreenViewModel: MainScreenViewModel = hiltViewModel(),
     start:String = Screen.Diary.route
 ) {
+    val context = LocalContext.current
+    val prefs = remember(context) { PreferencesManager(context) }
+    val startDestination =
+        if (prefs.isOnboardingComplete()) Screen.Dashboard.route else Screen.Onboarding.route
+
     NavHost(
         navController = navController,
-        startDestination = "onboarding",
+        startDestination = startDestination,
         modifier = modifier
     ) {
         composable(route = Screen.Diary.route) {
