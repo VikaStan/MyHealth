@@ -53,14 +53,20 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
+import com.example.myhealth.data.datasource.local.MealDao
+import com.example.myhealth.data.datasource.local.MealDayStat
+import com.example.myhealth.data.datasource.local.entity.MealEntity
 import com.example.myhealth.domain.models.Product
 import com.example.myhealth.domain.models.ProductType
+import com.example.myhealth.domain.repository.MealTimeRepository
 import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.ui.theme.MyHealthTheme
 import com.example.myhealth.utility.parseFloat
 import com.example.myhealth.utility.parseInt
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
 
@@ -413,6 +419,21 @@ fun FoodDetailDialog(
 @Composable
 fun FoodAddPreview() {
     MyHealthTheme {
-        FoodAdd(MealType.BREAKFAST.value, modelDiary = DiaryScreenViewModel(), modifier = Modifier)
+        val repo = MealTimeRepository(FakeMealDao())
+        FoodAdd(
+            MealType.BREAKFAST.value,
+            modelDiary = DiaryScreenViewModel(repo),
+            modifier = Modifier
+        )
     }
+}
+
+private class FakeMealDao : MealDao {
+    override suspend fun insert(meal: MealEntity) {}
+    override fun getMealsForToday(): Flow<List<MealEntity>> = flowOf(emptyList())
+    override fun getLast7DaysCalories(from: Long): Flow<List<MealDayStat>> = flowOf(emptyList())
+    override fun getTodayCalories(): Flow<Int?> = flowOf(0)
+    override fun getTodayProteins(): Flow<Int?> = flowOf(0)
+    override fun getTodayFats(): Flow<Int?> = flowOf(0)
+    override fun getTodayCarbs(): Flow<Int?> = flowOf(0)
 }
