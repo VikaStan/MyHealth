@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.myhealth.R
 import com.example.myhealth.domain.models.MealTime
 import com.example.myhealth.domain.models.Product
+import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.diary.MealType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

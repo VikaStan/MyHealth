@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myhealth.data.Person
 import com.example.myhealth.domain.models.Day
 import com.example.myhealth.domain.models.MealTime
+import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.presentation.statistics.StatsViewModel
 import com.example.myhealth.room.HealthRoomDb

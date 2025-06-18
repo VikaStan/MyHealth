@@ -59,8 +59,8 @@ import com.example.myhealth.data.datasource.local.entity.MealEntity
 import com.example.myhealth.domain.models.Product
 import com.example.myhealth.domain.models.ProductType
 import com.example.myhealth.domain.repository.MealTimeRepository
-import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.FoodAddViewModel
+import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.ui.theme.MyHealthTheme
 import com.example.myhealth.utility.parseFloat

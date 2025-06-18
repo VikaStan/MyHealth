@@ -14,10 +14,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.myhealth.models.MainScreenViewModel
 import com.example.myhealth.presentation.dashboard.DashBoardScreen
+import com.example.myhealth.presentation.diary.DiaryScreen
 import com.example.myhealth.presentation.onboarding.OnboardingScreen
 import com.example.myhealth.presentation.statistics.StatisticsScreen
 import com.example.myhealth.screens.Account
-import com.example.myhealth.screens.DiaryScreen
 import com.example.myhealth.screens.FoodAdd
 import com.example.myhealth.screens.Screen
 import com.example.myhealth.screens.Settings
@@ -41,7 +41,7 @@ fun BottomNavGraph(
         modifier = modifier
     ) {
         composable(route = Screen.Diary.route) {
-            DiaryScreen(navHostController = navController, model = mainScreenViewModel.diaryModel, mainModel = mainScreenViewModel)
+            DiaryScreen(navController = navController)
         }
         composable(route = Screen.Stats.route) {
             StatisticsScreen()

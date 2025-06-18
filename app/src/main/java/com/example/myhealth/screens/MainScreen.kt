@@ -35,9 +35,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myhealth.BottomNavGraph
 import com.example.myhealth.models.AccountViewModel
-import com.example.myhealth.models.DiaryScreenViewModel
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.statistics.StatsViewModel
 import com.example.myhealth.ui.components.appbar.ActionsMenu
 import com.example.myhealth.ui.components.appbar.AppBarState
