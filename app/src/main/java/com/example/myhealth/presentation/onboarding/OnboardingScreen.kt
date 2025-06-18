@@ -1,118 +1,123 @@
-@file:Suppress("DEPRECATION")
-
 package com.example.myhealth.presentation.onboarding
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.os.Build
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.myhealth.R
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.delay
 
-
-@RequiresApi(Build.VERSION_CODES.Q)
-@SuppressLint("ContextCastToActivity")
 @Composable
 fun OnboardingScreen(
-    viewModel: OnboardingViewModel = androidx.hilt.navigation.compose.hiltViewModel(),
-    onFinish: () -> Unit
+    viewModel: OnboardingViewModel = hiltViewModel(),
+    onFinished: () -> Unit
 ) {
+    val pages = OnboardingPage.pages
     val pagerState = rememberPagerState()
-    val uiState by viewModel.uiState.collectAsState()
-    val activity = LocalContext.current as ComponentActivity
+    val authState = viewModel.uiState
 
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        viewModel.onAuthResult(result.resultCode == Activity.RESULT_OK)
+    val systemUiController = rememberSystemUiController()
+    val darkIcons = !androidx.compose.foundation.isSystemInDarkTheme()
+    LaunchedEffect(darkIcons) {
+        systemUiController.setStatusBarColor(Color.Transparent, darkIcons)
     }
-
-    if (uiState.onboardingComplete) {
+    if (authState.connected && pagerState.currentPage == 4) {
         LaunchedEffect(Unit) {
-            pagerState.animateScrollToPage(4)
-            onFinish()
+            delay(1500)
+            onFinished()
         }
     }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        HorizontalPager(
-            count = if (uiState.onboardingComplete) 5 else 4,
-            state = pagerState,
-            modifier = Modifier.weight(1f)
-        ) { page ->
-            when (page) {
-                0 -> Slide(R.drawable.ic_onb_water, R.string.onb_title_1)
-                1 -> Slide(R.drawable.ic_onb_fit, R.string.onb_title_2)
-                2 -> Slide(R.drawable.ic_onb_bell, R.string.onb_title_3)
-                3 -> Slide(R.drawable.ic_onb_done, R.string.onb_title_4)
-                4 -> Slide(R.drawable.ic_onb_done, R.string.onb_title_4)
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("MyHealth") },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.onPrimary)
+                    }
+                }
+            )
+        },
+        floatingActionButton = {
+            if (pagerState.currentPage == 3 && !authState.connected) {
+                FloatingActionButton(
+                    onClick = viewModel::connectGoogleFit,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
+                ) {
+                    Icon(painterResource(R.drawable.ic_water_drop), null)
+                }
             }
+        },
+        snackbarHost = {
+            if (authState.connected && pagerState.currentPage == 3) {
+                LaunchedEffect(Unit) {
+                    (it as SnackbarHostState).showSnackbar("Подключено!")
+                }
+            }
+        }
+    ) { inner ->
+
+        HorizontalPager(
+            count = pages.size,
+            state = pagerState,
+            modifier = Modifier
+                .padding(inner)
+                .fillMaxSize(),
+            userScrollEnabled = !authState.connected
+        ) { page ->
+            OnboardingPageContent(page = pages[page])
         }
 
         HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier.padding(16.dp),
-            activeColor = MaterialTheme.colorScheme.primary
+            pagerState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(24.dp)
         )
-
-        val lastPage = pagerState.currentPage == 3 && !uiState.onboardingComplete
-        Button(
-            onClick = { viewModel.onButtonClick(activity, launcher) },
-            enabled = lastPage,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(id = R.string.onb_button))
-        }
-
-        if (uiState.showPermissionRationale) {
-            Snackbar {
-                Text(stringResource(R.string.permission_denied))
-            }
-        }
     }
 }
 
 @Composable
-private fun Slide(imageRes: Int, textRes: Int) {
+private fun OnboardingPageContent(page: OnboardingPage) {
     Column(
-        Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        Modifier
+            .fillMaxSize()
+            .background(page.bgColor.copy(alpha = 0.25f)),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painterResource(imageRes), contentDescription = null)
-        Spacer(Modifier.height(16.dp))
-        Text(stringResource(textRes), style = MaterialTheme.typography.titleLarge)
+        Icon(
+            painterResource(page.iconRes),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(120.dp)
+        )
+        Spacer(Modifier.height(32.dp))
     }
 }

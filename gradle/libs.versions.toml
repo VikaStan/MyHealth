@@ -27,6 +27,7 @@ playServicesFitness = "21.2.0"
 workRuntime = "2.10.1"
 kotlinReflect = "2.1.0"
 googleServices = "4.4.2"
+accompanistSystemUi = "0.34.0"
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
@@ -69,6 +70,7 @@ androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNa
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationCompose" }
 google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "googleHiltCompiler" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemUi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

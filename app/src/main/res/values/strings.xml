@@ -61,12 +61,6 @@
     <string name="channel_water" translatable="false">Напоминания о воде</string>
     <string name="goal_water">Goal water (ml)</string>
     <string name="water_reminder_text" translatable="false">До нормы осталось %1$d мл</string>
-    <string name="onb_title_1" translatable="false">Следите за гидратацией каждый день</string>
-    <string name="onb_title_2" translatable="false">Импортируем шаги и калории из Google Fit</string>
-    <string name="onb_title_3" translatable="false">Ненавязчивые напоминания каждые 45 минут</string>
-    <string name="onb_title_4" translatable="false">Всё готово к началу!</string>
-    <string name="onb_button" translatable="false">Подключить Google Fit</string>
-    <string name="permission_denied" translatable="false">Чтобы получать шаги и калории, разрешите доступ к активности</string>
     <string name="dashboard_screen">Dashboard</string>
     <string name="steps_label">Steps: %1$d</string>
     <string name="water_label">Water: %1$d ml</string>

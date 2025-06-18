@@ -107,6 +107,6 @@ dependencies {
     ksp(libs.androidx.room.room.compiler)
     implementation(libs.accompanist.pager)
     implementation(libs.google.accompanist.pager.indicators)
-
+    implementation(libs.accompanist.systemuicontroller)
 }
 
