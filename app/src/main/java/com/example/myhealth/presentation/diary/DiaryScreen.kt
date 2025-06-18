@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.myhealth.data.repository.DiaryState
 import com.example.myhealth.presentation.dashboard.BottomNavBar
 import com.example.myhealth.presentation.diary.components.MacroCircleCard
 import com.example.myhealth.presentation.diary.components.MealCard
@@ -36,7 +37,7 @@ fun DiaryScreen(
     navController: NavHostController,
     viewModel: DiaryScreenViewModel = hiltViewModel()
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState(initial = DiaryState())
 
     Scaffold(
         containerColor = BackBlue,

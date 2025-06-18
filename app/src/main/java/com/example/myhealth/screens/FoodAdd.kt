@@ -38,6 +38,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,9 +57,9 @@ import com.example.myhealth.R
 import com.example.myhealth.data.datasource.local.MealDao
 import com.example.myhealth.data.datasource.local.MealDayStat
 import com.example.myhealth.data.datasource.local.entity.MealEntity
+import com.example.myhealth.data.repository.DiaryRepository
 import com.example.myhealth.domain.models.Product
 import com.example.myhealth.domain.models.ProductType
-import com.example.myhealth.domain.repository.MealTimeRepository
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.diary.MealType
@@ -102,15 +103,40 @@ fun FoodAdd(
         )
     }
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        //TODO выбор времени?
-        Text(
-            text = stringResource(model.eatingTimeName),
-            style = MaterialTheme.typography.headlineMedium
-        )
+        val context = LocalContext.current
+        var showTimePicker by remember { mutableStateOf(false) }
+        var mealTime by remember { mutableStateOf(java.time.LocalTime.now()) }
+
+        if (showTimePicker) {
+            android.app.TimePickerDialog(
+                context,
+                { _, hour, minute ->
+                    mealTime = java.time.LocalTime.of(hour, minute)
+                    showTimePicker = false
+                },
+                mealTime.hour,
+                mealTime.minute,
+                true
+            ).show()
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(model.eatingTimeName),
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = mealTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")),
+                modifier = Modifier
+                    .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .clickable { showTimePicker = true }
+            )
+        }
 
         FoodSection(Modifier, model::onProductItemSelected, eatingFoodTime.productList)
 
-        //TODO список выбранных продуктов
         FoodDetailList(model.productOlds, model::onEditSwipe, model::onDelSwipe)
     }
 }
@@ -419,7 +445,7 @@ fun FoodDetailDialog(
 @Composable
 fun FoodAddPreview() {
     MyHealthTheme {
-        val repo = MealTimeRepository(FakeMealDao())
+        val repo = DiaryRepository(FakeMealDao())
         FoodAdd(
             MealType.BREAKFAST.value,
             modelDiary = DiaryScreenViewModel(repo),
