@@ -2,6 +2,8 @@
 
 package com.example.myhealth.presentation.onboarding
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,13 +13,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -28,6 +27,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,13 @@ fun OnboardingScreen(
     val authState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        viewModel.handleSignInResult(result.data)
+    }
+
     /* авто-переход после успешного подключения */
     if (authState.connected && pagerState.currentPage == 4) {
         LaunchedEffect(Unit) {
@@ -61,18 +69,15 @@ fun OnboardingScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("MyHealth") },
-                actions = {
-                    IconButton(onClick = { /* profile */ }) {
-                        Icon(Icons.Default.Person, contentDescription = null)
-                    }
-                }
+                title = { Text("MyHealth") }
             )
         },
         floatingActionButton = {
             if (pagerState.currentPage == 3 && !authState.connected) {
                 ExtendedFloatingActionButton(
-                    onClick = viewModel::connectGoogleFit,
+                    onClick = {
+                        launcher.launch(viewModel.getSignInIntent(context))
+                    },
                     containerColor = MaterialTheme.colorScheme.primary,
                     text = { Text("Подключить Google Fit") },
                     icon = { Icon(painterResource(R.drawable.ic_fit_logo), null) }
@@ -129,7 +134,7 @@ private fun OnboardingPageContent(page: Page) {
         Icon(
             painterResource(page.iconRes),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = Color.Unspecified,
             modifier = Modifier.size(120.dp)
         )
         if (page.title.isNotBlank()) {
