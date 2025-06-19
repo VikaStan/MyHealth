@@ -27,7 +27,9 @@ class AuthorizeFitUseCase @Inject constructor(
         val fitnessOptions = FitnessOptions.builder()
             .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
+            .addDataType(DataType.TYPE_HYDRATION, FitnessOptions.ACCESS_WRITE)
             .build()
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .addExtension(fitnessOptions)
             .build()
