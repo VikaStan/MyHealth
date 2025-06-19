@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.myhealth.presentation.dashboard.BottomNavBar
 import com.example.myhealth.presentation.statistics.components.DailyBarChart
 import com.example.myhealth.presentation.statistics.components.SegmentedTabRow
 import com.example.myhealth.presentation.statistics.components.WeeklyStepsCard
@@ -39,7 +38,7 @@ fun StatisticsScreen(
 
     Scaffold(
         containerColor = BackBlue,
-        bottomBar = { BottomNavBar(navController) }
+        topBar = {}
     ) { padding ->
 
         /*  ←  ВОТ здесь открываем Column и СРАЗУ ставим фигурную скобку  */

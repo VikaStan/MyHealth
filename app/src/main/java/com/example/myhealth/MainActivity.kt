@@ -11,8 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.myhealth.screens.MainScreen
+import com.example.myhealth.navigation.MyHealthApp
 import com.example.myhealth.presentation.reminder.HydrationReminderWorker
 import com.example.myhealth.ui.theme.MyHealthTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +31,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyHealthTheme {
                 Box(Modifier.safeDrawingPadding()) {
-                    MainScreen(mainViewModel = hiltViewModel())
+                    MyHealthApp()
                 }
             }
         }

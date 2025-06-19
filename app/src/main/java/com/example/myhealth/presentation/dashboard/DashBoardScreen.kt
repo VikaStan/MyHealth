@@ -40,8 +40,8 @@ import com.example.myhealth.ui.theme.WaterRing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashBoardScreen(
-    viewModel: DashboardViewModel = hiltViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -49,7 +49,7 @@ fun DashBoardScreen(
 
     Scaffold(
         containerColor = BackBlue,
-        bottomBar = { BottomNavBar(navController) },
+        topBar = {},
         floatingActionButton = { WaterFab { viewModel.addWater() } },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { data ->

@@ -32,9 +32,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myhealth.BottomNavGraph
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.navigation.bottomNavGraph
 import com.example.myhealth.presentation.account.AccountViewModel
 import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.statistics.StatsViewModel
@@ -119,12 +119,12 @@ fun MainScreen(
 
     ) {
         if (inSystem.value)
-            BottomNavGraph(
+            bottomNavGraph(
                 navController = navController,
                 modifier = Modifier.padding(it),
                 mainViewModel
             )
-        else BottomNavGraph(
+        else bottomNavGraph(
             navController = navController,
             modifier = Modifier.padding(it),
             mainViewModel

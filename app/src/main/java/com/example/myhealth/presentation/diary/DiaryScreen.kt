@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.myhealth.data.repository.DiaryState
-import com.example.myhealth.presentation.dashboard.BottomNavBar
 import com.example.myhealth.presentation.diary.components.MacroCircleCard
 import com.example.myhealth.presentation.diary.components.MealCard
 import com.example.myhealth.ui.theme.BackBlue
@@ -41,7 +40,7 @@ fun DiaryScreen(
 
     Scaffold(
         containerColor = BackBlue,
-        bottomBar = { BottomNavBar(navController) }
+        topBar = {}
     ) { padding ->
         Column(
             Modifier

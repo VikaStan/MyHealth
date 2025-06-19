@@ -28,7 +28,6 @@ import com.example.myhealth.presentation.account.components.EditableField
 import com.example.myhealth.presentation.account.components.ProfileHeader
 import com.example.myhealth.presentation.account.components.SettingsDropdown
 import com.example.myhealth.presentation.account.components.TargetInfoCard
-import com.example.myhealth.presentation.dashboard.BottomNavBar
 import com.example.myhealth.ui.theme.BackBlue
 import com.example.myhealth.ui.theme.PrimaryBlue
 
@@ -42,7 +41,6 @@ fun Account(
 
     Scaffold(
         containerColor = BackBlue,
-        bottomBar = { BottomNavBar(navController) },
         topBar = {
             TopAppBar(
                 title = {},

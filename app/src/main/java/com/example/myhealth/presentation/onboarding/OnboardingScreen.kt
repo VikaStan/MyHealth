@@ -76,7 +76,7 @@ fun OnboardingScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
                 ) {
-                    Icon(painterResource(R.drawable.ic_water), null)
+                    Icon(painterResource(R.drawable.ic_fit_logo), null)
                 }
             }
         },
