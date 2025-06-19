@@ -14,7 +14,7 @@ data class Page(
 object OnboardingPage {
     val pages = listOf(
         Page(
-            R.drawable.ic_water,
+            R.drawable.ic_glass,
             "Следите за гидратацией\nи калориями каждый день",
         ),
         Page(

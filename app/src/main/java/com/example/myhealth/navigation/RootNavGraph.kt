@@ -31,13 +31,13 @@ fun MyHealthApp(settings: SettingsDataStore = SettingsDataStore(LocalContext.cur
     if (passed == null) {
         Surface(color = BackBlue) {}
         return
+    }
+    val navController = rememberNavController()
 
-        val navController = rememberNavController()
-
-        Scaffold(
-            containerColor = BackBlue,
-            bottomBar = { BottomNavBar(navController) }
-        ) { inner ->
+    Scaffold(
+        containerColor = BackBlue,
+        bottomBar = { BottomNavBar(navController) }
+    ) { inner ->
 
             NavHost(
                 navController = navController,
@@ -65,4 +65,3 @@ fun MyHealthApp(settings: SettingsDataStore = SettingsDataStore(LocalContext.cur
             }
         }
     }
-}
