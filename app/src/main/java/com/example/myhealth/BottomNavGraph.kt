@@ -13,11 +13,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.myhealth.models.MainScreenViewModel
+import com.example.myhealth.presentation.account.Account
 import com.example.myhealth.presentation.dashboard.DashBoardScreen
 import com.example.myhealth.presentation.diary.DiaryScreen
 import com.example.myhealth.presentation.onboarding.OnboardingScreen
 import com.example.myhealth.presentation.statistics.StatisticsScreen
-import com.example.myhealth.screens.Account
 import com.example.myhealth.screens.FoodAdd
 import com.example.myhealth.screens.Screen
 import com.example.myhealth.screens.Settings
@@ -44,10 +44,10 @@ fun BottomNavGraph(
             DiaryScreen(navController = navController)
         }
         composable(route = Screen.Stats.route) {
-            StatisticsScreen()
+            StatisticsScreen(navController = navController)
         }
         composable(route = Screen.Account.route) {
-            Account()
+            Account(navController = navController)
         }
         composable(route = Screen.Settings.route) {
             Settings(onBackClick = { navController.popBackStack() })
