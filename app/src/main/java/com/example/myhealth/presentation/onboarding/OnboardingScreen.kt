@@ -62,7 +62,7 @@ fun OnboardingScreen(
     if (authState.connected && pagerState.currentPage == 4) {
         LaunchedEffect(Unit) {
             delay(1000)
-            onFinished
+            onFinished()
         }
     }
 
@@ -74,14 +74,22 @@ fun OnboardingScreen(
         },
         floatingActionButton = {
             if (pagerState.currentPage == 3 && !authState.connected) {
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        launcher.launch(viewModel.getSignInIntent(context))
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    text = { Text("Подключить Google Fit") },
-                    icon = { Icon(painterResource(R.drawable.ic_fit_logo), null) }
-                )
+                Column(horizontalAlignment = Alignment.End) {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            launcher.launch(viewModel.getSignInIntent(context))
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        text = { Text("Подключить Google Fit") },
+                        icon = { Icon(painterResource(R.drawable.ic_fit_logo), null) }
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    ExtendedFloatingActionButton(
+                        onClick = { onFinished() },
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        text = { Text("Пропустить") }
+                    )
+                }
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
