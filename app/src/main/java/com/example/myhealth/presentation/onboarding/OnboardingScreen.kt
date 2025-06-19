@@ -87,9 +87,10 @@ fun OnboardingScreen(
 
                     ExtendedFloatingActionButton(
                         onClick = { onFinished() },
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        text = { Text("Пропустить") }
-                    )
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    ) {
+                        Text("Пропустить")
+                    }
                 }
             }
         },
