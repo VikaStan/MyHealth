@@ -28,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,7 +43,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
-    onFinished: () -> Unit
+    onFinished: @Composable () -> Unit
 ) {
     val pages = OnboardingPage.pages
     val pagerState = rememberPagerState()
@@ -54,7 +53,7 @@ fun OnboardingScreen(
     /* авто-переход после успешного подключения */
     if (authState.connected && pagerState.currentPage == 4) {
         LaunchedEffect(Unit) {
-            delay(1_500)
+            delay(1000)
             onFinished()
         }
     }
@@ -74,7 +73,7 @@ fun OnboardingScreen(
             if (pagerState.currentPage == 3 && !authState.connected) {
                 ExtendedFloatingActionButton(
                     onClick = viewModel::connectGoogleFit,
-                    contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.primary,
                     text = { Text("Подключить Google Fit") },
                     icon = { Icon(painterResource(R.drawable.ic_fit_logo), null) }
                 )
