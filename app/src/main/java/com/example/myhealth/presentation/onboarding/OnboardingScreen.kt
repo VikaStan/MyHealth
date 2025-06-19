@@ -44,7 +44,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
-    onFinished: @Composable () -> Unit
+    onFinished: () -> Unit
 ) {
     val pages = OnboardingPage.pages
     val pagerState = rememberPagerState()
@@ -84,6 +84,7 @@ fun OnboardingScreen(
                         icon = { Icon(painterResource(R.drawable.ic_fit_logo), null) }
                     )
                     Spacer(Modifier.height(8.dp))
+
                     ExtendedFloatingActionButton(
                         onClick = { onFinished() },
                         containerColor = MaterialTheme.colorScheme.secondary,

@@ -50,10 +50,10 @@ fun MyHealthApp(settings: SettingsDataStore = SettingsDataStore(LocalContext.cur
 
                 /* ── Онбординг ───────────────────────────────────── */
                 composable("onboarding") {
+                    val scope = rememberCoroutineScope()
                     OnboardingScreen(
                         onFinished = {
                             /* 4. После успеха: - сохраняем флаг, - переходим */
-                            val scope = rememberCoroutineScope()
                             scope.launch { settings.setOnboardingPassed(true) }
                             navController.navigate("bottom_nav") {
                                 popUpTo("onboarding") { inclusive = true }
