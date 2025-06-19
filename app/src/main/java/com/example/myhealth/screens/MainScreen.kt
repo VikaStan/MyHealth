@@ -1,6 +1,5 @@
 package com.example.myhealth.screens
 
-//noinspection UsingMaterialAndMaterial3Libraries
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -101,7 +100,7 @@ fun MainScreen(
                     // переход в настройки при срабатывании flow
                     Screen.FoodAdd.AppBarIcons.Back -> {
                         navController.popBackStack()
-                        foodAddViewModel.updateListProducts(mainViewModel.diaryModel)
+                        foodAddViewModel.updateListProducts()
                     }
                 }
             }

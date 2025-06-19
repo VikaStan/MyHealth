@@ -54,7 +54,7 @@ fun BottomNavGraph(
         }
         composable(route = Screen.FoodAdd.route + "/{foodType}",
             arguments = listOf(navArgument("foodType") { type = NavType.StringType })) {
-            FoodAdd(it.arguments?.getString("foodType"), modifier, mainScreenViewModel.diaryModel)
+            FoodAdd(modifier, it.arguments?.getString("foodType"))
         }
 
         composable(Screen.Onboarding.route) {
@@ -65,8 +65,6 @@ fun BottomNavGraph(
         composable(route = Screen.Dashboard.route) {
             DashBoardScreen(navController = navController)
         }
-
-
     }
 }
 

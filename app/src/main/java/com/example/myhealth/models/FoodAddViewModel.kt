@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import com.example.myhealth.R
 import com.example.myhealth.domain.models.MealTime
 import com.example.myhealth.domain.models.Product
-import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.diary.MealType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,23 +46,16 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getEatingFoodTime(model: DiaryScreenViewModel, eatingType: String?) {
-        when (eatingType) {
-            MealType.LUNCH.value -> eatingFoodTime.value =
-                model.selectedDayOld.value.mealTimeList[1]
-
-            MealType.BREAKFAST.value -> eatingFoodTime.value =
-                model.selectedDayOld.value.mealTimeList[0]
-
-            MealType.DINNER.value -> eatingFoodTime.value =
-                model.selectedDayOld.value.mealTimeList[2]
-
-            else -> eatingFoodTime.value = model.selectedDayOld.value.mealTimeList[1]
-        }
-        eatingFoodTime.value.productList.forEach {
-            if (!productOlds.contains(it))
-                productOlds.add(it)
-        }
+    fun getEatingFoodTime(eatingType: String?) {
+        val type = eatingType ?: MealType.DINNER.value
+        eatingFoodTime.value = MealTime(
+            id = 0,
+            name = type,
+            productCount = productOlds.size,
+            totalCalories = productOlds.sumOf { it.caloriesPer100Gramm * it.gramms / 100 },
+            goalCalories = 0,
+            productList = productOlds.toMutableList()
+        )
     }
 
     fun foodAddDialogShow(show: Boolean = true) {
@@ -103,23 +95,8 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
         foodEditDialogShow(false)
     }
 
-    fun updateListProducts(model: DiaryScreenViewModel) {
-        if (isChange) {
-            when (model.selectedEatTimeName.value) {
-                MealType.LUNCH.value -> model.selectedDayOld.value.mealTimeList[1].productList =
-                    productOlds
-
-                MealType.BREAKFAST.value -> model.selectedDayOld.value.mealTimeList[0].productList =
-                    productOlds
-
-                MealType.DINNER.value -> model.selectedDayOld.value.mealTimeList[2].productList =
-                    productOlds
-
-                else -> model.selectedDayOld.value.mealTimeList[1].productList = productOlds
-            }
-            model.selectedDayOld.value.updateAllCount()
-            isChange = false
-        }
+    fun updateListProducts() {
+        isChange = false
     }
 
 

@@ -61,7 +61,6 @@ import com.example.myhealth.data.repository.DiaryRepository
 import com.example.myhealth.domain.models.Product
 import com.example.myhealth.domain.models.ProductType
 import com.example.myhealth.models.FoodAddViewModel
-import com.example.myhealth.presentation.diary.DiaryScreenViewModel
 import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.ui.theme.MyHealthTheme
 import com.example.myhealth.utility.parseFloat
@@ -73,9 +72,8 @@ import me.saket.swipe.SwipeableActionsBox
 
 @Composable
 fun FoodAdd(
-    eatingType: String?,
     modifier: Modifier,
-    modelDiary: DiaryScreenViewModel = hiltViewModel(),
+    eatingType: String?,
     model: FoodAddViewModel = hiltViewModel()
 ) {
 
@@ -83,7 +81,7 @@ fun FoodAdd(
     val eatingFoodTime by model.eatingFoodTime.collectAsState()
 
     model.getEatingTimeName(eatingType)
-    model.getEatingFoodTime(modelDiary, eatingType)
+    model.getEatingFoodTime(eatingType)
 
     if (model.foodAddDialog) {
         FoodDetailDialog(
@@ -445,11 +443,11 @@ fun FoodDetailDialog(
 @Composable
 fun FoodAddPreview() {
     MyHealthTheme {
-        val repo = DiaryRepository(FakeMealDao())
+        DiaryRepository(FakeMealDao())
         FoodAdd(
+            modifier = Modifier,
             MealType.BREAKFAST.value,
-            modelDiary = DiaryScreenViewModel(repo),
-            modifier = Modifier
+            model = FoodAddViewModel()
         )
     }
 }
