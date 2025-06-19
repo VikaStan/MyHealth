@@ -27,7 +27,7 @@ playServicesFitness = "21.2.0"
 workRuntime = "2.10.1"
 kotlinReflect = "2.1.0"
 googleServices = "4.4.2"
-accompanistSystemUi = "0.34.0"
+accompanistSystemUi = "0.36.0"
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }

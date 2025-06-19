@@ -1,160 +1,93 @@
 package com.example.myhealth.presentation.statistics
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.example.myhealth.presentation.dashboard.BottomNavBar
+import com.example.myhealth.presentation.statistics.components.DailyBarChart
+import com.example.myhealth.presentation.statistics.components.SegmentedTabRow
+import com.example.myhealth.presentation.statistics.components.WeeklyStepsCard
+import com.example.myhealth.presentation.statistics.components.WeeklyWaterCard
+import com.example.myhealth.ui.theme.BackBlue
+import com.example.myhealth.ui.theme.WaterRing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatisticsScreen(viewModel: StatsViewModel = hiltViewModel()) {
-    val selectedTab = viewModel.selectedTab
+fun StatisticsScreen(
+    navController: NavHostController,
+    viewModel: StatsViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
 
-    val stepsData by viewModel.stepsData.collectAsState()
-    val caloriesData by viewModel.caloriesData.collectAsState()
-    val waterData by viewModel.waterData.collectAsState()
-    val proteinsToday by viewModel.proteinsToday.collectAsState()
-    val fatsToday by viewModel.fatsToday.collectAsState()
-    val carbsToday by viewModel.carbsToday.collectAsState()
+    Scaffold(
+        containerColor = BackBlue,
+        bottomBar = { BottomNavBar(navController) }
+    ) { padding ->
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Статистика",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 12.dp)
-        )
-
-        // TabRow с тремя вкладками
-        TabRow(
-            selectedTabIndex = selectedTab.ordinal,
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        /*  ←  ВОТ здесь открываем Column и СРАЗУ ставим фигурную скобку  */
+        Column(
+            Modifier
+                .padding(padding)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            Tab(selected = selectedTab == StatsTab.ACTIVITY, onClick = { viewModel.selectTab(StatsTab.ACTIVITY) }, text = { Text("Активность") })
-            Tab(selected = selectedTab == StatsTab.NUTRITION, onClick = { viewModel.selectTab(StatsTab.NUTRITION) }, text = { Text("Питание") })
-            Tab(selected = selectedTab == StatsTab.HYDRATION, onClick = { viewModel.selectTab(StatsTab.HYDRATION) }, text = { Text("Гидратация") })
-        }
 
-        Spacer(Modifier.height(24.dp))
+            Text("Статистика", style = MaterialTheme.typography.titleLarge)
+            Spacer(Modifier.height(8.dp))
 
-        // Содержимое выбранной вкладки
-        when (selectedTab) {
-            StatsTab.ACTIVITY -> ActivityStatsContent(stepsData)
-            StatsTab.NUTRITION -> NutritionStatsContent(
-                caloriesData,
-                proteinsToday,
-                fatsToday,
-                carbsToday
+            SegmentedTabRow(
+                selected = state.currentTab,
+                onSelect = viewModel::switchTab,
+                modifier = Modifier.fillMaxWidth()
             )
-            StatsTab.HYDRATION -> HydrationStatsContent(waterData)
-        }
-    }
-}
 
-@Composable
-fun HydrationStatsContent(waterData: List<Int>) {
-    Card(
-        Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE5F3FF))
-    ) {
-        Column(Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Вода за неделю", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            if (waterData.isEmpty()) {
-                Text("Нет данных")
-            } else {
-                Row {
-                    waterData.forEach { ml ->
-                        Box(
-                            Modifier
-                                .height(((ml / 20).coerceAtMost(80)).dp)
-                                .width(16.dp)
-                                .padding(horizontal = 2.dp)
-                                .background(Color(0xFF99C7F3), shape = RoundedCornerShape(4.dp))
-                        )
-                    }
-                }
-                Spacer(Modifier.height(12.dp))
-                Text("Среднее: ${(waterData.average()).toInt()} мл/день")
-            }
-        }
-    }
-}
+            Spacer(Modifier.height(16.dp))
 
-@Composable
-fun NutritionStatsContent(caloriesData: List<Int>, proteins: Int,  fats: Int, carbs: Int) {
-    Card(
-        Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFC8F2D2))
-    ) {
-        Column(Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Калорийность за неделю", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            if (caloriesData.isEmpty()) {
-                Text("Нет данных")
-            } else {
-                Row {
-                    caloriesData.forEach { kcal ->
-                        Box(
-                            Modifier
-                                .height(((kcal / 25).coerceAtMost(80)).dp)
-                                .width(16.dp)
-                                .padding(horizontal = 2.dp)
-                                .background(Color(0xFF70CE93), shape = RoundedCornerShape(4.dp))
-                        )
-                    }
+            when (state.currentTab) {
+                StatsTab.ACTIVITY -> {
+                    WeeklyStepsCard(
+                        weeklySteps = state.weeklySteps,
+                        avgSteps = state.avgSteps
+                    )
+                    Spacer(Modifier.height(16.dp))
                 }
-                Spacer(Modifier.height(12.dp))
-                Text("Среднее: ${(caloriesData.average()).toInt()} ккал/день")
-            }
-            Spacer(Modifier.height(8.dp))
-            Text("Б: $proteins г, Ж: $fats г, У: $carbs г (сегодня)")
-        }
-    }
-}
 
-@Composable
-fun ActivityStatsContent(stepsData: List<Int>) {
-    Card(
-        Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFCDE8FF))
-    ) {
-        Column(Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Шагов за неделю", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            if (stepsData.isEmpty()) {
-                Text("Нет данных")
-            } else {
-                Row {
-                    stepsData.forEach { steps ->
-                        Box(
-                            Modifier
-                                .height(((steps / 120).coerceAtMost(80)).dp)
-                                .width(16.dp)
-                                .padding(horizontal = 2.dp)
-                                .background(Color(0xFF7FB9FF), shape = RoundedCornerShape(4.dp))
-                        )
-                    }
+                StatsTab.HYDRATION -> {
+                    WeeklyWaterCard(avgWater = state.avgWater)
+                    Spacer(Modifier.height(16.dp))
+                    DailyBarChart(
+                        bars = state.weeklyWater,
+                        barColor = WaterRing,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                Color.White,
+                                RoundedCornerShape(16.dp)
+                            )
+                            .padding(16.dp)
+                    )
                 }
-                Spacer(Modifier.height(12.dp))
-                Text("Среднее: ${(stepsData.average()).toInt()} шагов/день")
             }
-        }
+
+            Spacer(Modifier.height(72.dp))   // отступ под BottomNav
+        }   // ← закрываем Column
     }
 }
