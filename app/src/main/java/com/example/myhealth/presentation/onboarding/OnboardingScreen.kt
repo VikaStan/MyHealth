@@ -15,7 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myhealth.R
@@ -71,13 +72,12 @@ fun OnboardingScreen(
         },
         floatingActionButton = {
             if (pagerState.currentPage == 3 && !authState.connected) {
-                FloatingActionButton(
+                ExtendedFloatingActionButton(
                     onClick = viewModel::connectGoogleFit,
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = Color.White
-                ) {
-                    Icon(painterResource(R.drawable.ic_fit_logo), null)
-                }
+                    contentColor = Color.White,
+                    text = { Text("Подключить Google Fit") },
+                    icon = { Icon(painterResource(R.drawable.ic_fit_logo), null) }
+                )
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -119,7 +119,7 @@ fun OnboardingScreen(
 }
 
 @Composable
-private fun OnboardingPageContent(page: OnboardingPage) {
+private fun OnboardingPageContent(page: Page) {
     Column(
         Modifier
             .fillMaxSize()
@@ -133,6 +133,14 @@ private fun OnboardingPageContent(page: OnboardingPage) {
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(120.dp)
         )
-        Spacer(Modifier.height(32.dp))
+        if (page.title.isNotBlank()) {
+            Spacer(Modifier.height(32.dp))
+            Text(
+                page.title,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
     }
 }
