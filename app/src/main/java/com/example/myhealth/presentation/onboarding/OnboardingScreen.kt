@@ -54,7 +54,7 @@ fun OnboardingScreen(
     if (authState.connected && pagerState.currentPage == 4) {
         LaunchedEffect(Unit) {
             delay(1000)
-            onFinished()
+            onFinished
         }
     }
 
