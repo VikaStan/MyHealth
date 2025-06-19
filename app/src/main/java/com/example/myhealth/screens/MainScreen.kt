@@ -30,6 +30,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myhealth.models.FoodAddViewModel
@@ -63,7 +64,7 @@ fun MainScreen(
     )
     val navController = rememberNavController()
     val appBarState = rememberAppBarState(navController)
-    val inSystem = mainViewModel.inSystem.collectAsState()
+    mainViewModel.inSystem.collectAsState()
     LaunchedEffect(key1 = Unit) {//прослушивание нажатий в upBar
         // 2
         Screen.Diary.buttons
@@ -115,20 +116,14 @@ fun MainScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-
-
-    ) {
-        if (inSystem.value)
-            bottomNavGraph(
-                navController = navController,
-                modifier = Modifier.padding(it),
-                mainViewModel
-            )
-        else bottomNavGraph(
+    ) { inner ->
+        NavHost(
             navController = navController,
-            modifier = Modifier.padding(it),
-            mainViewModel
-        )
+            startDestination = "dashboard",
+            modifier = Modifier.padding(inner)
+        ) {
+            bottomNavGraph(navController)
+        }
     }
 }
 
