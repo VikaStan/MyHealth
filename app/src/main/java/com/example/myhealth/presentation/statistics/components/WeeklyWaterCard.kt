@@ -22,12 +22,14 @@ import com.example.myhealth.ui.theme.WaterRing
 
 @Composable
 fun WeeklyWaterCard(
+    modifier: Modifier = Modifier,
     avgWater: Int,
-    targetPerDay: Int = 2500,
-    modifier: Modifier = Modifier
+    targetPerDay: Int = 2500
 ) {
+    val ratio = (avgWater / targetPerDay.toFloat()).coerceIn(0f, 1f)
+
     Card(
-        modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -40,20 +42,24 @@ fun WeeklyWaterCard(
                     "$avgWater / $targetPerDay мл в день",
                     style = MaterialTheme.typography.titleMedium
                 )
+
                 Spacer(Modifier.height(12.dp))
+
+                /* new API: modifier идёт первым, progress — лямбда */
                 LinearProgressIndicator(
-                    progress = avgWater / targetPerDay.toFloat(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(10.dp),
+                    progress = { ratio },
                     color = WaterRing,
                     trackColor = CardBlue
                 )
             }
+
             CircularProgressWithIcon(
-                progress = avgWater / targetPerDay.toFloat(),
+                progress = ratio,
                 progressColor = Color(0xFF41A83E),
-                centerText = "${(avgWater * 100f / targetPerDay).toInt()}%"
+                centerText = "${(ratio * 100).toInt()}%"
             )
         }
     }
