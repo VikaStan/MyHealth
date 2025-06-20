@@ -60,6 +60,7 @@ import com.example.myhealth.data.datasource.local.entity.MealEntity
 import com.example.myhealth.data.repository.DiaryRepository
 import com.example.myhealth.domain.models.Product
 import com.example.myhealth.domain.models.ProductType
+import com.example.myhealth.domain.repository.ProductRepository
 import com.example.myhealth.models.FoodAddViewModel
 import com.example.myhealth.presentation.diary.MealType
 import com.example.myhealth.ui.theme.MyHealthTheme
@@ -448,7 +449,7 @@ fun FoodAddPreview() {
         FoodAdd(
             modifier = Modifier,
             MealType.BREAKFAST.value,
-            model = FoodAddViewModel()
+            model = FoodAddViewModel(FakeProductRepository())
         )
     }
 }
@@ -462,4 +463,10 @@ private class FakeMealDao : MealDao {
     override fun getTodayProteins(): Flow<Int?> = flowOf(0)
     override fun getTodayFats(): Flow<Int?> = flowOf(0)
     override fun getTodayCarbs(): Flow<Int?> = flowOf(0)
+}
+private class FakeProductRepository : ProductRepository {
+    override suspend fun findProduct(name: String): Product? =
+        Product(0, name, 0, 0, 0, 0, 0, 0, "")
+
+    override fun observeProduct(id: Int): Flow<Product?> = flowOf(null)
 }
