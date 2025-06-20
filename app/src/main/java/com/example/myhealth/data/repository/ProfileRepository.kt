@@ -3,6 +3,8 @@ package com.example.myhealth.data.repository
 import com.example.myhealth.data.Person
 import com.example.myhealth.presentation.account.ProfileState
 import com.example.myhealth.room.dao.PersonDao
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,6 +12,19 @@ import javax.inject.Singleton
 class ProfileRepository @Inject constructor(
     private val personDao: PersonDao
 ) {
+    val profileFlow: Flow<ProfileState> = personDao.observePerson().map { person ->
+        person?.let {
+            ProfileState(
+                name = it.name,
+                age = it.age,
+                height = it.height,
+                weight = it.weight,
+                waterTarget = it.waterGoal.toInt(),
+                caloriesTarget = it.caloriesGoal.toInt()
+            )
+        } ?: ProfileState()
+    }
+
     suspend fun getProfile(): ProfileState {
         return runCatching { personDao.getPerson() }.getOrNull()?.let { person ->
             ProfileState(

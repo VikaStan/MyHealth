@@ -90,14 +90,14 @@ fun DashBoardScreen(
             ) {
                 MetricCircleCard(
                     value = state.waterDrunk,
-                    target = 1800,
+                    target = state.waterTarget,
                     label = "Вода",
                     ringColor = WaterRing,
                     bgColor = Color.White
                 )
                 MetricCircleCard(
                     value = state.caloriesBurned,
-                    target = 2500,
+                    target = state.caloriesTarget,
                     label = "Калории",
                     ringColor = CalRing,
                     bgColor = Color.White
