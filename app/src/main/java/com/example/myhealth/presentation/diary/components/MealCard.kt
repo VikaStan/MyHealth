@@ -1,7 +1,6 @@
 package com.example.myhealth.presentation.diary.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,11 +36,15 @@ fun MealCard(
     ) {
         Row(
             Modifier
-                .padding(horizontal = 20.dp, vertical = 24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(horizontal = 20.dp, vertical = 24.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(title, style = MaterialTheme.typography.titleLarge)
+            Text(
+                title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.weight(1f)
+            )
             IconButton(
                 onClick = onAdd,
                 modifier = Modifier

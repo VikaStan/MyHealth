@@ -80,11 +80,17 @@ fun DiaryScreen(
 
             Spacer(Modifier.size(16.dp))
 
-            MealCard("завтрак") { /* open AddFoodDialog(MealType.BREAKFAST) */ }
+            MealCard("завтрак") {
+                navController.navigate("food_add/${MealType.BREAKFAST.value}")
+            }
             Spacer(Modifier.size(12.dp))
-            MealCard("обед") { /* ... */ }
+            MealCard("обед") {
+                navController.navigate("food_add/${MealType.LUNCH.value}")
+            }
             Spacer(Modifier.size(12.dp))
-            MealCard("ужин") { /* ... */ }
+            MealCard("ужин") {
+                navController.navigate("food_add/${MealType.DINNER.value}")
+            }
 
             Spacer(Modifier.size(72.dp))
         }
