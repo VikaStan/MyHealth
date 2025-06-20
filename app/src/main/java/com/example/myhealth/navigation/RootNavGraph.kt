@@ -15,7 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myhealth.data.datastore.SettingsDataStore
 import com.example.myhealth.presentation.bottomnav.BottomNavGraphScreen
-import com.example.myhealth.presentation.dashboard.BottomNavBar
 import com.example.myhealth.presentation.onboarding.OnboardingScreen
 import com.example.myhealth.ui.theme.BackBlue
 import kotlinx.coroutines.launch
@@ -35,8 +34,7 @@ fun MyHealthApp(settings: SettingsDataStore = SettingsDataStore(LocalContext.cur
     val navController = rememberNavController()
 
     Scaffold(
-        containerColor = BackBlue,
-        bottomBar = { BottomNavBar(navController) }
+        containerColor = BackBlue
     ) { inner ->
 
             NavHost(

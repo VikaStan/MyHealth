@@ -1,6 +1,5 @@
 package com.example.myhealth.presentation.statistics
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,16 +18,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.myhealth.presentation.statistics.components.DailyBarChart
 import com.example.myhealth.presentation.statistics.components.SegmentedTabRow
+import com.example.myhealth.presentation.statistics.components.WeeklyBarChart
 import com.example.myhealth.presentation.statistics.components.WeeklyStepsCard
 import com.example.myhealth.presentation.statistics.components.WeeklyWaterCard
 import com.example.myhealth.ui.theme.BackBlue
-import com.example.myhealth.ui.theme.WaterRing
+import com.example.myhealth.ui.theme.CardBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,22 +67,35 @@ fun StatisticsScreen(
                         avgSteps = state.avgSteps
                     )
                     Spacer(Modifier.height(16.dp))
+
+                    /* Нижняя карточка со столбцами шагов */
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = CardBlue)
+                    ) {
+                        WeeklyBarChart(
+                            bars = state.weeklySteps,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+                    }
                 }
 
                 StatsTab.HYDRATION -> {
                     WeeklyWaterCard(avgWater = state.avgWater)
                     Spacer(Modifier.height(16.dp))
-                    DailyBarChart(
-                        bars = state.weeklyWater,
-                        barColor = WaterRing,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                Color.White,
-                                RoundedCornerShape(16.dp)
-                            )
-                            .padding(16.dp)
-                    )
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = CardBlue)
+                    ) {
+                        WeeklyBarChart(
+                            bars = state.weeklyWater,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+                    }
                 }
             }
 

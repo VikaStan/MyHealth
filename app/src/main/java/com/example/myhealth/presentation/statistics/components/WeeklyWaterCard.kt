@@ -10,15 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.myhealth.ui.theme.CardBlue
-import com.example.myhealth.ui.theme.WaterRing
+import com.example.myhealth.R
 
 @Composable
 fun WeeklyWaterCard(
@@ -45,21 +43,11 @@ fun WeeklyWaterCard(
 
                 Spacer(Modifier.height(12.dp))
 
-                /* new API: modifier идёт первым, progress — лямбда */
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(10.dp),
-                    progress = { ratio },
-                    color = WaterRing,
-                    trackColor = CardBlue
-                )
             }
 
             CircularProgressWithIcon(
                 progress = ratio,
-                progressColor = Color(0xFF41A83E),
-                centerText = "${(ratio * 100).toInt()}%"
+                iconRes = R.drawable.ic_water,
             )
         }
     }

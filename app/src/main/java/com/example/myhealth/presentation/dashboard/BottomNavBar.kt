@@ -14,15 +14,15 @@ import androidx.navigation.NavHostController
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     NavigationBar(containerColor = androidx.compose.ui.graphics.Color.White) {
-        val items = listOf("home", "food", "stats", "profile")
+        val items = listOf("onboarding", "diary", "stats", "profile")
         items.forEach { route ->
             NavigationBarItem(
                 selected = navController.currentBackStackEntry?.destination?.route == route,
                 onClick = { navController.navigate(route) },
                 icon = {
                     val icon = when (route) {
-                        "home" -> Icons.Default.Home
-                        "food" -> Icons.Default.Restaurant
+                        "onboarding" -> Icons.Default.Home
+                        "diary" -> Icons.Default.Restaurant
                         "stats" -> Icons.Default.BarChart
                         else -> Icons.Default.Person
                     }

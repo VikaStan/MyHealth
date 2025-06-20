@@ -4,8 +4,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,45 +12,39 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.myhealth.ui.theme.PrimaryBlue
 
 @Composable
 fun CircularProgressWithIcon(
     progress: Float,
-    iconRes: Int? = null,
-    progressColor: Color = PrimaryBlue,
-    centerText: String? = null
+    trackColor: Color = Color(0xFFE0E5FF),
+    iconRes: Int,
+    centerText: String? = null,
+    modifier: Modifier = Modifier.size(120.dp)
 ) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(96.dp)) {
-        Canvas(Modifier.size(96.dp)) {
+    Box(contentAlignment = Alignment.Center, modifier = modifier) {
+        Canvas(modifier = modifier) {
+            val stroke = Stroke(width = 14.dp.toPx(), cap = StrokeCap.Round)
             drawArc(
-                color = progressColor.copy(alpha = .2f),
-                startAngle = 0f,
+                color = trackColor,
+                startAngle = -90f,
                 sweepAngle = 360f,
                 useCenter = false,
-                style = Stroke(10.dp.toPx(), cap = StrokeCap.Round)
+                style = stroke
             )
             drawArc(
-                color = progressColor,
+                color = trackColor,
                 startAngle = -90f,
-                sweepAngle = 360f * progress,
+                sweepAngle = 360f * progress.coerceIn(0f, 1f),
                 useCenter = false,
-                style = Stroke(10.dp.toPx(), cap = StrokeCap.Round)
+                style = stroke
+
             )
         }
-        if (iconRes != null) {
-            Icon(
-                painterResource(iconRes),
-                null,
-                tint = progressColor,
-                modifier = Modifier.size(40.dp)
-            )
-        } else {
-            Text(
-                centerText ?: "",
-                style = MaterialTheme.typography.bodyLarge,
-                color = progressColor
-            )
-        }
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = null,
+            tint = trackColor,
+            modifier = Modifier.size(42.dp)
+        )
     }
 }
