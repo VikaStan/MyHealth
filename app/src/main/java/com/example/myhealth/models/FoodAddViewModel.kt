@@ -6,18 +6,23 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myhealth.R
 import com.example.myhealth.domain.models.MealTime
 import com.example.myhealth.domain.models.Product
+import com.example.myhealth.domain.repository.ProductRepository
 import com.example.myhealth.presentation.diary.MealType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FoodAddViewModel @Inject constructor() : ViewModel() {
+class FoodAddViewModel @Inject constructor(
+    private val productRepository: ProductRepository
+) : ViewModel() {
 
-    var selectedTypeProductOld = MutableStateFlow(Product(0, "", 0, 0, 0, ""))
+    var selectedTypeProductOld = MutableStateFlow(Product(0, "", 0, 0, 0, 0, 0, 0, ""))
     var foodAddDialog by mutableStateOf(false)
     var foodEditDialog by mutableStateOf(false)
     var eatingTimeName = R.string.breakfast_title
@@ -67,8 +72,12 @@ class FoodAddViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onProductItemSelected(productOld: Product) {
-        selectedTypeProductOld.value = productOld
-        foodAddDialogShow()
+        viewModelScope.launch {
+            val info = productRepository.findProduct(productOld.name)
+            info?.productCategory = productOld.productCategory
+            selectedTypeProductOld.value = info ?: productOld
+            foodAddDialogShow()
+        }
     }
 
     fun onDelSwipe(productOld: Product) {

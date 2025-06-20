@@ -215,7 +215,7 @@ fun FoodSectionItem(
                 color = color, shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
-            .clickable { onProductItemSelected(Product(0, "", 0, 0, 0, "", productType)) },
+            .clickable { onProductItemSelected(Product(0, "", 0, 0, 0, 0, 0, 0, "", productType)) },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -363,17 +363,13 @@ fun FoodDetailDialog(
 
                 OutlinedTextField(
                     caloriesPer100Gramm.intValue.toString(),
-                    {
-                        if (it != "") {
-
-                            caloriesPer100Gramm.intValue = it.parseInt()
-                            caloriesSummery.floatValue =
-                                ((caloriesPer100Gramm.intValue.toFloat() / 100 * gramms.intValue))
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    {},
+                    enabled = false,
                     leadingIcon = { Icon(Icons.AutoMirrored.Filled.MenuBook, "") },
                     label = { Text(stringResource(R.string.calories_100_gr)) }) // калорий на 100 гр
+
+                Text("Б: ${productOld.proteinsPer100Gramm} Ж: ${productOld.fatsPer100Gramm} У: ${productOld.carbsPer100Gramm}")
+
 
                 OutlinedTextField(gramms.intValue.toString(),
                     {
@@ -402,17 +398,21 @@ fun FoodDetailDialog(
 
 
                 Button({
-                    if (caloriesPer100Gramm.intValue != 0 && gramms.intValue != 0 && !isEdit) onAcceptProduct(
+                    if (gramms.intValue != 0 && !isEdit) onAcceptProduct(
                         Product(
                             id = productOld.id,
                             name = productOld.name,
-                            caloriesPer100Gramm = caloriesPer100Gramm.intValue,
+                            caloriesPer100Gramm = productOld.caloriesPer100Gramm,
+                            proteinsPer100Gramm = productOld.proteinsPer100Gramm,
+                            fatsPer100Gramm = productOld.fatsPer100Gramm,
+                            carbsPer100Gramm = productOld.carbsPer100Gramm,
                             gramms = gramms.intValue,
                             caloriesPerGramm = productOld.caloriesPerGramm,
-                            description = description.value
+                            description = description.value,
+                            productCategory = productOld.productCategory
                         )
                     )
-                    else if (caloriesPer100Gramm.intValue != 0 && gramms.intValue != 0 && isEdit) {
+                    else if (gramms.intValue != 0 && isEdit) {
                         editProduct(
                             Product(
                                 id = productOld.id,
@@ -420,7 +420,8 @@ fun FoodDetailDialog(
                                 caloriesPer100Gramm = caloriesPer100Gramm.intValue,
                                 gramms = gramms.intValue,
                                 caloriesPerGramm = productOld.caloriesPerGramm,
-                                description = description.value
+                                description = description.value,
+                                productCategory = productOld.productCategory
                             )
                         )
                     } else toastShow.value = true
@@ -451,6 +452,7 @@ fun FoodAddPreview() {
         )
     }
 }
+
 
 private class FakeMealDao : MealDao {
     override suspend fun insert(meal: MealEntity) {}

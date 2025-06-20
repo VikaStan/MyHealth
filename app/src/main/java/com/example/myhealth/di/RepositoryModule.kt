@@ -2,7 +2,9 @@ package com.example.myhealth.di
 
 import com.example.myhealth.data.repository.DefaultWaterRepository
 import com.example.myhealth.data.repository.HealthRepositoryImpl
+import com.example.myhealth.data.repository.ProductRepositoryImpl
 import com.example.myhealth.domain.repository.HealthRepository
+import com.example.myhealth.domain.repository.ProductRepository
 import com.example.myhealth.domain.repository.WaterRepository
 import dagger.Binds
 import dagger.Module
@@ -21,4 +23,8 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindWaterRepository(impl: DefaultWaterRepository): WaterRepository
+
+    @Binds
+    @Singleton
+    fun bindProductRepository(impl: ProductRepositoryImpl): ProductRepository
 }

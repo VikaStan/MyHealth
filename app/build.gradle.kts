@@ -108,5 +108,7 @@ dependencies {
     implementation(libs.accompanist.pager)
     implementation(libs.google.accompanist.pager.indicators)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.gson)
 }
 

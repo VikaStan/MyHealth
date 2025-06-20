@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.myhealth.data.datasource.local.AppDatabase
 import com.example.myhealth.data.datasource.local.MealDao
+import com.example.myhealth.data.datasource.local.ProductDao
 import com.example.myhealth.data.datasource.local.StatsDao
 import com.example.myhealth.data.datasource.local.WaterDao
 import dagger.Module
@@ -42,4 +43,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideMealDao(db: AppDatabase): MealDao = db.mealDao()
+
+    @Provides
+    @Singleton
+    fun provideProductDao(db: AppDatabase): ProductDao = db.productDao()
 }
